@@ -2,17 +2,15 @@
 
 #include "MawWorld.h"
 
-int main (int argc, char** argv) {
+int main (int argc, char* const argv[]) {
 
-  MawWorld* mawWorld = new MawWorld();
+  MawWorld mawWorld;
     
-  mawWorld->initPhysics();
+  mawWorld.initPhysics();
   
   for (;;) {
-    mawWorld->stepSimulation();
+    mawWorld.stepSimulation();
   }
-      
-  delete mawWorld;
   
   return 0;
 }

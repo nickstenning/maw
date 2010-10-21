@@ -10,15 +10,19 @@ public:
   
   void stepSimulation();
   
-  MawWorld() :
-    m_collisionConfiguration(),
-    m_dispatcher(),
-    m_broadphase(),
-    m_solver(),
-    m_dynamicsWorld()
+  MawWorld()
+  : m_collisionConfiguration()
+  , m_dispatcher()
+  , m_broadphase()
+  , m_solver()
+  , m_dynamicsWorld()
+  , m_collisionShapes()
   {};
   
-  virtual ~MawWorld() { endPhysics(); }
+  MawWorld(MawWorld const&);
+  MawWorld& operator=(MawWorld const&);
+  
+  ~MawWorld() { endPhysics(); }
 
 private:
   btDefaultCollisionConfiguration*     m_collisionConfiguration;

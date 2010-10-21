@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4266DBD11265CD2D002C5362 /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4266DBCE1265CD2D002C5362 /* BulletCollision.framework */; };
-		4266DBD21265CD2D002C5362 /* BulletDynamics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4266DBCF1265CD2D002C5362 /* BulletDynamics.framework */; };
-		4266DBD31265CD2D002C5362 /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4266DBD01265CD2D002C5362 /* LinearMath.framework */; };
+		425CCD2B127075ED0025F51D /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2A127075ED0025F51D /* BulletCollision.framework */; };
+		425CCD2D127075ED0025F51D /* BulletDynamics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2C127075ED0025F51D /* BulletDynamics.framework */; };
+		425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2E127075ED0025F51D /* LinearMath.framework */; };
 		42B34D20126CD5CC009BCB90 /* MawWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */; };
 		8DD76F650486A84900D96B5E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.cpp */; settings = {ATTRIBUTES = (); }; };
 /* End PBXBuildFile section */
@@ -28,9 +28,9 @@
 
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		4266DBCE1265CD2D002C5362 /* BulletCollision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletCollision.framework; path = /Library/Frameworks/BulletCollision.framework; sourceTree = "<absolute>"; };
-		4266DBCF1265CD2D002C5362 /* BulletDynamics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletDynamics.framework; path = /Library/Frameworks/BulletDynamics.framework; sourceTree = "<absolute>"; };
-		4266DBD01265CD2D002C5362 /* LinearMath.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinearMath.framework; path = /Library/Frameworks/LinearMath.framework; sourceTree = "<absolute>"; };
+		425CCD2A127075ED0025F51D /* BulletCollision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletCollision.framework; path = Library/Frameworks/BulletCollision.framework; sourceTree = SDKROOT; };
+		425CCD2C127075ED0025F51D /* BulletDynamics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletDynamics.framework; path = Library/Frameworks/BulletDynamics.framework; sourceTree = SDKROOT; };
+		425CCD2E127075ED0025F51D /* LinearMath.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinearMath.framework; path = Library/Frameworks/LinearMath.framework; sourceTree = SDKROOT; };
 		42B34D1E126CD5CC009BCB90 /* MawWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MawWorld.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MawWorld.cpp; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* maw */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = maw; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,9 +41,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4266DBD11265CD2D002C5362 /* BulletCollision.framework in Frameworks */,
-				4266DBD21265CD2D002C5362 /* BulletDynamics.framework in Frameworks */,
-				4266DBD31265CD2D002C5362 /* LinearMath.framework in Frameworks */,
+				425CCD2B127075ED0025F51D /* BulletCollision.framework in Frameworks */,
+				425CCD2D127075ED0025F51D /* BulletDynamics.framework in Frameworks */,
+				425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,12 +53,12 @@
 		08FB7794FE84155DC02AAC07 /* maw */ = {
 			isa = PBXGroup;
 			children = (
-				4266DBCE1265CD2D002C5362 /* BulletCollision.framework */,
-				4266DBCF1265CD2D002C5362 /* BulletDynamics.framework */,
-				4266DBD01265CD2D002C5362 /* LinearMath.framework */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6859E8C029090F304C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
+				425CCD2A127075ED0025F51D /* BulletCollision.framework */,
+				425CCD2C127075ED0025F51D /* BulletDynamics.framework */,
+				425CCD2E127075ED0025F51D /* LinearMath.framework */,
 			);
 			name = maw;
 			sourceTree = "<group>";
@@ -114,6 +114,9 @@
 /* Begin PBXProject section */
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = NO;
+			};
 			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "maw" */;
 			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 1;
@@ -149,13 +152,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/OpenGL/BULLET_PHYSICS.build/Debug/OpenGLSupport.build/Objects-normal/i386\"",
-					"\"$(SRCROOT)/OpenGL/BULLET_PHYSICS.build/Debug/OpenGLSupport.build/Objects-normal/x86_64\"",
-					"\"$(SRCROOT)/OpenGL/Debug\"",
-					/usr/X11/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = maw;
 			};
 			name = Debug;
@@ -167,13 +164,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/OpenGL/BULLET_PHYSICS.build/Debug/OpenGLSupport.build/Objects-normal/i386\"",
-					"\"$(SRCROOT)/OpenGL/BULLET_PHYSICS.build/Debug/OpenGLSupport.build/Objects-normal/x86_64\"",
-					"\"$(SRCROOT)/OpenGL/Debug\"",
-					/usr/X11/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = maw;
 			};
 			name = Release;
@@ -187,6 +178,10 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -204,6 +199,10 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "";

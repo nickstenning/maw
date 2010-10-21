@@ -1,6 +1,21 @@
 #include "MawWorld.h"
 #include <iostream>
 
+// No-op
+MawWorld::MawWorld(MawWorld const&)
+: m_collisionConfiguration ()
+, m_dispatcher             ()
+, m_broadphase             ()
+, m_solver                 ()
+, m_dynamicsWorld          ()
+, m_collisionShapes        ()
+{}
+
+// No-op
+MawWorld& MawWorld::operator= (MawWorld const& rhs) {
+  return *this;
+}
+
 void MawWorld::initPhysics() {
   m_collisionConfiguration = new btDefaultCollisionConfiguration();
 	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
@@ -41,8 +56,6 @@ void MawWorld::initPhysics() {
 		// add the body to the dynamics world
 		m_dynamicsWorld->addRigidBody(body);
 	}
-  
-  
   
   
 	{
