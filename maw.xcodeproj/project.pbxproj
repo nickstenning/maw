@@ -10,8 +10,12 @@
 		425CCD2B127075ED0025F51D /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2A127075ED0025F51D /* BulletCollision.framework */; };
 		425CCD2D127075ED0025F51D /* BulletDynamics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2C127075ED0025F51D /* BulletDynamics.framework */; };
 		425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2E127075ED0025F51D /* LinearMath.framework */; };
+		425CCE67127089A90025F51D /* 2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425CCE66127089A90025F51D /* 2d.cpp */; };
+		425CCE7812708B8E0025F51D /* Brain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425CCE7712708B8E0025F51D /* Brain.cpp */; };
+		425CCE7F12708BFC0025F51D /* Pendulum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425CCE7E12708BFC0025F51D /* Pendulum.cpp */; };
+		428E8ECE12721AD300D9347D /* ga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 428E8ECD12721AD300D9347D /* ga.cpp */; };
 		42B34D20126CD5CC009BCB90 /* MawWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */; };
-		8DD76F650486A84900D96B5E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.cpp */; settings = {ATTRIBUTES = (); }; };
+		8DD76F650486A84900D96B5E /* maw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* maw.cpp */; settings = {ATTRIBUTES = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,16 +31,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		08FB7796FE84155DC02AAC07 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		08FB7796FE84155DC02AAC07 /* maw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maw.cpp; sourceTree = "<group>"; };
 		425CCD2A127075ED0025F51D /* BulletCollision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletCollision.framework; path = Library/Frameworks/BulletCollision.framework; sourceTree = SDKROOT; };
 		425CCD2C127075ED0025F51D /* BulletDynamics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletDynamics.framework; path = Library/Frameworks/BulletDynamics.framework; sourceTree = SDKROOT; };
 		425CCD2E127075ED0025F51D /* LinearMath.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinearMath.framework; path = Library/Frameworks/LinearMath.framework; sourceTree = SDKROOT; };
+		425CCE5D127089620025F51D /* 2d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 2d; sourceTree = BUILT_PRODUCTS_DIR; };
+		425CCE66127089A90025F51D /* 2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 2d.cpp; sourceTree = "<group>"; };
+		425CCE7612708B8E0025F51D /* Brain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Brain.h; sourceTree = "<group>"; };
+		425CCE7712708B8E0025F51D /* Brain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Brain.cpp; sourceTree = "<group>"; };
+		425CCE7D12708BFC0025F51D /* Pendulum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pendulum.h; sourceTree = "<group>"; };
+		425CCE7E12708BFC0025F51D /* Pendulum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pendulum.cpp; sourceTree = "<group>"; };
+		428E8EBE12721A1700D9347D /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		428E8ECC12721AD300D9347D /* ga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ga.h; sourceTree = "<group>"; };
+		428E8ECD12721AD300D9347D /* ga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ga.cpp; sourceTree = "<group>"; };
 		42B34D1E126CD5CC009BCB90 /* MawWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MawWorld.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MawWorld.cpp; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* maw */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = maw; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		425CCE5B127089620025F51D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F660486A84900D96B5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -66,9 +86,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */,
-				42B34D1E126CD5CC009BCB90 /* MawWorld.h */,
-				08FB7796FE84155DC02AAC07 /* main.cpp */,
+				425CCE8112708C170025F51D /* 2D */,
+				425CCE8812708C3A0025F51D /* MAW */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -77,8 +96,34 @@
 			isa = PBXGroup;
 			children = (
 				8DD76F6C0486A84900D96B5E /* maw */,
+				425CCE5D127089620025F51D /* 2d */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		425CCE8112708C170025F51D /* 2D */ = {
+			isa = PBXGroup;
+			children = (
+				428E8ECC12721AD300D9347D /* ga.h */,
+				428E8ECD12721AD300D9347D /* ga.cpp */,
+				428E8EBE12721A1700D9347D /* util.h */,
+				425CCE66127089A90025F51D /* 2d.cpp */,
+				425CCE7D12708BFC0025F51D /* Pendulum.h */,
+				425CCE7E12708BFC0025F51D /* Pendulum.cpp */,
+				425CCE7612708B8E0025F51D /* Brain.h */,
+				425CCE7712708B8E0025F51D /* Brain.cpp */,
+			);
+			name = 2D;
+			sourceTree = "<group>";
+		};
+		425CCE8812708C3A0025F51D /* MAW */ = {
+			isa = PBXGroup;
+			children = (
+				42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */,
+				42B34D1E126CD5CC009BCB90 /* MawWorld.h */,
+				08FB7796FE84155DC02AAC07 /* maw.cpp */,
+			);
+			name = MAW;
 			sourceTree = "<group>";
 		};
 		C6859E8C029090F304C91782 /* Documentation */ = {
@@ -91,6 +136,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		425CCE5C127089620025F51D /* 2d */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 425CCE63127089910025F51D /* Build configuration list for PBXNativeTarget "2d" */;
+			buildPhases = (
+				425CCE5A127089620025F51D /* Sources */,
+				425CCE5B127089620025F51D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 2d;
+			productName = 2d;
+			productReference = 425CCE5D127089620025F51D /* 2d */;
+			productType = "com.apple.product-type.tool";
+		};
 		8DD76F620486A84900D96B5E /* maw */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "maw" */;
@@ -116,6 +177,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
+				ORGANIZATIONNAME = "Nick Stenning";
 			};
 			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "maw" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -125,16 +187,28 @@
 			projectRoot = "";
 			targets = (
 				8DD76F620486A84900D96B5E /* maw */,
+				425CCE5C127089620025F51D /* 2d */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		425CCE5A127089620025F51D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				425CCE67127089A90025F51D /* 2d.cpp in Sources */,
+				425CCE7812708B8E0025F51D /* Brain.cpp in Sources */,
+				425CCE7F12708BFC0025F51D /* Pendulum.cpp in Sources */,
+				428E8ECE12721AD300D9347D /* ga.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F640486A84900D96B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DD76F650486A84900D96B5E /* main.cpp in Sources */,
+				8DD76F650486A84900D96B5E /* maw.cpp in Sources */,
 				42B34D20126CD5CC009BCB90 /* MawWorld.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,6 +286,36 @@
 			};
 			name = Release;
 		};
+		425CCE5F127089620025F51D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = 2d;
+			};
+			name = Debug;
+		};
+		425CCE60127089620025F51D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = 2d;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -229,6 +333,15 @@
 			buildConfigurations = (
 				1DEB923608733DC60010E9CD /* Debug */,
 				1DEB923708733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		425CCE63127089910025F51D /* Build configuration list for PBXNativeTarget "2d" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				425CCE5F127089620025F51D /* Debug */,
+				425CCE60127089620025F51D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
