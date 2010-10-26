@@ -275,7 +275,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>7</integer>
+									<integer>9</integer>
 									<integer>2</integer>
 									<integer>1</integer>
 									<integer>0</integer>
@@ -317,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>42976FE412632BF00067D576</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>2d.cpp</string>
+								<string>Pendulum.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -325,11 +325,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>42976FE512632BF00067D576</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>2d.cpp</string>
+										<string>Pendulum.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>422D83D6127777C30051F278</string>
+										<string>422D85981277A1DE0051F278</string>
 										<key>history</key>
 										<array>
 											<string>4266DAAC1265BB37002C5362</string>
@@ -341,19 +341,19 @@
 											<string>425CD0D91271A73F0025F51D</string>
 											<string>428E8E921272157A00D9347D</string>
 											<string>428E8F9512722A8900D9347D</string>
-											<string>422D81E21277635D0051F278</string>
-											<string>422D81E51277635D0051F278</string>
 											<string>422D8204127763BD0051F278</string>
 											<string>422D8206127763BD0051F278</string>
 											<string>422D82481277654C0051F278</string>
 											<string>422D82AF12776ACA0051F278</string>
 											<string>422D82B912776AE90051F278</string>
 											<string>422D82CA12776B480051F278</string>
-											<string>422D833E127770470051F278</string>
-											<string>422D83BD127777000051F278</string>
 											<string>422D83C51277772E0051F278</string>
-											<string>422D83CB127777720051F278</string>
-											<string>422D83CC127777720051F278</string>
+											<string>422D849A12778AF00051F278</string>
+											<string>422D854B12779B960051F278</string>
+											<string>422D854C12779B960051F278</string>
+											<string>422D85951277A1DE0051F278</string>
+											<string>422D85961277A1DE0051F278</string>
+											<string>422D85971277A1DE0051F278</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -367,18 +367,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {920, 471}}</string>
+								<string>{{0, 0}, {920, 516}}</string>
 								<key>RubberWindowFrame</key>
 								<string>50 55 1230 723 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>471pt</string>
+							<string>516pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>206pt</string>
+							<string>161pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -446,7 +446,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {920, 179}}</string>
+										<string>{{10, 27}, {920, 134}}</string>
 										<key>RubberWindowFrame</key>
 										<string>50 55 1230 723 0 0 1280 778 </string>
 									</dict>
@@ -670,7 +670,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>422D8374127773960051F278</string>
 		<string>422D81FA127763B10051F278</string>
 		<string>422D81FB127763B10051F278</string>
 		<string>/Users/borior/code/cpp/maw/maw.xcodeproj</string>

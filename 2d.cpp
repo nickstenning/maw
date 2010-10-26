@@ -28,18 +28,34 @@ unsigned int brainIdGenerator() {
   return brainCount++;
 }
 
-double computeFitness (Brain const& brain) {
+double computeFitness (Brain& brain) {
   Pendulum pdl;
 
-  // for some time period
+  double fitness = 0.0;
 
-    // feed theta, thetadot into brain
+  std::vector<double> input;
+  std::vector<double> output;
 
-    // using output as torque, step physics
+  pdl.ang(0);
+  pdl.vel(0);
 
-    // add to fitness proportional to time spent near vertical
+  while (pdl.time() < 100) {
+    input.clear();
+    input.push_back(pdl.ang());
+    input.push_back(pdl.vel());
 
-  return NORMRAND() * 100;
+    output = brain.feedForward(input);
+
+    pdl.step(output[0]);
+
+    if (brain.id() == 10) {
+      fitness += pdl.dt * (abs(pdl.pi) / pdl.pi);
+    } else {
+      fitness += pdl.dt * (abs(pdl.ang()) / pdl.pi);
+    }
+  }
+
+  return fitness;
 }
 
 bool compareFitness (Brain const& a, Brain const& b) { return (a.fitness() < b.fitness()); }
@@ -58,7 +74,7 @@ int main (int argc, char* const argv[]) {
     Brain b(brainIdGenerator(), 2, 4, 1);
     brainPop.push_back(b);
   }
-  
+
   std::cout << std::left;
   std::cout << COL << "# gen"
             << COL << "min"
@@ -99,12 +115,10 @@ int main (int argc, char* const argv[]) {
     double meanPhi = std::accumulate(newPop.begin(), newPop.end(), 0.0, sumFitness) / newPop.size();
 
     // Print generation stats
-
     std::cout << COL << i
               << COL << newPop[0].fitness()
               << COL << newPop[newPop.size() - 1].fitness()
               << COL << meanPhi << "\n";
-
   }
 
   return 0;
