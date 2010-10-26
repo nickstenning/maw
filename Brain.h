@@ -12,26 +12,48 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
+
+#include "util.h"
+
+typedef std::vector< double > Layer;
+typedef std::vector< std::vector<double> > Weights;
 
 class Brain {
 public:
-  Brain(int id)
-  : m_id(id)
-  , m_fitness(0.0)
-  {};
-  
-  ~Brain() {};
-  
+  Brain(int id, int numInput, int numHidden, int numOutput);
+  ~Brain();
+
   int const& id() const;
-  
+
   double const& fitness() const;
   Brain const& fitness(double const&);
-    
+
+  std::vector<double> feedForward(std::vector<double> const& input);
+
   friend std::ostream& operator<<(std::ostream&, Brain const&);
-  
-private:
+
+protected:
   int m_id;
   double m_fitness;
+
+  int m_numInput;
+  int m_numHidden;
+  int m_numOutput;
+
+  Layer m_layerInput;
+  Layer m_layerHidden;
+  Layer m_layerOutput;
+
+  Weights m_weightsIH;
+  Weights m_weightsHO;
+
+  void initLayer(Layer& l, int numNeurons, bool bias);
+  void initWeights(Weights& w, int numLayer1, int numLayer2, double (^block)(int, int));
+
+  inline double activationFunction(double x);
+
+  void cloneBrain(Brain const& from);
 };
 
 std::ostream& operator<<(std::ostream&, std::vector<Brain> const&);

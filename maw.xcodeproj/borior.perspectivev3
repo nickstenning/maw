@@ -200,8 +200,8 @@
 	<array/>
 	<key>PerspectiveWidths</key>
 	<array>
-		<integer>1094</integer>
-		<integer>1094</integer>
+		<integer>1230</integer>
+		<integer>1230</integer>
 	</array>
 	<key>Perspectives</key>
 	<array>
@@ -275,7 +275,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>4</integer>
+									<integer>7</integer>
 									<integer>2</integer>
 									<integer>1</integer>
 									<integer>0</integer>
@@ -317,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>42976FE412632BF00067D576</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>ga.cpp</string>
+								<string>2d.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -325,31 +325,35 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>42976FE512632BF00067D576</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>ga.cpp</string>
+										<string>2d.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>422D7FD0127737CE0051F278</string>
+										<string>422D83D6127777C30051F278</string>
 										<key>history</key>
 										<array>
 											<string>4266DAAC1265BB37002C5362</string>
 											<string>4266DCA41265CDC0002C5362</string>
 											<string>4270255212663C1F00471E67</string>
 											<string>42B34EBA126F063E009BCB90</string>
-											<string>425CCEA812708D7C0025F51D</string>
 											<string>425CCF411270B69C0025F51D</string>
 											<string>425CD0381270C5470025F51D</string>
 											<string>425CD0D91271A73F0025F51D</string>
 											<string>428E8E921272157A00D9347D</string>
 											<string>428E8F9512722A8900D9347D</string>
-											<string>428E905A127239ED00D9347D</string>
-											<string>428E905B127239ED00D9347D</string>
-											<string>428E906012723A5300D9347D</string>
-											<string>428E90AD12723D0500D9347D</string>
-											<string>428E90DA12723FAA00D9347D</string>
-											<string>425C0AB61275E89100A4A001</string>
-											<string>425C0AB71275E89100A4A001</string>
-											<string>425C0AB91275E89100A4A001</string>
+											<string>422D81E21277635D0051F278</string>
+											<string>422D81E51277635D0051F278</string>
+											<string>422D8204127763BD0051F278</string>
+											<string>422D8206127763BD0051F278</string>
+											<string>422D82481277654C0051F278</string>
+											<string>422D82AF12776ACA0051F278</string>
+											<string>422D82B912776AE90051F278</string>
+											<string>422D82CA12776B480051F278</string>
+											<string>422D833E127770470051F278</string>
+											<string>422D83BD127777000051F278</string>
+											<string>422D83C51277772E0051F278</string>
+											<string>422D83CB127777720051F278</string>
+											<string>422D83CC127777720051F278</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -389,8 +393,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {920, 179}}</string>
-										<key>RubberWindowFrame</key>
-										<string>50 55 1230 723 0 0 1280 778 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -406,7 +408,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {920, 155}}</string>
+										<string>{{10, 27}, {920, 179}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXProjectFindModule</string>
@@ -424,7 +426,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {920, 155}}</string>
+										<string>{{10, 27}, {920, 179}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXCVSModule</string>
@@ -444,7 +446,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {920, 173}}</string>
+										<string>{{10, 27}, {920, 179}}</string>
+										<key>RubberWindowFrame</key>
+										<string>50 55 1230 723 0 0 1280 778 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -527,12 +531,12 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {1094, 166}}</string>
+						<string>{{0, 0}, {1230, 170}}</string>
 					</dict>
 					<key>Module</key>
 					<string>PBXDebugCLIModule</string>
 					<key>Proportion</key>
-					<string>166pt</string>
+					<string>170pt</string>
 				</dict>
 				<dict>
 					<key>ContentConfiguration</key>
@@ -551,8 +555,8 @@
 								<string>yes</string>
 								<key>sizes</key>
 								<array>
-									<string>{{0, 0}, {534, 241}}</string>
-									<string>{{534, 0}, {560, 241}}</string>
+									<string>{{0, 0}, {600, 247}}</string>
+									<string>{{600, 0}, {630, 247}}</string>
 								</array>
 							</dict>
 							<key>VerticalSplitView</key>
@@ -567,8 +571,8 @@
 								<string>yes</string>
 								<key>sizes</key>
 								<array>
-									<string>{{0, 0}, {1094, 241}}</string>
-									<string>{{0, 241}, {1094, 254}}</string>
+									<string>{{0, 0}, {1230, 247}}</string>
+									<string>{{0, 247}, {1230, 260}}</string>
 								</array>
 							</dict>
 						</dict>
@@ -588,7 +592,7 @@
 						<key>DebugSTDIOWindowFrame</key>
 						<string>{{200, 200}, {500, 300}}</string>
 						<key>Frame</key>
-						<string>{{0, 171}, {1094, 495}}</string>
+						<string>{{0, 175}, {1230, 507}}</string>
 						<key>PBXDebugSessionStackFrameViewKey</key>
 						<dict>
 							<key>DebugVariablesTableConfiguration</key>
@@ -598,16 +602,16 @@
 								<string>Value</string>
 								<real>85</real>
 								<string>Summary</string>
-								<real>330</real>
+								<real>400</real>
 							</array>
 							<key>Frame</key>
-							<string>{{534, 0}, {560, 241}}</string>
+							<string>{{600, 0}, {630, 247}}</string>
 						</dict>
 					</dict>
 					<key>Module</key>
 					<string>PBXDebugSessionModule</string>
 					<key>Proportion</key>
-					<string>495pt</string>
+					<string>507pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -625,14 +629,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>425C0AA81275AEC300A4A001</string>
+				<string>422D81F4127763B10051F278</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>425C0AA91275AEC300A4A001</string>
-				<string>425C0AAA1275AEC300A4A001</string>
-				<string>425C0AAB1275AEC300A4A001</string>
-				<string>425C0AAC1275AEC300A4A001</string>
-				<string>425C0AAD1275AEC300A4A001</string>
+				<string>422D81F5127763B10051F278</string>
+				<string>422D81F6127763B10051F278</string>
+				<string>422D81F7127763B10051F278</string>
+				<string>422D81F8127763B10051F278</string>
+				<string>42976FE412632BF00067D576</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -666,6 +670,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>422D8374127773960051F278</string>
+		<string>422D81FA127763B10051F278</string>
+		<string>422D81FB127763B10051F278</string>
 		<string>/Users/borior/code/cpp/maw/maw.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

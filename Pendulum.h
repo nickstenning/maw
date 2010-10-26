@@ -14,7 +14,7 @@ class Pendulum {
 public:
   Pendulum() {};
   ~Pendulum() {};
-  
+
 private:
 };
 

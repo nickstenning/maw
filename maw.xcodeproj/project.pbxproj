@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		422D8125127753330051F278 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 422D8124127753330051F278 /* util.cpp */; };
 		425CCD2B127075ED0025F51D /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2A127075ED0025F51D /* BulletCollision.framework */; };
 		425CCD2D127075ED0025F51D /* BulletDynamics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2C127075ED0025F51D /* BulletDynamics.framework */; };
 		425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2E127075ED0025F51D /* LinearMath.framework */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* maw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maw.cpp; sourceTree = "<group>"; };
+		422D8124127753330051F278 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
 		425CCD2A127075ED0025F51D /* BulletCollision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletCollision.framework; path = Library/Frameworks/BulletCollision.framework; sourceTree = SDKROOT; };
 		425CCD2C127075ED0025F51D /* BulletDynamics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletDynamics.framework; path = Library/Frameworks/BulletDynamics.framework; sourceTree = SDKROOT; };
 		425CCD2E127075ED0025F51D /* LinearMath.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinearMath.framework; path = Library/Frameworks/LinearMath.framework; sourceTree = SDKROOT; };
@@ -107,6 +109,7 @@
 				428E8ECC12721AD300D9347D /* ga.h */,
 				428E8ECD12721AD300D9347D /* ga.cpp */,
 				428E8EBE12721A1700D9347D /* util.h */,
+				422D8124127753330051F278 /* util.cpp */,
 				425CCE66127089A90025F51D /* 2d.cpp */,
 				425CCE7D12708BFC0025F51D /* Pendulum.h */,
 				425CCE7E12708BFC0025F51D /* Pendulum.cpp */,
@@ -201,6 +204,7 @@
 				425CCE7812708B8E0025F51D /* Brain.cpp in Sources */,
 				425CCE7F12708BFC0025F51D /* Pendulum.cpp in Sources */,
 				428E8ECE12721AD300D9347D /* ga.cpp in Sources */,
+				422D8125127753330051F278 /* util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,13 +14,14 @@
 #include <numeric>
 
 #include "Brain.h"
+#include "util.h"
 
 namespace ga {
-  
+
   std::vector<size_t> piePick (std::vector<double> const& pie, size_t numToPick);
-  
+
   Brain const& recombine (Brain const&, Brain const&);
-  Brain const& mutate (Brain&);
+  void mutate (Brain&);
 
 }
 
