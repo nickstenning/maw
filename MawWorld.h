@@ -3,19 +3,20 @@
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
-class MawWorld {
+#include "GlutDemoApplication.h"
+
+class MawWorld : public GlutDemoApplication {
 public:
   void initPhysics();
 	void endPhysics();
 
-  void stepSimulation();
+  void stepSimulation(float dt);
 
   MawWorld()
-  : m_collisionConfiguration()
-  , m_dispatcher()
-  , m_broadphase()
-  , m_solver()
-  , m_dynamicsWorld()
+  : m_collisionConfiguration(0)
+  , m_dispatcher(0)
+  , m_broadphase(0)
+  , m_solver(0)
   , m_collisionShapes()
   {};
 
@@ -24,13 +25,16 @@ public:
 
   ~MawWorld() { endPhysics(); }
 
+  void setDebugDrawer(btIDebugDraw& drawer);
+  virtual void clientMoveAndDisplay();
+  virtual void displayCallback();
+  virtual void keyboardCallback(unsigned char key, int x, int y);
+
 private:
   btDefaultCollisionConfiguration*     m_collisionConfiguration;
   btCollisionDispatcher*               m_dispatcher;
   btBroadphaseInterface*               m_broadphase;
   btSequentialImpulseConstraintSolver* m_solver;
-
-	btDiscreteDynamicsWorld*             m_dynamicsWorld;
 
   btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
 };

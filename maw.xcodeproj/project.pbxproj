@@ -8,12 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		422D8125127753330051F278 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 422D8124127753330051F278 /* util.cpp */; };
+		422D86F61279CBF00051F278 /* BrainDotPrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 422D86F51279CBF00051F278 /* BrainDotPrinter.cpp */; };
 		425CCD2B127075ED0025F51D /* BulletCollision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2A127075ED0025F51D /* BulletCollision.framework */; };
 		425CCD2D127075ED0025F51D /* BulletDynamics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2C127075ED0025F51D /* BulletDynamics.framework */; };
 		425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2E127075ED0025F51D /* LinearMath.framework */; };
 		425CCE67127089A90025F51D /* 2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425CCE66127089A90025F51D /* 2d.cpp */; };
 		425CCE7812708B8E0025F51D /* Brain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425CCE7712708B8E0025F51D /* Brain.cpp */; };
 		425CCE7F12708BFC0025F51D /* Pendulum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425CCE7E12708BFC0025F51D /* Pendulum.cpp */; };
+		42740F961281C414008FD575 /* DemoApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F7F1281C414008FD575 /* DemoApplication.cpp */; };
+		42740F971281C414008FD575 /* GL_DialogDynamicsWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F811281C414008FD575 /* GL_DialogDynamicsWorld.cpp */; };
+		42740F981281C414008FD575 /* GL_DialogWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F831281C414008FD575 /* GL_DialogWindow.cpp */; };
+		42740F991281C414008FD575 /* GL_ShapeDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F851281C414008FD575 /* GL_ShapeDrawer.cpp */; };
+		42740F9A1281C414008FD575 /* GL_Simplex1to4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F871281C414008FD575 /* GL_Simplex1to4.cpp */; };
+		42740F9B1281C414008FD575 /* GLDebugDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F891281C414008FD575 /* GLDebugDrawer.cpp */; };
+		42740F9C1281C414008FD575 /* GLDebugFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F8B1281C414008FD575 /* GLDebugFont.cpp */; };
+		42740F9D1281C414008FD575 /* GlutDemoApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F8D1281C414008FD575 /* GlutDemoApplication.cpp */; };
+		42740F9E1281C414008FD575 /* GlutStuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F8F1281C414008FD575 /* GlutStuff.cpp */; };
+		42740F9F1281C414008FD575 /* RenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F911281C414008FD575 /* RenderTexture.cpp */; };
+		42740FA01281C414008FD575 /* Win32AppMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F931281C414008FD575 /* Win32AppMain.cpp */; };
+		42740FA11281C414008FD575 /* Win32DemoApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42740F941281C414008FD575 /* Win32DemoApplication.cpp */; };
+		42740FE11281C738008FD575 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE01281C738008FD575 /* GLUT.framework */; };
+		42740FE31281C738008FD575 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE21281C738008FD575 /* OpenGL.framework */; };
 		428E8ECE12721AD300D9347D /* ga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 428E8ECD12721AD300D9347D /* ga.cpp */; };
 		42B34D20126CD5CC009BCB90 /* MawWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */; };
 		8DD76F650486A84900D96B5E /* maw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* maw.cpp */; settings = {ATTRIBUTES = (); }; };
@@ -34,6 +49,8 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* maw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maw.cpp; sourceTree = "<group>"; };
 		422D8124127753330051F278 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
+		422D86F41279CBF00051F278 /* BrainDotPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrainDotPrinter.h; sourceTree = "<group>"; };
+		422D86F51279CBF00051F278 /* BrainDotPrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BrainDotPrinter.cpp; sourceTree = "<group>"; };
 		425CCD2A127075ED0025F51D /* BulletCollision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletCollision.framework; path = Library/Frameworks/BulletCollision.framework; sourceTree = SDKROOT; };
 		425CCD2C127075ED0025F51D /* BulletDynamics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BulletDynamics.framework; path = Library/Frameworks/BulletDynamics.framework; sourceTree = SDKROOT; };
 		425CCD2E127075ED0025F51D /* LinearMath.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinearMath.framework; path = Library/Frameworks/LinearMath.framework; sourceTree = SDKROOT; };
@@ -43,6 +60,33 @@
 		425CCE7712708B8E0025F51D /* Brain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Brain.cpp; sourceTree = "<group>"; };
 		425CCE7D12708BFC0025F51D /* Pendulum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pendulum.h; sourceTree = "<group>"; };
 		425CCE7E12708BFC0025F51D /* Pendulum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pendulum.cpp; sourceTree = "<group>"; };
+		42740F7D1281C414008FD575 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		42740F7E1281C414008FD575 /* DebugCastResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugCastResult.h; sourceTree = "<group>"; };
+		42740F7F1281C414008FD575 /* DemoApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoApplication.cpp; sourceTree = "<group>"; };
+		42740F801281C414008FD575 /* DemoApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoApplication.h; sourceTree = "<group>"; };
+		42740F811281C414008FD575 /* GL_DialogDynamicsWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GL_DialogDynamicsWorld.cpp; sourceTree = "<group>"; };
+		42740F821281C414008FD575 /* GL_DialogDynamicsWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GL_DialogDynamicsWorld.h; sourceTree = "<group>"; };
+		42740F831281C414008FD575 /* GL_DialogWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GL_DialogWindow.cpp; sourceTree = "<group>"; };
+		42740F841281C414008FD575 /* GL_DialogWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GL_DialogWindow.h; sourceTree = "<group>"; };
+		42740F851281C414008FD575 /* GL_ShapeDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GL_ShapeDrawer.cpp; sourceTree = "<group>"; };
+		42740F861281C414008FD575 /* GL_ShapeDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GL_ShapeDrawer.h; sourceTree = "<group>"; };
+		42740F871281C414008FD575 /* GL_Simplex1to4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GL_Simplex1to4.cpp; sourceTree = "<group>"; };
+		42740F881281C414008FD575 /* GL_Simplex1to4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GL_Simplex1to4.h; sourceTree = "<group>"; };
+		42740F891281C414008FD575 /* GLDebugDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDebugDrawer.cpp; sourceTree = "<group>"; };
+		42740F8A1281C414008FD575 /* GLDebugDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDebugDrawer.h; sourceTree = "<group>"; };
+		42740F8B1281C414008FD575 /* GLDebugFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDebugFont.cpp; sourceTree = "<group>"; };
+		42740F8C1281C414008FD575 /* GLDebugFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDebugFont.h; sourceTree = "<group>"; };
+		42740F8D1281C414008FD575 /* GlutDemoApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GlutDemoApplication.cpp; sourceTree = "<group>"; };
+		42740F8E1281C414008FD575 /* GlutDemoApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlutDemoApplication.h; sourceTree = "<group>"; };
+		42740F8F1281C414008FD575 /* GlutStuff.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GlutStuff.cpp; sourceTree = "<group>"; };
+		42740F901281C414008FD575 /* GlutStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlutStuff.h; sourceTree = "<group>"; };
+		42740F911281C414008FD575 /* RenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTexture.cpp; sourceTree = "<group>"; };
+		42740F921281C414008FD575 /* RenderTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderTexture.h; sourceTree = "<group>"; };
+		42740F931281C414008FD575 /* Win32AppMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Win32AppMain.cpp; sourceTree = "<group>"; };
+		42740F941281C414008FD575 /* Win32DemoApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Win32DemoApplication.cpp; sourceTree = "<group>"; };
+		42740F951281C414008FD575 /* Win32DemoApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Win32DemoApplication.h; sourceTree = "<group>"; };
+		42740FE01281C738008FD575 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		42740FE21281C738008FD575 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		428E8EBE12721A1700D9347D /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		428E8ECC12721AD300D9347D /* ga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ga.h; sourceTree = "<group>"; };
 		428E8ECD12721AD300D9347D /* ga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ga.cpp; sourceTree = "<group>"; };
@@ -66,6 +110,8 @@
 				425CCD2B127075ED0025F51D /* BulletCollision.framework in Frameworks */,
 				425CCD2D127075ED0025F51D /* BulletDynamics.framework in Frameworks */,
 				425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */,
+				42740FE11281C738008FD575 /* GLUT.framework in Frameworks */,
+				42740FE31281C738008FD575 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +127,8 @@
 				425CCD2A127075ED0025F51D /* BulletCollision.framework */,
 				425CCD2C127075ED0025F51D /* BulletDynamics.framework */,
 				425CCD2E127075ED0025F51D /* LinearMath.framework */,
+				42740FE01281C738008FD575 /* GLUT.framework */,
+				42740FE21281C738008FD575 /* OpenGL.framework */,
 			);
 			name = maw;
 			sourceTree = "<group>";
@@ -115,6 +163,8 @@
 				425CCE7E12708BFC0025F51D /* Pendulum.cpp */,
 				425CCE7612708B8E0025F51D /* Brain.h */,
 				425CCE7712708B8E0025F51D /* Brain.cpp */,
+				422D86F41279CBF00051F278 /* BrainDotPrinter.h */,
+				422D86F51279CBF00051F278 /* BrainDotPrinter.cpp */,
 			);
 			name = 2D;
 			sourceTree = "<group>";
@@ -125,8 +175,41 @@
 				42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */,
 				42B34D1E126CD5CC009BCB90 /* MawWorld.h */,
 				08FB7796FE84155DC02AAC07 /* maw.cpp */,
+				42740F7C1281C414008FD575 /* OpenGL */,
 			);
 			name = MAW;
+			sourceTree = "<group>";
+		};
+		42740F7C1281C414008FD575 /* OpenGL */ = {
+			isa = PBXGroup;
+			children = (
+				42740F7D1281C414008FD575 /* CMakeLists.txt */,
+				42740F7E1281C414008FD575 /* DebugCastResult.h */,
+				42740F7F1281C414008FD575 /* DemoApplication.cpp */,
+				42740F801281C414008FD575 /* DemoApplication.h */,
+				42740F811281C414008FD575 /* GL_DialogDynamicsWorld.cpp */,
+				42740F821281C414008FD575 /* GL_DialogDynamicsWorld.h */,
+				42740F831281C414008FD575 /* GL_DialogWindow.cpp */,
+				42740F841281C414008FD575 /* GL_DialogWindow.h */,
+				42740F851281C414008FD575 /* GL_ShapeDrawer.cpp */,
+				42740F861281C414008FD575 /* GL_ShapeDrawer.h */,
+				42740F871281C414008FD575 /* GL_Simplex1to4.cpp */,
+				42740F881281C414008FD575 /* GL_Simplex1to4.h */,
+				42740F891281C414008FD575 /* GLDebugDrawer.cpp */,
+				42740F8A1281C414008FD575 /* GLDebugDrawer.h */,
+				42740F8B1281C414008FD575 /* GLDebugFont.cpp */,
+				42740F8C1281C414008FD575 /* GLDebugFont.h */,
+				42740F8D1281C414008FD575 /* GlutDemoApplication.cpp */,
+				42740F8E1281C414008FD575 /* GlutDemoApplication.h */,
+				42740F8F1281C414008FD575 /* GlutStuff.cpp */,
+				42740F901281C414008FD575 /* GlutStuff.h */,
+				42740F911281C414008FD575 /* RenderTexture.cpp */,
+				42740F921281C414008FD575 /* RenderTexture.h */,
+				42740F931281C414008FD575 /* Win32AppMain.cpp */,
+				42740F941281C414008FD575 /* Win32DemoApplication.cpp */,
+				42740F951281C414008FD575 /* Win32DemoApplication.h */,
+			);
+			path = OpenGL;
 			sourceTree = "<group>";
 		};
 		C6859E8C029090F304C91782 /* Documentation */ = {
@@ -184,7 +267,14 @@
 			};
 			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "maw" */;
 			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* maw */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -205,6 +295,7 @@
 				425CCE7F12708BFC0025F51D /* Pendulum.cpp in Sources */,
 				428E8ECE12721AD300D9347D /* ga.cpp in Sources */,
 				422D8125127753330051F278 /* util.cpp in Sources */,
+				422D86F61279CBF00051F278 /* BrainDotPrinter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +305,18 @@
 			files = (
 				8DD76F650486A84900D96B5E /* maw.cpp in Sources */,
 				42B34D20126CD5CC009BCB90 /* MawWorld.cpp in Sources */,
+				42740F961281C414008FD575 /* DemoApplication.cpp in Sources */,
+				42740F971281C414008FD575 /* GL_DialogDynamicsWorld.cpp in Sources */,
+				42740F981281C414008FD575 /* GL_DialogWindow.cpp in Sources */,
+				42740F991281C414008FD575 /* GL_ShapeDrawer.cpp in Sources */,
+				42740F9A1281C414008FD575 /* GL_Simplex1to4.cpp in Sources */,
+				42740F9B1281C414008FD575 /* GLDebugDrawer.cpp in Sources */,
+				42740F9C1281C414008FD575 /* GLDebugFont.cpp in Sources */,
+				42740F9D1281C414008FD575 /* GlutDemoApplication.cpp in Sources */,
+				42740F9E1281C414008FD575 /* GlutStuff.cpp in Sources */,
+				42740F9F1281C414008FD575 /* RenderTexture.cpp in Sources */,
+				42740FA01281C414008FD575 /* Win32AppMain.cpp in Sources */,
+				42740FA11281C414008FD575 /* Win32DemoApplication.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +365,7 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = ./OpenGL;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -283,7 +386,7 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = ./OpenGL;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
