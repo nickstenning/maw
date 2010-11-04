@@ -83,6 +83,11 @@ m_stepping(true),
 m_singleStep(false),
 m_idle(false),
 
+m_profileIterator(),
+m_clock(),
+m_lastKey(),
+m_shapeDrawer(),
+
 m_enableshadows(false),
 m_sundirection(btVector3(1,-2,1)*1000),
 m_defaultContactProcessingThreshold(BT_LARGE_FLOAT)
@@ -1105,9 +1110,9 @@ void	DemoApplication::renderscene(int pass)
 {
 	btScalar	m[16];
 	btMatrix3x3	rot;rot.setIdentity();
-	const int	numObjects=m_dynamicsWorld->getNumCollisionObjects();
+	const int numObj = m_dynamicsWorld->getNumCollisionObjects();
 	btVector3 wireColor(1,0,0);
-	for(int i=0;i<numObjects;i++)
+	for(int i=0;i<numObj;i++)
 	{
 		btCollisionObject*	colObj=m_dynamicsWorld->getCollisionObjectArray()[i];
 		btRigidBody*		body=btRigidBody::upcast(colObj);
@@ -1122,7 +1127,7 @@ void	DemoApplication::renderscene(int pass)
 			colObj->getWorldTransform().getOpenGLMatrix(m);
 			rot=colObj->getWorldTransform().getBasis();
 		}
-		btVector3 wireColor(1.f,1.0f,0.5f); //wants deactivation
+		wireColor = btVector3(1.f,1.0f,0.5f); //wants deactivation
 		if(i&1) wireColor=btVector3(0.f,0.0f,1.f);
 		///color differently for active, sleeping, wantsdeactivation states
 		if (colObj->getActivationState() == 1) //active
@@ -1286,12 +1291,12 @@ void	DemoApplication::clientResetScene()
 #endif //SHOW_NUM_DEEP_PENETRATIONS
 
 	gNumClampedCcdMotions = 0;
-	int numObjects = 0;
+	int numObj = 0;
 	int i;
 
 	if (m_dynamicsWorld)
 	{
-		numObjects = m_dynamicsWorld->getNumCollisionObjects();
+		numObj = m_dynamicsWorld->getNumCollisionObjects();
 
 		///create a copy of the array, not a reference!
 		btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
@@ -1319,7 +1324,7 @@ void	DemoApplication::clientResetScene()
 				//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
 				//m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),getDynamicsWorld()->getDispatcher());
 
-				btRigidBody* body = btRigidBody::upcast(colObj);
+				body = btRigidBody::upcast(colObj);
 				if (body && !body->isStaticObject())
 				{
 					btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));

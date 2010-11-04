@@ -20,9 +20,6 @@ public:
   , m_collisionShapes()
   {};
 
-  MawWorld(MawWorld const&);
-  MawWorld& operator=(MawWorld const&);
-
   ~MawWorld() { endPhysics(); }
 
   void setDebugDrawer(btIDebugDraw& drawer);
@@ -31,6 +28,10 @@ public:
   virtual void keyboardCallback(unsigned char key, int x, int y);
 
 private:
+  // Uncopyable
+  MawWorld(MawWorld const&);
+  MawWorld& operator=(MawWorld const&);
+
   btDefaultCollisionConfiguration*     m_collisionConfiguration;
   btCollisionDispatcher*               m_dispatcher;
   btBroadphaseInterface*               m_broadphase;

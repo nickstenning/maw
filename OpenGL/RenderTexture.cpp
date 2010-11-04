@@ -16,9 +16,10 @@ subject to the following restrictions:
 #include "RenderTexture.h"
 #include <memory.h>
 
-
 renderTexture::renderTexture(int width,int height)
-:m_height(height),m_width(width)
+:m_height(height)
+,m_width(width)
+,m_buffer(0)
 {
 	m_buffer = new unsigned char[m_width*m_height*4];
 

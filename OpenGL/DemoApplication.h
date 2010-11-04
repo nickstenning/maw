@@ -43,7 +43,12 @@ class DemoApplication
 	void	displayProfileString(int xOffset,int yStart,char* message);
 	class CProfileIterator* m_profileIterator;
 
-	protected:
+private:
+  // uncopyable
+  DemoApplication(DemoApplication const&);
+  DemoApplication& operator=(DemoApplication const&);
+
+protected:
 #ifdef USE_BT_CLOCK
 	btClock m_clock;
 #endif //USE_BT_CLOCK
@@ -109,10 +114,8 @@ public:
 
 	virtual	void initPhysics() = 0;
 
-	virtual	void setDrawClusters(bool drawClusters)
-	{
-
-	}
+	virtual	void setDrawClusters(bool)
+	{}
 
 	void overrideGLShapeDrawer (GL_ShapeDrawer* shapeDrawer);
 
@@ -201,11 +204,11 @@ public:
 
 	virtual void keyboardCallback(unsigned char key, int x, int y);
 
-	virtual void keyboardUpCallback(unsigned char key, int x, int y) {}
+	virtual void keyboardUpCallback(unsigned char, int, int) {}
 
-	virtual void specialKeyboard(int key, int x, int y){}
+	virtual void specialKeyboard(int, int, int){}
 
-	virtual void specialKeyboardUp(int key, int x, int y){}
+	virtual void specialKeyboardUp(int, int, int){}
 
 	virtual void reshape(int w, int h);
 

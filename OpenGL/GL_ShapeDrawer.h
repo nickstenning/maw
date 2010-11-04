@@ -29,7 +29,7 @@ protected:
 	struct ShapeCache
 	{
 	struct Edge { btVector3 n[2];int v[2]; };
-	ShapeCache(btConvexShape* s) : m_shapehull(s) {}
+  ShapeCache(btConvexShape* s) : m_shapehull(s), m_edges() {}
 	btShapeHull					m_shapehull;
 	btAlignedObjectArray<Edge>	m_edges;
 	};

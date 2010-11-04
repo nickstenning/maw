@@ -63,6 +63,7 @@ protected:
 	int m_type;
 
 public:
+  GL_DialogControl() : m_type() {}
 
 	virtual ~GL_DialogControl()
 	{
@@ -82,6 +83,7 @@ public:
 	btAlignedObjectArray<const char*> m_textLines;
 
 	GL_TextControl()
+  : m_textLines()
 	{
 		m_type = GL_TEXT_CONTROL;
 	}
@@ -94,6 +96,11 @@ public:
 
 struct GL_ToggleControl : public GL_DialogControl
 {
+private:
+  // uncopyable
+  GL_ToggleControl(GL_ToggleControl const&);
+  GL_ToggleControl& operator=(GL_ToggleControl const&);
+
 	btCollisionObject* m_toggleBody;
 	GL_DialogWindow* m_parentWindow;
 
@@ -118,6 +125,11 @@ public:
 
 struct GL_SliderControl : public GL_DialogControl
 {
+private:
+  // uncopyable
+  GL_SliderControl(GL_SliderControl const&);
+  GL_SliderControl& operator=(GL_SliderControl const&);
+
 	btCollisionObject* m_sliderBody;
 	GL_DialogWindow* m_parentWindow;
 	btScalar m_lowerLimit;
@@ -159,6 +171,10 @@ public:
 ///Very basic OpenGL Graphical Userinterface Window with text, toggle, slider control
 class GL_DialogWindow
 {
+private:
+  // uncopyable
+  GL_DialogWindow(GL_DialogWindow const&);
+  GL_DialogWindow& operator=(GL_DialogWindow const&);
 
 	int	m_dialogHorPos;
 	int	m_dialogVertPos;

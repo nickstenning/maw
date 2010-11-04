@@ -23,9 +23,13 @@ subject to the following restrictions:
 ///Can be used by GJK.
 class GL_Simplex1to4 : public btBU_Simplex1to4
 {
-	btSimplexSolverInterface*	m_simplexSolver;
+private:
+  // uncopyable
+  GL_Simplex1to4(GL_Simplex1to4 const&);
+  GL_Simplex1to4& operator=(GL_Simplex1to4 const&);
 
-	public:
+public:
+	btSimplexSolverInterface*	m_simplexSolver;
 
 	GL_Simplex1to4();
 

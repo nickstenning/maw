@@ -966,11 +966,11 @@ void		GL_ShapeDrawer::drawShadow(btScalar* m,const btVector3& extrusion,const bt
 
 //
 GL_ShapeDrawer::GL_ShapeDrawer()
-{
-	m_texturehandle			=	0;
-	m_textureenabled		=	false;
-	m_textureinitialized	=	false;
-}
+: m_shapecaches()
+, m_texturehandle(0)
+, m_textureenabled(false)
+, m_textureinitialized(false)
+{}
 
 GL_ShapeDrawer::~GL_ShapeDrawer()
 {

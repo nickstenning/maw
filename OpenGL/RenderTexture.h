@@ -28,6 +28,11 @@ class renderTexture
 	int m_width;
 	unsigned char*	m_buffer;
 
+private:
+  // uncopyable
+  renderTexture(renderTexture const&);
+  renderTexture& operator=(renderTexture const&);
+
 public:
 
 	renderTexture(int width,int height);

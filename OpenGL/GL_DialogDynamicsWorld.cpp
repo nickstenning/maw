@@ -24,14 +24,25 @@ subject to the following restrictions:
 #include "BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h"
 
 GL_DialogDynamicsWorld::GL_DialogDynamicsWorld()
+: m_collisionConfiguration(0)
+, m_broadphase(0)
+, m_constraintSolver(0)
+, m_dispatcher(0)
+, m_simplexSolver(0)
+, m_pdSolver(0)
+, m_dynamicsWorld(0)
+, m_upperBorder(0)
+, m_lowerBorder(0)
+, m_leftBorder(0)
+, m_rightBorder(0)
+, m_pickConstraint(0)
+, m_screenWidth(0)
+, m_screenHeight(0)
+, m_mouseOldX()
+, m_mouseOldY()
+, m_mouseButtons()
+, m_dialogs()
 {
-	m_upperBorder = 0;
-	m_lowerBorder =0;
-
-	m_pickConstraint = 0;
-	m_screenWidth = 0;
-	m_screenHeight = 0;
-
 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
 	m_broadphase = new btDbvtBroadphase();
 	m_constraintSolver = new btSequentialImpulseConstraintSolver();

@@ -36,6 +36,10 @@ struct GL_SliderControl;
 
 class GL_DialogDynamicsWorld
 {
+private:
+  // uncopyable
+  GL_DialogDynamicsWorld(GL_DialogDynamicsWorld const&);
+  GL_DialogDynamicsWorld& operator=(GL_DialogDynamicsWorld const&);
 
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
 	btDbvtBroadphase* m_broadphase;
