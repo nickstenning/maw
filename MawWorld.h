@@ -3,6 +3,7 @@
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
+#include "GLDebugDrawer.h"
 #include "GlutDemoApplication.h"
 
 class MawWorld : public GlutDemoApplication {
@@ -12,25 +13,20 @@ public:
 
   void stepSimulation(float dt);
 
-  MawWorld()
-  : m_collisionConfiguration(0)
-  , m_dispatcher(0)
-  , m_broadphase(0)
-  , m_solver(0)
-  , m_collisionShapes()
-  {};
-
+  MawWorld();
   ~MawWorld() { endPhysics(); }
 
-  void setDebugDrawer(btIDebugDraw& drawer);
   virtual void clientMoveAndDisplay();
   virtual void displayCallback();
-  virtual void keyboardCallback(unsigned char key, int x, int y);
+
+  void addUnicycle(btVector3 const& pos);
 
 private:
   // Uncopyable
   MawWorld(MawWorld const&);
   MawWorld& operator=(MawWorld const&);
+
+  btIDebugDraw* m_debugDrawer;
 
   btDefaultCollisionConfiguration*     m_collisionConfiguration;
   btCollisionDispatcher*               m_dispatcher;
