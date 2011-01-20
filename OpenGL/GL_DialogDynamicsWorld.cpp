@@ -68,7 +68,7 @@ GL_DialogDynamicsWorld::GL_DialogDynamicsWorld()
 	tr.setIdentity();
 
 	{
-		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(0,1,0),0);
+		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(0,1,0),btScalar(0));
 		m_upperBorder = new btCollisionObject();
 		tr.setOrigin(btVector3(0,-BT_LARGE_FLOAT,0));
 		m_upperBorder->setWorldTransform(tr);
@@ -77,7 +77,7 @@ GL_DialogDynamicsWorld::GL_DialogDynamicsWorld()
 	}
 
 	{
-		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(0,-1,0),0);
+		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(0,-1,0),btScalar(0));
 		m_lowerBorder = new btCollisionObject();
 
 		tr.setIdentity();
@@ -87,7 +87,7 @@ GL_DialogDynamicsWorld::GL_DialogDynamicsWorld()
 		m_dynamicsWorld->addCollisionObject(m_lowerBorder);
 	}
 	{
-		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(1,0,0),0);
+		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(1,0,0),btScalar(0));
 		m_leftBorder = new btCollisionObject();
 		tr.setIdentity();
 		tr.setOrigin(btVector3(-BT_LARGE_FLOAT,0,0));
@@ -96,7 +96,7 @@ GL_DialogDynamicsWorld::GL_DialogDynamicsWorld()
 		m_dynamicsWorld->addCollisionObject(m_leftBorder);
 	}
 	{
-		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(-1,0,0),0);
+		btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(-1,0,0),btScalar(0));
 		m_rightBorder = new btCollisionObject();
 		tr.setIdentity();
 		tr.setOrigin(btVector3(BT_LARGE_FLOAT,0,0));
