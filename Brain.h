@@ -10,7 +10,6 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#include <iostream>
 #include <vector>
 #include <cmath>
 
@@ -18,28 +17,36 @@
 
 typedef std::vector< double > Layer;
 typedef std::vector< std::vector<double> > Weights;
+typedef unsigned int uint;
+typedef double (^weightBlock)(uint, uint);
+
+class BrainDotPrinter;
 
 class Brain {
 public:
-  Brain(int id, int numInput, int numHidden, int numOutput);
+  Brain(uint numInput, uint numHidden, uint numOutput);
+  Brain(uint numInput, uint numHidden, uint numOutput, weightBlock block);
   ~Brain();
-
-  int const& id() const;
 
   double const& fitness() const;
   Brain const& fitness(double const&);
 
+  Weights weightsHidden() const;
+  Brain const& weightsHidden(Weights const&);
+  Weights weightsOutput() const;
+  Brain const& weightsOutput(Weights const&);
+
   std::vector<double> feedForward(std::vector<double> const& input);
 
   friend std::ostream& operator<<(std::ostream&, Brain const&);
+  friend class BrainDotPrinter;
 
 protected:
-  int m_id;
   double m_fitness;
 
-  int m_numInput;
-  int m_numHidden;
-  int m_numOutput;
+  uint m_numInput;
+  uint m_numHidden;
+  uint m_numOutput;
 
   Layer m_layerInput;
   Layer m_layerHidden;
@@ -48,14 +55,13 @@ protected:
   Weights m_weightsIH;
   Weights m_weightsHO;
 
-  void initLayer(Layer& l, int numNeurons, bool bias);
-  void initWeights(Weights& w, int numLayer1, int numLayer2, double (^block)(int, int));
+  void initLayer(Layer& l, uint numNeurons);
+  void initWeights(Weights& w, uint numLayer1, uint numLayer2, weightBlock block);
 
   inline double activationFunction(double x);
-
-  void cloneBrain(Brain const& from);
 };
 
+// Define operator for template in "util.h"
 std::ostream& operator<<(std::ostream&, std::vector<Brain> const&);
 
 #endif // BRAIN_H

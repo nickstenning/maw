@@ -24,7 +24,9 @@ std::vector<double> physics (double ang_0, double vel_0, double externalTorque) 
 
   // d_vel / d_t = torque
   double d_vel = 0.0;
-  d_vel += (-Pendulum::gravity/Pendulum::length) * sin(ang_0);
+
+  // NB: the angle is the angle to the *upper* vertical, measured clockwise.
+  d_vel += Pendulum::gravity/Pendulum::length * sin(ang_0);
   d_vel += externalTorque / (Pendulum::mass * Pendulum::length);
   result.push_back(d_vel);
 
@@ -62,10 +64,6 @@ Pendulum const& Pendulum::vel(double const& v) {
 }
 
 void Pendulum::step(double externalTorque) {
-  // Maximum applied torque
-  if (externalTorque > 2 * pi * mass * length) externalTorque = 2 * pi * mass * length;
-  if (externalTorque < -2 * pi * mass * length) externalTorque = -2 * pi * mass * length;
-
   rk_step(dt, externalTorque, physics);
 
   // Angular wrap-round
@@ -73,28 +71,28 @@ void Pendulum::step(double externalTorque) {
   while (m_ang < -pi) m_ang += 2 * pi;
 
   // Maximum speed
-  if (m_vel > 20 * pi)  m_vel = 20 * pi;
-  if (m_vel < -20 * pi) m_vel = -20 * pi;
+  if (m_vel > 10 * pi)  m_vel = 10 * pi;
+  if (m_vel < -10 * pi) m_vel = -10 * pi;
 
   m_time += dt;
 }
 
-void Pendulum::rk_step(double h, double t, rkBlock func) {
+void Pendulum::rk_step(double h, double torque, rkBlock func) {
   typedef std::vector<double> state;
 
-  state c1_v = func(m_ang, m_vel, t);
+  state c1_v = func(m_ang, m_vel, torque);
   double c1_ang = h * c1_v[0];
   double c1_vel = h * c1_v[1];
 
-  state c2_v = func(m_ang + c1_ang/2, m_vel + c1_vel/2, t);
+  state c2_v = func(m_ang + c1_ang/2, m_vel + c1_vel/2, torque);
   double c2_ang = h * c2_v[0];
   double c2_vel = h * c2_v[1];
 
-  state c3_v = func(m_ang + c2_ang/2, m_vel + c2_vel/2, t);
+  state c3_v = func(m_ang + c2_ang/2, m_vel + c2_vel/2, torque);
   double c3_ang = h * c3_v[0];
   double c3_vel = h * c3_v[1];
 
-  state c4_v = func(m_ang + c3_ang, m_vel + c3_vel, t);
+  state c4_v = func(m_ang + c3_ang, m_vel + c3_vel, torque);
   double c4_ang = h * c4_v[0];
   double c4_vel = h * c4_v[1];
 
