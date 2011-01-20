@@ -31,6 +31,7 @@
 		42740FE31281C738008FD575 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE21281C738008FD575 /* OpenGL.framework */; };
 		428E8ECE12721AD300D9347D /* ga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 428E8ECD12721AD300D9347D /* ga.cpp */; };
 		42B34D20126CD5CC009BCB90 /* MawWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */; };
+		42C33C2A12B80C3E00EDB692 /* Unicycle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C33C2912B80C3E00EDB692 /* Unicycle.cpp */; };
 		8DD76F650486A84900D96B5E /* maw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* maw.cpp */; settings = {ATTRIBUTES = (); }; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,8 @@
 		428E8ECD12721AD300D9347D /* ga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ga.cpp; sourceTree = "<group>"; };
 		42B34D1E126CD5CC009BCB90 /* MawWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MawWorld.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MawWorld.cpp; sourceTree = "<group>"; };
+		42C33C2812B80C3E00EDB692 /* Unicycle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Unicycle.h; sourceTree = "<group>"; };
+		42C33C2912B80C3E00EDB692 /* Unicycle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Unicycle.cpp; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* maw */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = maw; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -172,6 +175,8 @@
 		425CCE8812708C3A0025F51D /* MAW */ = {
 			isa = PBXGroup;
 			children = (
+				42C33C2812B80C3E00EDB692 /* Unicycle.h */,
+				42C33C2912B80C3E00EDB692 /* Unicycle.cpp */,
 				42B34D1F126CD5CC009BCB90 /* MawWorld.cpp */,
 				42B34D1E126CD5CC009BCB90 /* MawWorld.h */,
 				08FB7796FE84155DC02AAC07 /* maw.cpp */,
@@ -317,6 +322,7 @@
 				42740F9F1281C414008FD575 /* RenderTexture.cpp in Sources */,
 				42740FA01281C414008FD575 /* Win32AppMain.cpp in Sources */,
 				42740FA11281C414008FD575 /* Win32DemoApplication.cpp in Sources */,
+				42C33C2A12B80C3E00EDB692 /* Unicycle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +362,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = YES;
@@ -383,6 +390,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = YES;
