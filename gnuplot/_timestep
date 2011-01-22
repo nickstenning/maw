@@ -1,0 +1,6 @@
+if (!gif) pause pauseTime
+t = t + dt
+
+replot
+
+if (t + dt < T) reread

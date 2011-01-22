@@ -1,0 +1,37 @@
+if (!gif) load d.'/gnuplot/_anim'
+if (gif) load d.'/gnuplot/_gif'
+
+set size ratio -1 # scale 1:1
+
+set nokey
+set nomouse
+set macros
+
+r = 1.2
+
+set xrange [-r:r]
+set yrange [-r:r]
+
+t = 0
+T = 10000 # Should match numFrames
+dt = 4
+pauseTime = 0
+
+# 'every 1::t::t' plots only the 't'th point.
+# 'every 10::0::t' plots every 10th point from 0 to the 't'th point.
+
+point = "every 1::t::t u (sin($2)):(cos($2)) w p"
+bar = "every 1::t::t u (0):(0):(sin($2)):(cos($2)) w vectors"
+torque = "every 1::t::t u (sin($2)):(cos($2)):(($4 * 0.5)*cos(-$2)):(($4 * 0.5)*sin(-$2)) w vectors"
+fit = "every 1::t::t u (1):(-1):(0):(($5/10000)) w vectors"
+
+set style line 1 ps 3 pt 7         # pendulum ball
+set style arrow 1 nohead ls 1      # pendulum bar
+set style arrow 2 nohead ls 3 lw 3 # torque
+
+plot 'pendulum' @point  ls 1, \
+     'pendulum' @bar    as 1, \
+     'pendulum' @torque as 2, \
+     'pendulum' @fit    ls 4
+
+load d.'/gnuplot/_timestep'
