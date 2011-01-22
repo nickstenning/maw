@@ -1,4 +1,4 @@
-/*
+  /*
  *  BrainDotPrinter.cpp
  *  maw
  *
@@ -8,6 +8,14 @@
  */
 
 #include "BrainDotPrinter.h"
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+#include <sstream>
+
+#include "Brain.h"
 
 BrainDotPrinter::BrainDotPrinter(std::ostream& os)
 : m_os(&os)

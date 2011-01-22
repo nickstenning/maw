@@ -10,13 +10,14 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <numeric>
 
 #include "ga.h"
-
-#include "BrainDotPrinter.h"
+#include "Brain.h"
 
 #define POP_SIZE        20
-#define NUM_GENERATIONS 30
+#define NUM_GENERATIONS 100
+
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
 
@@ -50,27 +51,14 @@ int main (int argc, char* const argv[]) {
     // Sort generation by fitness
     std::sort(pop.begin(), pop.end(), ga::compareFitness);
 
-    double meanPhi = std::accumulate(pop.begin(), pop.end(), 0.0, ga::sumFitness) / pop.size();
+    double meanFitness = std::accumulate(pop.begin(), pop.end(), 0.0, ga::sumFitness) / pop.size();
 
     // Print generation stats
     std::cerr << COL << i
               << COL << pop[pop.size() - 1].fitness()
               << COL << pop[0].fitness()
-              << COL << meanPhi << "\n";
-
-    std::cerr << "# ";
-    for (size_t j = 0; j < pop.size(); j += 1) {
-      std::cerr << pop[j].fitness() << " ";
-    }
-    std::cerr << "\n";
+              << COL << meanFitness << "\n";
   }
-
-  BrainDotPrinter printer(std::cerr);
-
-  std::cerr << "# most fit: " << pop[0] << "\n";
-
-  // print dot to stderr
-  printer << pop[0] << "\n";
 
   // print data for run to stdout
   ga::computeFitness(pop[0], true);

@@ -11,9 +11,6 @@
 #define BRAIN_H
 
 #include <vector>
-#include <cmath>
-
-#include "util.h"
 
 typedef std::vector< double > Layer;
 typedef std::vector< std::vector<double> > Weights;
@@ -36,7 +33,7 @@ public:
   Weights weightsOutput() const;
   Brain const& weightsOutput(Weights const&);
 
-  std::vector<double> feedForward(std::vector<double> const& input);
+  std::vector<int> feedForward(std::vector<double> const& input);
 
   friend std::ostream& operator<<(std::ostream&, Brain const&);
   friend class BrainDotPrinter;
@@ -59,6 +56,7 @@ protected:
   void initWeights(Weights& w, uint numLayer1, uint numLayer2, weightBlock block);
 
   inline double activationFunction(double x);
+  inline int    terminationFunction(double x);
 };
 
 // Define operator for template in "util.h"

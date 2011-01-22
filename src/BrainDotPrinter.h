@@ -11,12 +11,13 @@
 #define BRAIN_DOT_PRINTER_H
 
 #include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <string>
+#include <vector>
 
-#include "Brain.h"
+typedef unsigned int uint;
 
+class Brain;
+ 
 class BrainDotPrinter {
 public:
   BrainDotPrinter(std::ostream& os);

@@ -63,7 +63,18 @@ Pendulum const& Pendulum::vel(double const& v) {
   return *this;
 }
 
-void Pendulum::step(double externalTorque) {
+void Pendulum::step(int bang) {
+
+  double externalTorque;
+
+  if (bang == 1) {
+    externalTorque = 1;
+  } else if (bang == -1) {
+    externalTorque = -1;
+  } else if (bang == 0) {
+    externalTorque = 0;
+  }
+
   rk_step(dt, externalTorque, physics);
 
   // Angular wrap-round

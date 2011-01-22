@@ -20,7 +20,7 @@ public:
   Pendulum();
   ~Pendulum();
 
-  void step(double externalTorque);
+  void step(int bang); // Bang-bang control: +1, -1, or 0.
 
   double const& time() const;
   double const& ang() const;

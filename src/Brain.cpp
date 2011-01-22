@@ -9,6 +9,11 @@
 
 #include "Brain.h"
 
+#include <vector>
+#include <cmath>
+
+#include "util.h"
+
 Brain::Brain(uint numInput, uint numHidden, uint numOutput)
 : m_numInput(numInput)
 , m_numHidden(numHidden)
@@ -23,21 +28,13 @@ Brain::Brain(uint numInput, uint numHidden, uint numOutput)
   initLayer(m_layerInput, m_numInput);
   initLayer(m_layerHidden, m_numHidden);
   initLayer(m_layerOutput, m_numOutput);
-
+  
   initWeights(m_weightsIH, m_numInput, m_numHidden, ^ (uint, uint) {
-    // Set I->H weights in range [-1/sqrt(numInput), 1/sqrt(numInput)]
-    //double ::lim = 1 / sqrt( static_cast<double> (numInput) );
-    //return ((NORMRAND() * 2 * lim) - lim);
-
-    return ((NORMRAND() * 2) - 1);
+    return util::rand(-1, 1);
   });
 
   initWeights(m_weightsHO, m_numHidden, m_numOutput, ^ (uint, uint) {
-    // Set I->H weights in range [-1/sqrt(numHidden), 1/sqrt(numHidden)]
-    //double ::lim = 1 / sqrt( static_cast<double> (numHidden) );
-    //return ((NORMRAND() * 2 * lim) - lim);
-
-    return ((NORMRAND() * 2) - 1);
+    return util::rand(-1, 1);
   });
 }
 
@@ -93,7 +90,7 @@ Brain const& Brain::weightsOutput(Weights const& w) {
   return *this;
 }
 
-std::vector<double> Brain::feedForward (std::vector<double> const& input) {
+std::vector<int> Brain::feedForward (std::vector<double> const& input) {
   for(uint i = 0; i < m_numInput; i += 1) m_layerInput[i] = input[i];
 
   // Propagate to hidden layer
@@ -104,7 +101,7 @@ std::vector<double> Brain::feedForward (std::vector<double> const& input) {
       m_layerHidden[j] += m_layerInput[k] * m_weightsIH[k][j];
     }
 
-    m_layerHidden[j] = activationFunction( m_layerHidden[j] );
+    m_layerHidden[j] = this->activationFunction( m_layerHidden[j] );
   }
 
   // Propagate to output layer
@@ -115,11 +112,14 @@ std::vector<double> Brain::feedForward (std::vector<double> const& input) {
       m_layerOutput[j] += m_layerHidden[k] * m_weightsHO[k][j];
     }
 
-    //m_layerOutput[j] = activationFunction( m_layerOutput[j] );
+    m_layerOutput[j] = this->activationFunction( m_layerOutput[j] );
   }
 
-  std::vector<double> output;
-  for(uint i = 0; i < m_numOutput; i += 1) output.push_back(m_layerOutput[i]);
+  std::vector<int> output;
+  for(uint i = 0; i < m_numOutput; i += 1) {
+    int pinnedOutput = this->terminationFunction( m_layerOutput[i] );
+    output.push_back(pinnedOutput);
+  }
 
   return output;
 }
@@ -146,11 +146,17 @@ void Brain::initWeights (Weights& weights, uint numLayer1, uint numLayer2, doubl
 }
 
 inline double Brain::activationFunction (double x) {
-  // Sigmoid
-  //return 1 / (1 + exp(-10*x));
+  return tanh(x);
+}
 
-  // Direct
-  return x;
+inline int Brain::terminationFunction (double x) {
+  if (x > 0.75) {
+    return 1;
+  } else if (x < -0.75) {
+    return -1;
+  } else {
+    return 0;
+  }
 }
 
 // How to print a brain

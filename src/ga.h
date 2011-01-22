@@ -11,18 +11,13 @@
 #define GA_H
 
 #include <vector>
-#include <numeric>
-#include <assert.h>
-
-#include "Pendulum.h"
-#include "Brain.h"
-
-#include "util.h"
 
 #define NUM_NEURONS_INPUT  2
-#define NUM_NEURONS_HIDDEN 10
+#define NUM_NEURONS_HIDDEN 5
 #define NUM_NEURONS_OUTPUT 1
 #define MUTATION_RATE      0.005
+
+class Brain;
 
 namespace ga {
 

@@ -9,6 +9,15 @@
 
 #include "ga.h"
 
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <assert.h>
+
+#include "Pendulum.h"
+#include "Brain.h"
+#include "util.h"
+
 namespace ga {
 
   double diracDelta(double x, double a) {
@@ -75,9 +84,9 @@ namespace ga {
     double fitness = 1.0;
 
     std::vector<double> input;
-    std::vector<double> output;
+    std::vector<int> output;
 
-    pdl.ang((NORMRAND() * 2 * pdl.pi) - pdl.pi);
+    pdl.ang(util::rand(-pdl.pi/20, pdl.pi/20));
     pdl.vel(0);
 
     while (pdl.time() < 100) {
@@ -114,7 +123,7 @@ namespace ga {
     for (size_t i = 0; i < numToPick; i += 1) {
 
       double subTotal = 0.0;
-      double pickPoint = NORMRAND() * pieSize;
+      double pickPoint = util::rand(0, pieSize);
 
       // Find the index that that point in the pie corresponds to.
       for (size_t j = 0; j < pie.size(); j += 1) {
@@ -143,7 +152,6 @@ namespace ga {
                                     aOutput[0].size() == bOutput[0].size());
 
     assert(parentsHaveSameTopology);
-
 
     Brain offspring(aHidden.size(), aHidden[0].size(), aOutput[0].size());
 
@@ -196,7 +204,7 @@ namespace ga {
     for (i = 0; i < wHidden.size(); i += 1) {
       for (j = 0; j < wHidden[i].size(); j += 1) {
         if (rand() % mutate == 0) {
-          val = sqrt(-log(NORMRAND()));
+          val = sqrt(-log(util::rand()));
           if (rand() % 2 == 1) {
             val = val * -1;
           }
@@ -209,7 +217,7 @@ namespace ga {
     for (i = 0; i < wOutput.size(); i += 1) {
       for (j = 0; j < wOutput[i].size(); j += 1) {
         if (rand() % mutate == 0) {
-          val = sqrt(-log(NORMRAND()));
+          val = sqrt(-log(util::rand()));
           if (rand() % 2 == 1) {
             val = val * -1;
           }

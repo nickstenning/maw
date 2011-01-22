@@ -13,8 +13,10 @@
 #include <iostream>
 #include <vector>
 
-// Normalised RNG: returns a result in [0,1]
-#define NORMRAND() static_cast<double>(rand()) / RAND_MAX
+namespace util {
+  // Normalised RNG: returns a result in [a, b)
+  double rand (double a = 0, double b = 1);
+}
 
 // Teach IOStream how to print a std::vector<whatever>
 template<typename T>
