@@ -5,10 +5,11 @@
 
 #include "ga.h"
 #include "brain.h"
+#include "brain_dot_printer.h"
 #include "util.h"
 
 #define POP_SIZE        50
-#define NUM_GENERATIONS 50
+#define NUM_GENERATIONS 500
 
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
@@ -47,6 +48,10 @@ int main (int /*argc*/, char* const /*argv*/[]) {
   std::cout << "# FITNESS = " << pop[0].fitness() << "\n";
   std::cout << "# \n";
   ga::printProperties(std::cout);
+  std::cout << "# \n";
+  BrainDotPrinter bp(std::cout);
+  bp.prefix("# ");
+  bp << pop[0] << "\n";
 
   ga::computeFitness(pop[0], true);
 

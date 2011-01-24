@@ -17,8 +17,11 @@
 
 // Mutation probability (chance we do any mutation at all)
 #define MUTATION_PROB 0.9
-#define MUTATION_RATE 0.01
-#define MUTATION_SIZE 1.0
+// Mutation rate (chance of mutation any one neuron).
+// Maybe set at 1 / number of neurons available to mutate?
+#define MUTATION_RATE 0.1
+// Size of weight change
+#define MUTATION_SIZE 50.0
 
 // How many random init conds to average over?
 #define NUM_RUNS 3

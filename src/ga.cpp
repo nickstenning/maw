@@ -168,10 +168,12 @@ namespace ga {
     Weights wHidden = brain.weightsHidden();
     Weights wOutput = brain.weightsOutput();
 
-    // Mutate each weight with a probability of 1/MUTATION_RATE by adding num in [-,1)
+    // Mutate each weight with a probability of 1/MUTATION_RATE by
+    // adding num in [-MUTATION_SIZE,MUTATION_SIZE)
     for (i = 0; i < wHidden.size(); i += 1) {
       for (j = 0; j < wHidden[i].size(); j += 1) {
         if (util::choose(MUTATION_RATE)) {
+          // std::cerr << "mI" << j << "H" << i << "\n";
           wHidden[i][j] += util::rand(-MUTATION_SIZE, MUTATION_SIZE);
         }
       }
@@ -180,6 +182,7 @@ namespace ga {
     for (i = 0; i < wOutput.size(); i += 1) {
       for (j = 0; j < wOutput[i].size(); j += 1) {
         if (util::choose(MUTATION_RATE)) {
+          // std::cerr << "mH" << j << "O" << i << "\n";
           wOutput[i][j] += util::rand(-MUTATION_SIZE, MUTATION_SIZE);
         }
       }

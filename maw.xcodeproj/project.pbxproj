@@ -12,6 +12,7 @@
 		425CCD2F127075ED0025F51D /* LinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425CCD2E127075ED0025F51D /* LinearMath.framework */; };
 		426DE32712EDE5D30026764E /* brain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426DE32312EDE5D30026764E /* brain.cpp */; };
 		426DE32812EDE5D30026764E /* pendulum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426DE32512EDE5D30026764E /* pendulum.cpp */; };
+		426DE44612EE1E8A0026764E /* brain_dot_printer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426DE44412EE1E8A0026764E /* brain_dot_printer.cpp */; };
 		42740FE11281C738008FD575 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE01281C738008FD575 /* GLUT.framework */; };
 		42740FE31281C738008FD575 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE21281C738008FD575 /* OpenGL.framework */; };
 		4280EA7812E8588600722801 /* 2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4280EA6D12E8588600722801 /* 2d.cpp */; };
@@ -55,6 +56,8 @@
 		426DE32412EDE5D30026764E /* brain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = brain.h; path = src/brain.h; sourceTree = "<group>"; };
 		426DE32512EDE5D30026764E /* pendulum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pendulum.cpp; path = src/pendulum.cpp; sourceTree = "<group>"; };
 		426DE32612EDE5D30026764E /* pendulum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pendulum.h; path = src/pendulum.h; sourceTree = "<group>"; };
+		426DE44412EE1E8A0026764E /* brain_dot_printer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = brain_dot_printer.cpp; path = src/brain_dot_printer.cpp; sourceTree = "<group>"; };
+		426DE44512EE1E8A0026764E /* brain_dot_printer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = brain_dot_printer.h; path = src/brain_dot_printer.h; sourceTree = "<group>"; };
 		42740FE01281C738008FD575 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		42740FE21281C738008FD575 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		4280EA6D12E8588600722801 /* 2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = 2d.cpp; path = src/2d.cpp; sourceTree = "<group>"; };
@@ -141,6 +144,8 @@
 		4280EA8912E8589300722801 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				426DE44412EE1E8A0026764E /* brain_dot_printer.cpp */,
+				426DE44512EE1E8A0026764E /* brain_dot_printer.h */,
 				426DE32312EDE5D30026764E /* brain.cpp */,
 				426DE32412EDE5D30026764E /* brain.h */,
 				426DE32512EDE5D30026764E /* pendulum.cpp */,
@@ -288,6 +293,7 @@
 				4280EA7D12E8588600722801 /* util.cpp in Sources */,
 				426DE32712EDE5D30026764E /* brain.cpp in Sources */,
 				426DE32812EDE5D30026764E /* pendulum.cpp in Sources */,
+				426DE44612EE1E8A0026764E /* brain_dot_printer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
