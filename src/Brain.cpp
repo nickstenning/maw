@@ -14,6 +14,20 @@
 
 #include "util.h"
 
+Weights randomWeights(uint layer1, uint layer2) {
+  Weights w(layer1);
+
+  for (uint i = 0; i < layer1; i += 1) {
+    std::vector<double> x(layer2);
+    w[i] = x;
+
+    for (uint j = 0; j < layer2; j += 1) {
+      w[i][j] = util::rand(-1, 1);
+    }
+  }
+  return w;
+}
+
 Brain::Brain(uint numInput, uint numHidden, uint numOutput)
 : m_numInput(numInput)
 , m_numHidden(numHidden)
@@ -21,40 +35,13 @@ Brain::Brain(uint numInput, uint numHidden, uint numOutput)
 , m_layerInput()
 , m_layerHidden()
 , m_layerOutput()
-, m_weightsIH()
-, m_weightsHO()
+, m_weightsIH(randomWeights(m_numInput, m_numHidden))
+, m_weightsHO(randomWeights(m_numHidden, m_numOutput))
 , m_fitness(0.0)
 {
   initLayer(m_layerInput, m_numInput);
   initLayer(m_layerHidden, m_numHidden);
   initLayer(m_layerOutput, m_numOutput);
-  
-  initWeights(m_weightsIH, m_numInput, m_numHidden, ^ (uint, uint) {
-    return util::rand(-1, 1);
-  });
-
-  initWeights(m_weightsHO, m_numHidden, m_numOutput, ^ (uint, uint) {
-    return util::rand(-1, 1);
-  });
-}
-
-Brain::Brain(uint numInput, uint numHidden, uint numOutput, weightBlock block)
-: m_numInput(numInput)
-, m_numHidden(numHidden)
-, m_numOutput(numOutput)
-, m_layerInput()
-, m_layerHidden()
-, m_layerOutput()
-, m_weightsIH()
-, m_weightsHO()
-, m_fitness(0.0)
-{
-  initLayer(m_layerInput, m_numInput);
-  initLayer(m_layerHidden, m_numHidden);
-  initLayer(m_layerOutput, m_numOutput);
-
-  initWeights(m_weightsIH, m_numInput, m_numHidden, block);
-  initWeights(m_weightsHO, m_numHidden, m_numOutput, block);
 }
 
 Brain::~Brain() {}
@@ -68,25 +55,21 @@ Brain const& Brain::fitness(double const& f) {
   return *this;
 }
 
-Weights Brain::weightsHidden() const {
+Weights const& Brain::weightsHidden() const {
   return m_weightsIH;
 }
 
-Weights Brain::weightsOutput() const {
+Weights const& Brain::weightsOutput() const {
   return m_weightsHO;
 }
 
-Brain const& Brain::weightsHidden(Weights const& w) {
-  initWeights(m_weightsIH, m_numInput, m_numHidden, ^ (uint i, uint j) {
-    return w[i][j];
-  });
+Brain& Brain::weightsHidden(Weights const& w) {
+  m_weightsIH = w;
   return *this;
 }
 
-Brain const& Brain::weightsOutput(Weights const& w) {
-  initWeights(m_weightsHO, m_numHidden, m_numOutput, ^ (uint i, uint j) {
-    return w[i][j];
-  });
+Brain& Brain::weightsOutput(Weights const& w) {
+  m_weightsHO = w;
   return *this;
 }
 
@@ -129,19 +112,6 @@ void Brain::initLayer(Layer& layer, uint numNeurons) {
 
   for (uint i = 0; i < numNeurons; i += 1) {
     layer.push_back(0.0);
-  }
-}
-
-void Brain::initWeights (Weights& weights, uint numLayer1, uint numLayer2, double (^block)(uint, uint)) {
-  weights.clear();
-
-  for (uint i = 0; i < numLayer1; i += 1) {
-    std::vector<double> x;
-    weights.push_back(x);
-
-    for (uint j = 0; j < numLayer2; j += 1) {
-      weights[i].push_back(block(i, j));
-    }
   }
 }
 

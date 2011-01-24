@@ -15,23 +15,21 @@
 typedef std::vector< double > Layer;
 typedef std::vector< std::vector<double> > Weights;
 typedef unsigned int uint;
-typedef double (^weightBlock)(uint, uint);
 
 class BrainDotPrinter;
 
 class Brain {
 public:
   Brain(uint numInput, uint numHidden, uint numOutput);
-  Brain(uint numInput, uint numHidden, uint numOutput, weightBlock block);
   ~Brain();
 
   double const& fitness() const;
   Brain const& fitness(double const&);
 
-  Weights weightsHidden() const;
-  Brain const& weightsHidden(Weights const&);
-  Weights weightsOutput() const;
-  Brain const& weightsOutput(Weights const&);
+  Weights const& weightsHidden() const;
+  Brain& weightsHidden(Weights const&);
+  Weights const& weightsOutput() const;
+  Brain& weightsOutput(Weights const&);
 
   std::vector<int> feedForward(std::vector<double> const& input);
 
@@ -53,7 +51,6 @@ protected:
   Weights m_weightsHO;
 
   void initLayer(Layer& l, uint numNeurons);
-  void initWeights(Weights& w, uint numLayer1, uint numLayer2, weightBlock block);
 
   inline double activationFunction(double x);
   inline int    terminationFunction(double x);
