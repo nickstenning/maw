@@ -1,6 +1,7 @@
 #ifndef GA_H
 #define GA_H
 
+#include <iostream>
 #include <vector>
 
 // NN properties
@@ -9,23 +10,28 @@
 #define OUTPUT_SIZE 1
 
 // Proportion of the fitness-rank-ordered population guaranteed to be saved.
-#define ELITISM 0.25
+#define ELITISM 0.1
 
 // Crossover probability for any given member of the new generation.
-#define CROSSOVER_PROB 0.2
+#define CROSSOVER_PROB 0.1
 
 // Mutation probability (chance we do any mutation at all)
-#define MUTATION_PROB 0.8
-#define MUTATION_RATE 0.005
+#define MUTATION_PROB 0.9
+#define MUTATION_RATE 0.01
 #define MUTATION_SIZE 1.0
 
+// How many random init conds to average over?
+#define NUM_RUNS 3
+
 // Pendulum config
-#define EVAL_TIME 100.0
+#define BANG_SIZE 0.3
+#define EVAL_TIME 10.0
 #define PI        3.141592653589793238462643
 #define INIT_ANG  PI/20.0
-#define SCORE_ANG PI/20.0
+#define SCORE_ANG PI/24.0
 
 class Brain;
+class Pendulum;
 
 namespace ga {
 
@@ -37,12 +43,14 @@ namespace ga {
   bool compareFitness (Brain const& a, Brain const& b);
   double sumFitness (double& a, Brain const& b);
   void computeFitness (Brain& brain, bool print = false);
+  double computeFitnessForRun (Brain& brain, Pendulum& pdl, bool print = false);
 
   Brain piePick (population const& pop);
 
   void crossover (Brain&, Brain const&);
   void mutate (Brain&);
 
+  void printProperties (std::ostream& os);
 }
 
 #endif // GA_H

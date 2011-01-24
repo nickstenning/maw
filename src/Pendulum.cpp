@@ -44,28 +44,22 @@ double const& Pendulum::vel() const {
   return m_vel;
 }
 
-Pendulum const& Pendulum::ang(double const& a) {
+Pendulum& Pendulum::time(double const& t) {
+  m_time = t;
+  return *this;
+}
+
+Pendulum& Pendulum::ang(double const& a) {
   m_ang = a;
   return *this;
 }
 
-Pendulum const& Pendulum::vel(double const& v) {
+Pendulum& Pendulum::vel(double const& v) {
   m_vel = v;
   return *this;
 }
 
-void Pendulum::step(int bang) {
-
-  double externalTorque;
-
-  if (bang == 1) {
-    externalTorque = 1;
-  } else if (bang == -1) {
-    externalTorque = -1;
-  } else if (bang == 0) {
-    externalTorque = 0;
-  }
-
+void Pendulum::step(double externalTorque) {
   rk_step(dt, externalTorque, physics);
 
   // Angular wrap-round

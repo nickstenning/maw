@@ -58,16 +58,34 @@ namespace ga {
     }
   }
 
-  void computeFitness (Brain& brain, bool print) {
+  void computeFitness(Brain& brain, bool print) {
     Pendulum pdl;
-
     double fitness = 0.0;
 
+    if (print) {
+      // Only do one run, and print it.
+      pdl.ang(util::rand(-INIT_ANG, INIT_ANG))
+         .vel(0.0)
+         .time(0.0);
+
+      computeFitnessForRun(brain, pdl, true);
+
+    } else {
+      for (size_t i = 0; i < NUM_RUNS; i += 1) {
+        pdl.ang(util::rand(-INIT_ANG, INIT_ANG))
+           .vel(0.0)
+           .time(0.0);
+
+        fitness += computeFitnessForRun(brain, pdl);
+      }
+      brain.fitness(fitness / NUM_RUNS);
+    }
+  }
+
+  double computeFitnessForRun(Brain& brain, Pendulum& pdl, bool print) {
+    double fitness = 0.0;
     std::vector<double> input;
     std::vector<int> output;
-
-    pdl.ang(util::rand(-INIT_ANG, INIT_ANG));
-    pdl.vel(0);
 
     while (pdl.time() < EVAL_TIME) {
       input.clear();
@@ -77,19 +95,23 @@ namespace ga {
 
       output = brain.feedForward(input);
 
-      pdl.step(output[0]);
+      pdl.step(BANG_SIZE * output[0]);
 
       if (print) {
         std::cout << pdl.time() << "\t" << pdl.ang() << "\t"
-                  << pdl.vel() << "\t" << output[0] << "\t"
+                  << pdl.vel() << "\t" << BANG_SIZE * output[0] << "\t"
                   << fitness << "\n";
       }
 
-      bool inDelta = abs(pdl.ang()) < SCORE_ANG;
-      if (inDelta) fitness += (pdl.dt / EVAL_TIME);
+      bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
+      if (inScoringZone) {
+        fitness += (pdl.dt / EVAL_TIME) * util::diracDelta(pdl.ang());
+      } else {
+        fitness = std::max(0.0, fitness - (pdl.dt / EVAL_TIME));
+      }
     }
 
-    brain.fitness(fitness);
+    return fitness;
   }
 
   Brain piePick (population const& pop) {
@@ -146,11 +168,11 @@ namespace ga {
     Weights wHidden = brain.weightsHidden();
     Weights wOutput = brain.weightsOutput();
 
-    // Mutate each weight with a probability of 1/MUTATION_RATE by adding num in [-1,1)
+    // Mutate each weight with a probability of 1/MUTATION_RATE by adding num in [-,1)
     for (i = 0; i < wHidden.size(); i += 1) {
       for (j = 0; j < wHidden[i].size(); j += 1) {
         if (util::choose(MUTATION_RATE)) {
-          wHidden[i][j] += util::rand(-1, 1);
+          wHidden[i][j] += util::rand(-MUTATION_SIZE, MUTATION_SIZE);
         }
       }
     }
@@ -158,7 +180,7 @@ namespace ga {
     for (i = 0; i < wOutput.size(); i += 1) {
       for (j = 0; j < wOutput[i].size(); j += 1) {
         if (util::choose(MUTATION_RATE)) {
-          wOutput[i][j] += util::rand(-1, 1);
+          wOutput[i][j] += util::rand(-MUTATION_SIZE, MUTATION_SIZE);
         }
       }
     }
@@ -173,6 +195,22 @@ namespace ga {
 
   double sumFitness (double& a, Brain const& b) {
     return (a + b.fitness());
+  }
+
+  void printProperties (std::ostream& os) {
+    os << "# INPUT_SIZE     = " << INPUT_SIZE     << "\n"
+       << "# HIDDEN_SIZE    = " << HIDDEN_SIZE    << "\n"
+       << "# OUTPUT_SIZE    = " << OUTPUT_SIZE    << "\n"
+       << "# ELITISM        = " << ELITISM        << "\n"
+       << "# CROSSOVER_PROB = " << CROSSOVER_PROB << "\n"
+       << "# MUTATION_PROB  = " << MUTATION_PROB  << "\n"
+       << "# MUTATION_RATE  = " << MUTATION_RATE  << "\n"
+       << "# MUTATION_SIZE  = " << MUTATION_SIZE  << "\n"
+       << "# NUM_RUNS       = " << NUM_RUNS       << "\n"
+       << "# BANG_SIZE      = " << BANG_SIZE      << "\n"
+       << "# EVAL_TIME      = " << EVAL_TIME      << "\n"
+       << "# INIT_ANG       = " << INIT_ANG       << "\n"
+       << "# SCORE_ANG      = " << SCORE_ANG      << "\n";
   }
 
 }

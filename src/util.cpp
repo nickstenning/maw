@@ -5,7 +5,6 @@
 
 unsigned int util::initRNG (unsigned int seed) {
   srand(seed);
-  std::cerr << "# RNG seed: " << seed << "\n";
   return seed;
 }
 

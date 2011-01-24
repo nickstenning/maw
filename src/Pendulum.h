@@ -11,14 +11,15 @@ public:
   Pendulum();
   ~Pendulum();
 
-  void step(int bang); // Bang-bang control: +1, -1, or 0.
+  void step(double externalTorque);
 
   double const& time() const;
   double const& ang() const;
   double const& vel() const;
 
-  Pendulum const& ang(double const& a);
-  Pendulum const& vel(double const& v);
+  Pendulum& time(double const& t);
+  Pendulum& ang(double const& a);
+  Pendulum& vel(double const& v);
 
   static const double pi;
   static const double gravity;

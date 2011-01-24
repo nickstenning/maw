@@ -13,7 +13,7 @@ set xrange [-r:r]
 set yrange [-r:r]
 
 t = 0
-T = 10000 # Should match numFrames
+T = 1000 # Should match numFrames
 dt = 4
 pauseTime = 0
 

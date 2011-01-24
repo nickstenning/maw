@@ -5,25 +5,17 @@
 
 #include "ga.h"
 #include "brain.h"
+#include "util.h"
 
-#define POP_SIZE        20
-#define NUM_GENERATIONS 5
+#define POP_SIZE        50
+#define NUM_GENERATIONS 50
 
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
 
-int main (int argc, char* const argv[]) {
-  // Set up RNG
-  unsigned int seed;
-
-  if (argc == 2) {
-    seed = atoi(argv[1]);
-  } else {
-    seed = std::time(0);
-  }
-
-  srand(seed);
-  std::cerr << "Initialised RNG with seed " << seed << "\n";
+int main (int /*argc*/, char* const /*argv*/[]) {
+  unsigned int seed = util::initRNG();
+  std::cout << "# RNG_SEED = " << seed << "\n";
 
   // Initialise GA population
   ga::population pop;
@@ -52,9 +44,11 @@ int main (int argc, char* const argv[]) {
   }
 
   // print data for run to stdout
-  // ga::computeFitness(pop[0], true);
-  // std::cout << "# And worst one:\n";
-  ga::computeFitness(pop[pop.size() - 1], true);
+  std::cout << "# FITNESS = " << pop[0].fitness() << "\n";
+  std::cout << "# \n";
+  ga::printProperties(std::cout);
+
+  ga::computeFitness(pop[0], true);
 
   return 0;
 }
