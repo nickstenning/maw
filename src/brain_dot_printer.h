@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-typedef unsigned int uint;
-
 class Brain;
 
 class BrainDotPrinter {
@@ -15,8 +13,10 @@ public:
   BrainDotPrinter(BrainDotPrinter const& bp);
   ~BrainDotPrinter();
 
-  BrainDotPrinter& operator=(BrainDotPrinter const&);
+  std::string const& prefix() const;
+  BrainDotPrinter& prefix(const char prefix[]);
 
+  BrainDotPrinter& operator=(BrainDotPrinter const&);
   BrainDotPrinter& operator<<(Brain const& b);
 
   template<typename T>
@@ -27,8 +27,9 @@ public:
 protected:
   std::ostream* m_os;
   std::vector<std::string> m_colours;
+  std::string m_prefix;
 
-  void printWeight(std::ostream&, std::string, uint, std::string, uint, double);
+  void printWeight(std::ostream&, std::string, size_t, std::string, size_t, double);
   void initColours();
 };
 
