@@ -1,18 +1,8 @@
-/*
- *  Brain.cpp
- *  maw
- *
- *  Created by Nick Stenning on 21/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
-#include "Brain.h"
-
 #include <vector>
 #include <cmath>
 
 #include "util.h"
+#include "brain.h"
 
 Weights randomWeights(uint layer1, uint layer2) {
   Weights w(layer1);

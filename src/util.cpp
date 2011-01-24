@@ -1,7 +1,7 @@
-#include "util.h"
-
 #include <cmath>
 #include <iostream>
+
+#include "util.h"
 
 unsigned int util::initRNG (unsigned int seed) {
   srand(seed);

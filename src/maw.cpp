@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "MawWorld.h"
+#include "maw_world.h"
 #include "GlutStuff.h"
 
 int main (int argc, char** argv) {

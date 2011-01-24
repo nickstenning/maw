@@ -1,4 +1,4 @@
-#include "MawWorld.h"
+#include "maw_world.h"
 
 MawWorld::MawWorld ()
 : m_collisionConfiguration(0)

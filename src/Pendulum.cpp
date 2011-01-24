@@ -1,13 +1,4 @@
-/*
- *  Pendulum.cpp
- *  maw
- *
- *  Created by Nick Stenning on 21/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
-#include "Pendulum.h"
+#include "pendulum.h"
 
 const double Pendulum::pi      = 3.141592653589793238462643;
 const double Pendulum::gravity = 9.81; // m s^-2

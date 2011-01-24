@@ -1,19 +1,10 @@
-/*
- *  2d.cpp
- *  maw
- *
- *  Created by Nick Stenning on 21/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
 #include <vector>
 #include <iostream>
 #include <iomanip>
 #include <numeric>
 
 #include "ga.h"
-#include "Brain.h"
+#include "brain.h"
 
 #define POP_SIZE        20
 #define NUM_GENERATIONS 100
@@ -40,9 +31,9 @@ int main (int argc, char* const argv[]) {
 
   std::cerr << std::left;
   std::cerr << COL << "# gen"
-            << COL << "min"
-            << COL << "max"
-            << COL << "mean" << "\n";
+            << COL << "minFit"
+            << COL << "maxFit"
+            << COL << "meanFit" << "\n";
 
   // GA
   for (size_t i = 0; i < NUM_GENERATIONS; i += 1) {

@@ -1,21 +1,11 @@
-  /*
- *  BrainDotPrinter.cpp
- *  maw
- *
- *  Created by Nick Stenning on 28/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
-#include "BrainDotPrinter.h"
-
 #include <iostream>
 #include <string>
 #include <vector>
 #include <iomanip>
 #include <sstream>
 
-#include "Brain.h"
+#include "brain.h"
+#include "brain_dot_printer.h"
 
 BrainDotPrinter::BrainDotPrinter(std::ostream& os)
 : m_os(&os)

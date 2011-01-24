@@ -1,12 +1,3 @@
-/*
- *  ga.h
- *  maw
- *
- *  Created by Nick Stenning on 22/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
 #ifndef GA_H
 #define GA_H
 

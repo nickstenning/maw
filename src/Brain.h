@@ -1,12 +1,3 @@
-/*
- *  Brain.h
- *  maw
- *
- *  Created by Nick Stenning on 21/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
 #ifndef BRAIN_H
 #define BRAIN_H
 

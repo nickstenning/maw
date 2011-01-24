@@ -1,12 +1,3 @@
-/*
- *  BrainDotPrinter.h
- *  maw
- *
- *  Created by Nick Stenning on 28/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
 #ifndef BRAIN_DOT_PRINTER_H
 #define BRAIN_DOT_PRINTER_H
 
@@ -17,7 +8,7 @@
 typedef unsigned int uint;
 
 class Brain;
- 
+
 class BrainDotPrinter {
 public:
   BrainDotPrinter(std::ostream& os);

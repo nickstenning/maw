@@ -1,22 +1,12 @@
-/*
- *  ga.cpp
- *  maw
- *
- *  Created by Nick Stenning on 22/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
-#include "ga.h"
-
 #include <iostream>
 #include <vector>
 #include <numeric>
 #include <assert.h>
 
-#include "Pendulum.h"
-#include "Brain.h"
+#include "pendulum.h"
+#include "brain.h"
 #include "util.h"
+#include "ga.h"
 
 namespace ga {
 
