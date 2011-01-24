@@ -1,12 +1,3 @@
-/*
- *  util.h
- *  maw
- *
- *  Created by Nick Stenning on 22/10/2010.
- *  Copyright 2010 Nick Stenning. All rights reserved.
- *
- */
-
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -14,8 +5,14 @@
 #include <vector>
 
 namespace util {
+  // Simple helper to initialize RNG
+  unsigned int initRNG (unsigned int seed = std::time(0));
+
   // Normalised RNG: returns a result in [a, b)
   double rand (double a = 0, double b = 1);
+
+  // Dirac delta function
+  double diracDelta(double x = 0, double a = 1);
 }
 
 // Teach IOStream how to print a std::vector<whatever>

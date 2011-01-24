@@ -20,10 +20,6 @@
 
 namespace ga {
 
-  double diracDelta(double x, double a) {
-    return (a) * exp(-(x*x*a*a));
-  }
-
   void init (population& pop, size_t popSize) {
     for (size_t i = 0; i < popSize; i += 1) {
       Brain b(NUM_NEURONS_INPUT, NUM_NEURONS_HIDDEN, NUM_NEURONS_OUTPUT);
@@ -105,8 +101,8 @@ namespace ga {
                   << fitness << "\n";
       }
 
-      double angScore = diracDelta(pdl.ang(), 100);
-      double velScore = diracDelta(pdl.vel(), 1);
+      double angScore = util::diracDelta(pdl.ang(), 100);
+      double velScore = util::diracDelta(pdl.vel(), 1);
 
       fitness += angScore * velScore;
     }
