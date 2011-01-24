@@ -14,6 +14,10 @@ double util::rand (double a, double b) {
   return (b - a) * normed + a;
 }
 
+bool util::choose (double prob) {
+  return (util::rand(0,1) < prob);
+}
+
 double util::diracDelta(double x, double a) {
   return (a) * exp(-(x*x*a*a));
 }

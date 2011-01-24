@@ -7,7 +7,7 @@
 #include "brain.h"
 
 #define POP_SIZE        20
-#define NUM_GENERATIONS 100
+#define NUM_GENERATIONS 5
 
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
@@ -52,7 +52,9 @@ int main (int argc, char* const argv[]) {
   }
 
   // print data for run to stdout
-  ga::computeFitness(pop[0], true);
+  // ga::computeFitness(pop[0], true);
+  // std::cout << "# And worst one:\n";
+  ga::computeFitness(pop[pop.size() - 1], true);
 
   return 0;
 }

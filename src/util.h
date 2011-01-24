@@ -11,6 +11,9 @@ namespace util {
   // Normalised RNG: returns a result in [a, b)
   double rand (double a = 0, double b = 1);
 
+  // Boolean returning true with probability specified by argument.
+  bool choose (double prob = 0.5);
+
   // Dirac delta function
   double diracDelta(double x = 0, double a = 1);
 }

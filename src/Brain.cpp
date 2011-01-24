@@ -4,29 +4,29 @@
 #include "util.h"
 #include "brain.h"
 
-Weights randomWeights(uint layer1, uint layer2) {
+Weights randomWeights(size_t layer1, size_t layer2) {
   Weights w(layer1);
 
-  for (uint i = 0; i < layer1; i += 1) {
+  for (size_t i = 0; i < layer1; i += 1) {
     std::vector<double> x(layer2);
     w[i] = x;
 
-    for (uint j = 0; j < layer2; j += 1) {
+    for (size_t j = 0; j < layer2; j += 1) {
       w[i][j] = util::rand(-1, 1);
     }
   }
   return w;
 }
 
-Brain::Brain(uint numInput, uint numHidden, uint numOutput)
+Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
 : m_numInput(numInput)
 , m_numHidden(numHidden)
 , m_numOutput(numOutput)
 , m_layerInput()
 , m_layerHidden()
 , m_layerOutput()
-, m_weightsIH(randomWeights(m_numInput, m_numHidden))
-, m_weightsHO(randomWeights(m_numHidden, m_numOutput))
+, m_weightsIH()
+, m_weightsHO()
 , m_fitness(0.0)
 {
   initLayer(m_layerInput, m_numInput);
@@ -35,6 +35,11 @@ Brain::Brain(uint numInput, uint numHidden, uint numOutput)
 }
 
 Brain::~Brain() {}
+
+void Brain::initRandomWeights() {
+  m_weightsIH = randomWeights(m_numInput, m_numHidden);
+  m_weightsHO = randomWeights(m_numHidden, m_numOutput);
+}
 
 double const& Brain::fitness() const {
   return m_fitness;
@@ -64,13 +69,13 @@ Brain& Brain::weightsOutput(Weights const& w) {
 }
 
 std::vector<int> Brain::feedForward (std::vector<double> const& input) {
-  for(uint i = 0; i < m_numInput; i += 1) m_layerInput[i] = input[i];
+  for(size_t i = 0; i < m_numInput; i += 1) m_layerInput[i] = input[i];
 
   // Propagate to hidden layer
-  for(uint j = 0; j < m_numHidden; j += 1) {
+  for(size_t j = 0; j < m_numHidden; j += 1) {
     m_layerHidden[j] = 0.0;
 
-    for(uint k = 0; k < m_numInput; k += 1) {
+    for(size_t k = 0; k < m_numInput; k += 1) {
       m_layerHidden[j] += m_layerInput[k] * m_weightsIH[k][j];
     }
 
@@ -78,10 +83,10 @@ std::vector<int> Brain::feedForward (std::vector<double> const& input) {
   }
 
   // Propagate to output layer
-  for(uint j = 0; j < m_numOutput; j += 1) {
+  for(size_t j = 0; j < m_numOutput; j += 1) {
     m_layerOutput[j] = 0.0;
 
-    for(uint k = 0; k < m_numHidden; k += 1) {
+    for(size_t k = 0; k < m_numHidden; k += 1) {
       m_layerOutput[j] += m_layerHidden[k] * m_weightsHO[k][j];
     }
 
@@ -89,7 +94,7 @@ std::vector<int> Brain::feedForward (std::vector<double> const& input) {
   }
 
   std::vector<int> output;
-  for(uint i = 0; i < m_numOutput; i += 1) {
+  for(size_t i = 0; i < m_numOutput; i += 1) {
     int pinnedOutput = this->terminationFunction( m_layerOutput[i] );
     output.push_back(pinnedOutput);
   }
@@ -97,12 +102,18 @@ std::vector<int> Brain::feedForward (std::vector<double> const& input) {
   return output;
 }
 
-void Brain::initLayer(Layer& layer, uint numNeurons) {
+void Brain::initLayer(Layer& layer, size_t numNeurons) {
   layer.clear();
 
-  for (uint i = 0; i < numNeurons; i += 1) {
+  for (size_t i = 0; i < numNeurons; i += 1) {
     layer.push_back(0.0);
   }
+}
+
+bool Brain::topologyIsCompatibleWith(Brain const& rhs) const {
+  return (m_numInput == rhs.m_numInput &&
+          m_numHidden == rhs.m_numHidden &&
+          m_numOutput == rhs.m_numOutput);
 }
 
 inline double Brain::activationFunction (double x) {

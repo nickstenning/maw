@@ -22,8 +22,8 @@ pauseTime = 0
 
 point = "every 1::t::t u (sin($2)):(cos($2)) w p"
 bar = "every 1::t::t u (0):(0):(sin($2)):(cos($2)) w vectors"
-torque = "every 1::t::t u (sin($2)):(cos($2)):(($4 * 0.5)*cos(-$2)):(($4 * 0.5)*sin(-$2)) w vectors"
-fit = "every 1::t::t u (1):(-1):(0):(($5/10000)) w vectors"
+torque = "every 1::t::t u (sin($2)):(cos($2)):($4*cos(-$2)):($4*sin(-$2)) w vectors"
+fit = "every 1::t::t u (1):(-1):(0):($5) w vectors"
 
 set style line 1 ps 3 pt 7         # pendulum ball
 set style arrow 1 nohead ls 1      # pendulum bar

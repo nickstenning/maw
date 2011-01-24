@@ -3,10 +3,27 @@
 
 #include <vector>
 
-#define NUM_NEURONS_INPUT  2
-#define NUM_NEURONS_HIDDEN 5
-#define NUM_NEURONS_OUTPUT 1
-#define MUTATION_RATE      0.005
+// NN properties
+#define INPUT_SIZE  2
+#define HIDDEN_SIZE 5
+#define OUTPUT_SIZE 1
+
+// Proportion of the fitness-rank-ordered population guaranteed to be saved.
+#define ELITISM 0.25
+
+// Crossover probability for any given member of the new generation.
+#define CROSSOVER_PROB 0.2
+
+// Mutation probability (chance we do any mutation at all)
+#define MUTATION_PROB 0.8
+#define MUTATION_RATE 0.005
+#define MUTATION_SIZE 1.0
+
+// Pendulum config
+#define EVAL_TIME 100.0
+#define PI        3.141592653589793238462643
+#define INIT_ANG  PI/20.0
+#define SCORE_ANG PI/20.0
 
 class Brain;
 
@@ -19,13 +36,11 @@ namespace ga {
 
   bool compareFitness (Brain const& a, Brain const& b);
   double sumFitness (double& a, Brain const& b);
-  void computeFitness (Brain& brain);
-  void computeFitness (Brain& brain, bool print);
+  void computeFitness (Brain& brain, bool print = false);
 
-  std::vector<size_t> piePick (std::vector<double> const& pie, size_t numToPick);
+  Brain piePick (population const& pop);
 
-  Brain recombine (Brain const&, Brain const&);
-
+  void crossover (Brain&, Brain const&);
   void mutate (Brain&);
 
 }

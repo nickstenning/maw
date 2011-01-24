@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <numeric>
 #include <assert.h>
 
@@ -12,44 +13,44 @@ namespace ga {
 
   void init (population& pop, size_t popSize) {
     for (size_t i = 0; i < popSize; i += 1) {
-      Brain b(NUM_NEURONS_INPUT, NUM_NEURONS_HIDDEN, NUM_NEURONS_OUTPUT);
+      Brain b(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE);
+      b.initRandomWeights();
       computeFitness(b);
       pop.push_back(b);
     }
   }
 
   void stepGeneration (population& pop) {
-    std::vector<double> pie;
-
-    // Add fitness slices to virtual pie.
-    for (population::iterator it = pop.begin(); it != pop.end(); ++it) {
-      pie.push_back(it->fitness());
-    }
-
-    // Pick all the parents from the pie.
-    std::vector<size_t> parents = piePick(pie, pop.size() * 2);
-
     population newPop;
 
-    for (size_t i = 0; i < pop.size(); i += 1) {
-      Brain mum = pop[parents[2 * i]];
-      Brain dad = pop[parents[2 * i + 1]];
+    // Generate rank-ordered list by fitness.
+    std::sort(pop.begin(), pop.end(), compareFitness);
 
-      // Cross-over
-      Brain offspring = recombine(mum, dad);
+    // Elitist step. We preserve some proportion of the population untouched
+    // for the next generation.
+    size_t numElite = round(ELITISM * pop.size());
+    size_t numRemain = pop.size() - numElite;
+    for (population::iterator it = pop.begin(); it != pop.begin() + numElite; ++it) {
+      newPop.push_back(*it);
+    }
 
-      // Mutate
-      mutate(offspring);
+    // Socially liberal step.
+    for (size_t i = 0; i < numRemain; i += 1) {
+      Brain offspring = piePick(pop);
 
-      // Add to new population
+      if (util::choose(CROSSOVER_PROB)) {
+        crossover(offspring, piePick(pop));
+      }
+
+      if (util::choose(MUTATION_PROB)) {
+        mutate(offspring);
+      }
+
       newPop.push_back(offspring);
     }
 
-    pop.clear();
-
-    for (size_t j = 0; j < newPop.size(); j += 1) {
-      pop.push_back(newPop[j]);
-    }
+    // Replace population with new population.
+    pop = newPop;
 
     // Compute fitness for next generation
     for (population::iterator it = pop.begin(); it != pop.end(); ++it) {
@@ -57,25 +58,18 @@ namespace ga {
     }
   }
 
-  bool compareFitness (Brain const& a, Brain const& b) { return (a.fitness() > b.fitness()); }
-  double sumFitness (double& a, Brain const& b) { return (a + b.fitness()); }
-
-  void computeFitness(Brain& brain) {
-    computeFitness(brain, false);
-  }
-
   void computeFitness (Brain& brain, bool print) {
     Pendulum pdl;
 
-    double fitness = 1.0;
+    double fitness = 0.0;
 
     std::vector<double> input;
     std::vector<int> output;
 
-    pdl.ang(util::rand(-pdl.pi/20, pdl.pi/20));
+    pdl.ang(util::rand(-INIT_ANG, INIT_ANG));
     pdl.vel(0);
 
-    while (pdl.time() < 100) {
+    while (pdl.time() < EVAL_TIME) {
       input.clear();
 
       input.push_back(pdl.ang());
@@ -91,130 +85,94 @@ namespace ga {
                   << fitness << "\n";
       }
 
-      double angScore = util::diracDelta(pdl.ang(), 100);
-      double velScore = util::diracDelta(pdl.vel(), 1);
-
-      fitness += angScore * velScore;
+      bool inDelta = abs(pdl.ang()) < SCORE_ANG;
+      if (inDelta) fitness += (pdl.dt / EVAL_TIME);
     }
 
     brain.fitness(fitness);
   }
 
-  std::vector<size_t> piePick (std::vector<double> const& pie, size_t numToPick) {
-    double pieSize = std::accumulate(pie.begin(), pie.end(), 0);
+  Brain piePick (population const& pop) {
+    double pieSize = std::accumulate(pop.begin(), pop.end(), 0.0, sumFitness);
+    double subTotal = 0.0;
+    double pickPoint = util::rand(0, pieSize);
 
-    std::vector<size_t> picks;
+    population::const_iterator pick;
 
-    // Pick numToPick indices
-    for (size_t i = 0; i < numToPick; i += 1) {
-
-      double subTotal = 0.0;
-      double pickPoint = util::rand(0, pieSize);
-
-      // Find the index that that point in the pie corresponds to.
-      for (size_t j = 0; j < pie.size(); j += 1) {
-        subTotal += pie[j];
-        if (subTotal >= pickPoint) {
-          picks.push_back(j);
-          break;
-        }
-      }
+    // Find the index that that point in the pie corresponds to.
+    for (population::const_iterator it = pop.begin(); it != pop.end(); ++it) {
+      subTotal += it->fitness();
+      if (subTotal >= pickPoint) pick = it;
     }
 
-    return picks;
+    return *pick;
   }
 
-  Brain recombine (Brain const& a, Brain const& b) {
+  void crossover (Brain& brain, Brain const& other) {
     size_t i, j;
 
-    Weights aHidden = a.weightsHidden();
-    Weights aOutput = a.weightsOutput();
+    assert(brain.topologyIsCompatibleWith(other));
 
-    Weights bHidden = b.weightsHidden();
-    Weights bOutput = b.weightsOutput();
-
-    bool parentsHaveSameTopology = (aHidden.size() == bHidden.size() &&
-                                    aHidden[0].size() == bHidden[0].size() &&
-                                    aOutput[0].size() == bOutput[0].size());
-
-    assert(parentsHaveSameTopology);
-
-    Brain offspring(aHidden.size(), aHidden[0].size(), aOutput[0].size());
-
-    Weights hidden = offspring.weightsHidden();
-    Weights output = offspring.weightsOutput();
-
+    Weights hidden = brain.weightsHidden();
+    Weights output = brain.weightsOutput();
+    Weights otherHidden = other.weightsHidden();
+    Weights otherOutput = other.weightsOutput();
 
     // For each non-input neuron, randomly choose a parent, and copy all
     // input weights from that parent.
     for (j = 0; j < hidden[0].size(); j += 1) {
-      if (rand() % 2 == 0) { // choose a
+      if (util::choose(0.5)) {
         for (i = 0; i < hidden.size(); i += 1) {
-          hidden[i][j] = aHidden[i][j];
-        }
-      } else { // choose b
-        for (i = 0; i < hidden.size(); i += 1) {
-          hidden[i][j] = bHidden[i][j];
+          hidden[i][j] = otherHidden[i][j];
         }
       }
     }
 
     for (j = 0; j < output[0].size(); j += 1) {
-      if (rand() % 2 == 0) { // choose a
+      if (util::choose(0.5)) {
         for (i = 0; i < output.size(); i += 1) {
-          output[i][j] = aOutput[i][j];
-        }
-      } else { // choose b
-        for (i = 0; i < output.size(); i += 1) {
-          output[i][j] = bOutput[i][j];
+          output[i][j] = otherOutput[i][j];
         }
       }
     }
 
-    offspring.weightsHidden(hidden);
-    offspring.weightsOutput(output);
-
-    return offspring;
+    brain.weightsHidden(hidden)
+         .weightsOutput(output);
   }
 
   void mutate (Brain& brain) {
     size_t i, j;
 
-    int mutate = 1/MUTATION_RATE;
-    double val;
-
     Weights wHidden = brain.weightsHidden();
     Weights wOutput = brain.weightsOutput();
 
-    // Mutate each weight with a probability of 1/200 by adding num in [-1,1]
+    // Mutate each weight with a probability of 1/MUTATION_RATE by adding num in [-1,1)
     for (i = 0; i < wHidden.size(); i += 1) {
       for (j = 0; j < wHidden[i].size(); j += 1) {
-        if (rand() % mutate == 0) {
-          val = sqrt(-log(util::rand()));
-          if (rand() % 2 == 1) {
-            val = val * -1;
-          }
-
-          wHidden[i][j] += val;
+        if (util::choose(MUTATION_RATE)) {
+          wHidden[i][j] += util::rand(-1, 1);
         }
       }
     }
 
     for (i = 0; i < wOutput.size(); i += 1) {
       for (j = 0; j < wOutput[i].size(); j += 1) {
-        if (rand() % mutate == 0) {
-          val = sqrt(-log(util::rand()));
-          if (rand() % 2 == 1) {
-            val = val * -1;
-          }
-
-          wOutput[i][j] += val;
+        if (util::choose(MUTATION_RATE)) {
+          wOutput[i][j] += util::rand(-1, 1);
         }
       }
     }
 
     brain.weightsHidden(wHidden);
     brain.weightsOutput(wOutput);
+  }
+
+  bool compareFitness (Brain const& a, Brain const& b) {
+    return (a.fitness() > b.fitness());
+  }
+
+  double sumFitness (double& a, Brain const& b) {
+    return (a + b.fitness());
   }
 
 }
