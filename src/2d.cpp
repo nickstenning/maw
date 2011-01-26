@@ -9,7 +9,7 @@
 #include "util.h"
 
 #define POP_SIZE        50
-#define NUM_GENERATIONS 500
+#define NUM_GENERATIONS 30
 
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
@@ -17,6 +17,8 @@
 int main (int /*argc*/, char* const /*argv*/[]) {
   unsigned int seed = util::initRNG();
   std::cout << "# RNG_SEED = " << seed << "\n";
+
+  Brain* fittest = NULL;
 
   // Initialise GA population
   ga::population pop;
@@ -34,26 +36,30 @@ int main (int /*argc*/, char* const /*argv*/[]) {
 
     // Sort generation by fitness
     std::sort(pop.begin(), pop.end(), ga::compareFitness);
-
     double meanFitness = std::accumulate(pop.begin(), pop.end(), 0.0, ga::sumFitness) / pop.size();
 
     // Print generation stats
     std::cerr << COL << i
-              << COL << pop[pop.size() - 1].fitness()
               << COL << pop[0].fitness()
+              << COL << pop[pop.size() - 1].fitness()
               << COL << meanFitness << "\n";
+
+    fittest = &pop[pop.size() - 1];
   }
 
   // print data for run to stdout
-  std::cout << "# FITNESS = " << pop[0].fitness() << "\n";
+  std::cout << "# FITNESS = " << fittest->fitness() << "\n";
   std::cout << "# \n";
   ga::printProperties(std::cout);
   std::cout << "# \n";
   BrainDotPrinter bp(std::cout);
   bp.prefix("# ");
-  bp << pop[0] << "\n";
+  bp << *fittest << "\n";
 
-  ga::computeFitness(pop[0], true);
+  ga::computeFitness(*fittest, true);
+
+  fittest = NULL;
+  delete fittest;
 
   return 0;
 }

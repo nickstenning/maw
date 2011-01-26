@@ -23,14 +23,14 @@ namespace ga {
   void stepGeneration (population& pop) {
     population newPop;
 
-    // Generate rank-ordered list by fitness.
+    // Generate rank-ordered list by fitness, fittest last.
     std::sort(pop.begin(), pop.end(), compareFitness);
 
     // Elitist step. We preserve some proportion of the population untouched
     // for the next generation.
     size_t numElite = round(ELITISM * pop.size());
     size_t numRemain = pop.size() - numElite;
-    for (population::iterator it = pop.begin(); it != pop.begin() + numElite; ++it) {
+    for (population::iterator it = pop.end() - 1; it != pop.end() - 1 - numElite; --it) {
       newPop.push_back(*it);
     }
 
@@ -64,7 +64,7 @@ namespace ga {
 
     if (print) {
       // Only do one run, and print it.
-      pdl.ang(util::rand(-INIT_ANG, INIT_ANG))
+      pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
          .vel(0.0)
          .time(0.0);
 
@@ -72,7 +72,7 @@ namespace ga {
 
     } else {
       for (size_t i = 0; i < NUM_RUNS; i += 1) {
-        pdl.ang(util::rand(-INIT_ANG, INIT_ANG))
+        pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
            .vel(0.0)
            .time(0.0);
 
@@ -87,7 +87,11 @@ namespace ga {
     std::vector<double> input;
     std::vector<int> output;
 
-    while (pdl.time() < EVAL_TIME) {
+    if (print) {
+      std::cout << "# t\ttheta\tthetadot\ttorque\tfitness\n";
+    }
+
+    while (pdl.time() < MAX_EVAL_TIME) {
       input.clear();
 
       input.push_back(pdl.ang());
@@ -99,15 +103,15 @@ namespace ga {
 
       if (print) {
         std::cout << pdl.time() << "\t" << pdl.ang() << "\t"
-                  << pdl.vel() << "\t" << BANG_SIZE * output[0] << "\t"
+                  << (pdl.vel() / pdl.length) << "\t" << BANG_SIZE * output[0] << "\t"
                   << fitness << "\n";
       }
 
       bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
       if (inScoringZone) {
-        fitness += (pdl.dt / EVAL_TIME) * util::diracDelta(pdl.ang());
+        fitness += pdl.dt * util::diracDelta(pdl.ang());
       } else {
-        fitness = std::max(0.0, fitness - (pdl.dt / EVAL_TIME));
+        break; // Failure. No need to evaluate further.
       }
     }
 
@@ -193,7 +197,7 @@ namespace ga {
   }
 
   bool compareFitness (Brain const& a, Brain const& b) {
-    return (a.fitness() > b.fitness());
+    return (a.fitness() < b.fitness());
   }
 
   double sumFitness (double& a, Brain const& b) {
@@ -211,8 +215,7 @@ namespace ga {
        << "# MUTATION_SIZE  = " << MUTATION_SIZE  << "\n"
        << "# NUM_RUNS       = " << NUM_RUNS       << "\n"
        << "# BANG_SIZE      = " << BANG_SIZE      << "\n"
-       << "# EVAL_TIME      = " << EVAL_TIME      << "\n"
-       << "# INIT_ANG       = " << INIT_ANG       << "\n"
+       << "# MAX_EVAL_TIME  = " << MAX_EVAL_TIME  << "\n"
        << "# SCORE_ANG      = " << SCORE_ANG      << "\n";
   }
 
