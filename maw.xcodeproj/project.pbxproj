@@ -15,6 +15,9 @@
 		426DE44612EE1E8A0026764E /* brain_dot_printer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426DE44412EE1E8A0026764E /* brain_dot_printer.cpp */; };
 		42740FE11281C738008FD575 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE01281C738008FD575 /* GLUT.framework */; };
 		42740FE31281C738008FD575 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42740FE21281C738008FD575 /* OpenGL.framework */; };
+		4274BEC812F0974200F49EFB /* brain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426DE32312EDE5D30026764E /* brain.cpp */; };
+		4274BECA12F0974200F49EFB /* pendulum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426DE32512EDE5D30026764E /* pendulum.cpp */; };
+		4274BED112F0978900F49EFB /* brainsock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4274BED012F0978900F49EFB /* brainsock.cpp */; };
 		4280EA7812E8588600722801 /* 2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4280EA6D12E8588600722801 /* 2d.cpp */; };
 		4280EA7B12E8588600722801 /* ga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4280EA7212E8588600722801 /* ga.cpp */; };
 		4280EA7D12E8588600722801 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4280EA7612E8588600722801 /* util.cpp */; };
@@ -60,6 +63,8 @@
 		426DE44512EE1E8A0026764E /* brain_dot_printer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = brain_dot_printer.h; path = src/brain_dot_printer.h; sourceTree = "<group>"; };
 		42740FE01281C738008FD575 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		42740FE21281C738008FD575 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		4274BEC312F096E500F49EFB /* brainsock */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = brainsock; sourceTree = BUILT_PRODUCTS_DIR; };
+		4274BED012F0978900F49EFB /* brainsock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = brainsock.cpp; path = src/brainsock.cpp; sourceTree = "<group>"; };
 		4280EA6D12E8588600722801 /* 2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = 2d.cpp; path = src/2d.cpp; sourceTree = "<group>"; };
 		4280EA7212E8588600722801 /* ga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ga.cpp; path = src/ga.cpp; sourceTree = "<group>"; };
 		4280EA7312E8588600722801 /* ga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ga.h; path = src/ga.h; sourceTree = "<group>"; };
@@ -106,6 +111,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4274BEC112F096E500F49EFB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F660486A84900D96B5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,6 +149,7 @@
 			children = (
 				8DD76F6C0486A84900D96B5E /* maw */,
 				425CCE5D127089620025F51D /* 2d */,
+				4274BEC312F096E500F49EFB /* brainsock */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,6 +157,7 @@
 		4280EA8912E8589300722801 /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				4274BED012F0978900F49EFB /* brainsock.cpp */,
 				426DE44412EE1E8A0026764E /* brain_dot_printer.cpp */,
 				426DE44512EE1E8A0026764E /* brain_dot_printer.h */,
 				426DE32312EDE5D30026764E /* brain.cpp */,
@@ -236,6 +250,22 @@
 			productReference = 425CCE5D127089620025F51D /* 2d */;
 			productType = "com.apple.product-type.tool";
 		};
+		4274BEC212F096E500F49EFB /* brainsock */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4274BEC712F0970400F49EFB /* Build configuration list for PBXNativeTarget "brainsock" */;
+			buildPhases = (
+				4274BEC012F096E500F49EFB /* Sources */,
+				4274BEC112F096E500F49EFB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = brainsock;
+			productName = brainsock;
+			productReference = 4274BEC312F096E500F49EFB /* brainsock */;
+			productType = "com.apple.product-type.tool";
+		};
 		8DD76F620486A84900D96B5E /* maw */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "maw" */;
@@ -279,6 +309,7 @@
 			targets = (
 				8DD76F620486A84900D96B5E /* maw */,
 				425CCE5C127089620025F51D /* 2d */,
+				4274BEC212F096E500F49EFB /* brainsock */,
 			);
 		};
 /* End PBXProject section */
@@ -294,6 +325,16 @@
 				426DE32712EDE5D30026764E /* brain.cpp in Sources */,
 				426DE32812EDE5D30026764E /* pendulum.cpp in Sources */,
 				426DE44612EE1E8A0026764E /* brain_dot_printer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4274BEC012F096E500F49EFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4274BEC812F0974200F49EFB /* brain.cpp in Sources */,
+				4274BECA12F0974200F49EFB /* pendulum.cpp in Sources */,
+				4274BED112F0978900F49EFB /* brainsock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +479,36 @@
 			};
 			name = Release;
 		};
+		4274BEC512F096E600F49EFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = brainsock;
+			};
+			name = Debug;
+		};
+		4274BEC612F096E600F49EFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = brainsock;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -464,6 +535,15 @@
 			buildConfigurations = (
 				425CCE5F127089620025F51D /* Debug */,
 				425CCE60127089620025F51D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4274BEC712F0970400F49EFB /* Build configuration list for PBXNativeTarget "brainsock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4274BEC512F096E600F49EFB /* Debug */,
+				4274BEC612F096E600F49EFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
