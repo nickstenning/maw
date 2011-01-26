@@ -1,6 +1,5 @@
 /build/
 /data/
-/generated/
 .DS_Store
 *.pbxuser
 *.mode1v3
