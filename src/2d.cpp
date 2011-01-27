@@ -12,6 +12,8 @@
 #define COL             std::setw( COLWIDTH )
 
 int main (int argc, char* const argv[]) {
+  std::cout << std::setprecision(6) << std::fixed;
+
   unsigned int seed = util::initRNG();
   std::cout << "# RNG_SEED = " << seed << "\n";
 
@@ -20,7 +22,6 @@ int main (int argc, char* const argv[]) {
   int numGenerations = 5;
 
   if (argc == 2) {
-    std::cout << atoi(argv[1]);
     numGenerations = atoi(argv[1]);
 
   }
