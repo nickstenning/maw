@@ -12,9 +12,12 @@ r = 1.2
 set xrange [-r:r]
 set yrange [-r:r]
 
+max_eval_time = 100
+resolution = 0.01
+
 t = 0
-T = 1000 # Should match numFrames
-dt = 4
+T = max_eval_time * (1 / resolution)
+dt = 1
 pauseTime = 0
 
 # 'every 1::t::t' plots only the 't'th point.
@@ -22,16 +25,14 @@ pauseTime = 0
 
 point = "every 1::t::t u (sin($2)):(cos($2)) w p"
 bar = "every 1::t::t u (0):(0):(sin($2)):(cos($2)) w vectors"
-torque = "every 1::t::t u (sin($2)):(cos($2)):($4/5*cos($2)):(-$4/5*sin($2)) w vectors"
-fit = "every 1::t::t u (1):(-1):(0):($5/5) w vectors"
+torque = "every 1::t::t u (sin($2)):(cos($2)):($4/20*cos($2)):(-$4/20*sin($2)) w vectors"
 
 set style line 1 ps 3 pt 7         # pendulum ball
 set style arrow 1 nohead ls 1      # pendulum bar
 set style arrow 2 nohead ls 3 lw 3 # torque
 
 plot 'pendulum' @point  ls 1, \
-     'pendulum' @bar    as 1, \
-     'pendulum' @torque as 2, \
-     'pendulum' @fit    ls 4
+     ''         @bar    as 1, \
+     ''         @torque as 2
 
 load d.'/gnuplot/_timestep'
