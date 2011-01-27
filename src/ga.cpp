@@ -99,7 +99,7 @@ namespace ga {
 
       output = brain.feedForward(input);
 
-      pdl.step(BANG_SIZE * output[0]);
+      pdl.step(BANG_SIZE * output[0] + util::rand(-NOISE_LEVEL, NOISE_LEVEL));
 
       if (print) {
         std::cout << pdl.time() << "\t" << pdl.ang() << "\t"

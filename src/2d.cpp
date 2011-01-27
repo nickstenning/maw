@@ -9,7 +9,7 @@
 #include "util.h"
 
 #define POP_SIZE        50
-#define NUM_GENERATIONS 30
+#define NUM_GENERATIONS 5
 
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
