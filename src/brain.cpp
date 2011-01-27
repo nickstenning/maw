@@ -130,6 +130,14 @@ inline int Brain::terminationFunction (double x) {
   }
 }
 
+bool operator< (Brain const& lhs, Brain const& rhs) {
+  return lhs.fitness() < rhs.fitness();
+}
+
+double operator+ (double const& lhs, Brain const& rhs) {
+  return lhs + rhs.fitness();
+}
+
 // How to print a brain
 std::ostream& operator<< (std::ostream& os, Brain const& b) {
   os << "<Brain"

@@ -4,6 +4,10 @@
 #include <iostream>
 #include <vector>
 
+// GA properties
+#define POP_SIZE        50
+#define NUM_GENERATIONS 5
+
 // NN properties
 #define INPUT_SIZE  2
 #define HIDDEN_SIZE 5
@@ -36,24 +40,45 @@
 class Brain;
 class Pendulum;
 
-namespace ga {
+namespace GA {
 
-  typedef std::vector<Brain> population;
-
-  void init (population&, size_t);
-  void stepGeneration (population&);
+  typedef std::vector<Brain> Population;
 
   bool compareFitness (Brain const& a, Brain const& b);
   double sumFitness (double& a, Brain const& b);
-  void computeFitness (Brain& brain, bool print = false);
-  double computeFitnessForRun (Brain& brain, Pendulum& pdl, bool print = false);
 
-  Brain piePick (population const& pop);
+  double computeFitness (Brain& brain);
 
   void crossover (Brain&, Brain const&);
   void mutate (Brain&);
 
-  void printProperties (std::ostream& os);
+  Brain piePick (Population const& pop);
+
+  class Runner
+  {
+  public:
+    Runner (size_t numGenerations = NUM_GENERATIONS, size_t popSize = POP_SIZE);
+
+    bool isFinished () const;
+
+    void step ();
+
+    void updateFitness (Brain& brain);
+
+    void fillStats(int& gen, double& min, double& max, double& mean, double& stddev) const;
+    Brain const& getFittest() const;
+
+    void printRunData (std::ostream& os, Brain& brain);
+    void printProperties (std::ostream& os);
+
+  protected:
+    Population m_pop;
+
+    size_t m_numGenerations;
+    size_t m_generation;
+
+  };
+
 }
 
 #endif // GA_H

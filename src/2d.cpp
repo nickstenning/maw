@@ -1,63 +1,76 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
-#include <numeric>
+#include <cstdlib>
 
 #include "ga.h"
 #include "brain.h"
 #include "brain_dot_printer.h"
 #include "util.h"
 
-#define POP_SIZE        50
-#define NUM_GENERATIONS 5
-
 #define COLWIDTH        10
 #define COL             std::setw( COLWIDTH )
 
-int main (int /*argc*/, char* const /*argv*/[]) {
+int main (int argc, char* const argv[]) {
   unsigned int seed = util::initRNG();
   std::cout << "# RNG_SEED = " << seed << "\n";
 
-  Brain* fittest = NULL;
+  Brain const* fittest = NULL;
+
+  int numGenerations = 5;
+
+  if (argc == 2) {
+    std::cout << atoi(argv[1]);
+    numGenerations = atoi(argv[1]);
+
+  }
 
   // Initialise GA population
-  ga::population pop;
-  ga::init(pop, POP_SIZE);
+  GA::Runner runner(numGenerations);
 
   std::cerr << std::left;
   std::cerr << COL << "# gen"
             << COL << "minFit"
             << COL << "maxFit"
-            << COL << "meanFit" << "\n";
+            << COL << "meanFit"
+            << COL << "sdFit" << "\n";
 
   // GA
-  for (size_t i = 0; i < NUM_GENERATIONS; i += 1) {
-    ga::stepGeneration(pop);
+  while (!runner.isFinished()) {
+    runner.step();
 
-    // Sort generation by fitness
-    std::sort(pop.begin(), pop.end(), ga::compareFitness);
-    double meanFitness = std::accumulate(pop.begin(), pop.end(), 0.0, ga::sumFitness) / pop.size();
+    fittest = &runner.getFittest();
+
+    int gen;
+    double min, max, mean, stddev;
+
+    runner.fillStats(gen, min, max, mean, stddev);
 
     // Print generation stats
-    std::cerr << COL << i
-              << COL << pop[0].fitness()
-              << COL << pop[pop.size() - 1].fitness()
-              << COL << meanFitness << "\n";
-
-    fittest = &pop[pop.size() - 1];
+    std::cerr << COL << gen
+              << COL << min
+              << COL << max
+              << COL << mean
+              << COL << stddev << "\n";
   }
 
   // print data for run to stdout
-  std::cout << "# FITNESS = " << fittest->fitness() << "\n";
+  std::cout << "# FITNESS = " << fittest->fitness() << "\n"
+            << "# \n";
+
+  runner.printProperties(std::cout);
+
   std::cout << "# \n";
-  ga::printProperties(std::cout);
-  std::cout << "# \n";
+
   BrainDotPrinter bp(std::cout);
   bp.prefix("# ");
   bp << *fittest << "\n";
 
-  ga::computeFitness(*fittest, true);
+  // Make a copy we can futz with:
+  Brain fittestRunnable = *fittest;
+  runner.printRunData(std::cout, fittestRunnable);
 
+  // Clean up:
   fittest = NULL;
   delete fittest;
 
