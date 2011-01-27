@@ -123,7 +123,14 @@ namespace GA {
     min = m_pop[0].fitness();
     max = m_pop[m_pop.size() - 1].fitness();
     mean = std::accumulate(m_pop.begin(), m_pop.end(), 0.0) / m_pop.size();
-    stddev = 0.0; // TODO
+
+    double sumsqdev = 0.0;
+
+    for (Population::const_iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      sumsqdev += pow(it->fitness() - mean, 2);
+    }
+
+    stddev = sqrt(sumsqdev / m_pop.size());
   }
 
   Brain const& Runner::getFittest () const {
