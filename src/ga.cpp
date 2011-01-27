@@ -146,7 +146,7 @@ namespace GA {
     for (size_t i = 0; i < NUM_RUNS; i += 1) {
 
       pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
-         .vel(0.0)
+         .vel(util::rand(-2, 2))
          .time(0.0);
 
       os << "# run " << i << "\n";
