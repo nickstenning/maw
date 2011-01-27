@@ -1,0 +1,21 @@
+digraph brain {
+  splines=false; nodesep=1; ranksep="1.5 equally"; rankdir=LR;
+  I0 -> H0 [headlabel=1.727,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
+  I0 -> H1 [headlabel=-1.090,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
+  I0 -> H2 [headlabel=-0.625,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
+  I0 -> H3 [headlabel=-8.732,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
+  I0 -> H4 [headlabel=0.945,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
+  I1 -> H0 [headlabel=2.266,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
+  I1 -> H1 [headlabel=1.621,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
+  I1 -> H2 [headlabel=-2.461,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
+  I1 -> H3 [headlabel=-0.893,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
+  I1 -> H4 [headlabel=2.964,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
+  H0 -> O0 [headlabel=-3.683,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
+  H1 -> O0 [headlabel=0.317,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
+  H2 -> O0 [headlabel=-0.227,color="#2ca02c",fontcolor="#2ca02c",fontsize=10,labeldistance=3];
+  H3 -> O0 [headlabel=12.298,color="#d62728",fontcolor="#d62728",fontsize=10,labeldistance=3];
+  H4 -> O0 [headlabel=1.405,color="#9467bd",fontcolor="#9467bd",fontsize=10,labeldistance=3];
+  { rank=same; I0 I1 }
+  { rank=same; H0 H1 H2 H3 H4 }
+  { rank=same; O0 }
+}

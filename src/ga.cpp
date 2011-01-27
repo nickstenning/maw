@@ -3,43 +3,88 @@
 #include <algorithm>
 #include <numeric>
 #include <assert.h>
+#include <cmath>
 
 #include "pendulum.h"
 #include "brain.h"
 #include "util.h"
 #include "ga.h"
 
-namespace ga {
+namespace GA {
 
-  void init (population& pop, size_t popSize) {
-    for (size_t i = 0; i < popSize; i += 1) {
-      Brain b(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE);
-      b.initRandomWeights();
-      computeFitness(b);
-      pop.push_back(b);
-    }
+  /**
+   * Feed the state variables into the brain, feed forward, and advance the
+   * physics using the output of the brain as a controlling torque.
+   *
+   * @return Applied control torque
+  **/
+  double stepPhysics(Brain& brain, Pendulum& pdl) {
+    std::vector<double> input;
+    std::vector<int> output;
+
+    input.push_back(pdl.ang());
+    input.push_back(pdl.vel());
+
+    output = brain.feedForward(input);
+
+    double controlTorque = BANG_SIZE * output[0];
+    double noiseTorque   = util::rand(-NOISE_LEVEL, NOISE_LEVEL);
+
+    pdl.step(controlTorque + noiseTorque);
+
+    return controlTorque;
   }
 
-  void stepGeneration (population& pop) {
-    population newPop;
+  /**
+   * Return the fitness increment for the current timestep. Called once per
+   * physics timestep.
+   *
+   * @return Status: -1 results in evaluation being aborted.
+  **/
+  int stepFitness(double& fitness, Pendulum& pdl) {
+    bool inScoringZone = std::abs(pdl.ang()) < SCORE_ANG;
+    if (inScoringZone) {
+      fitness += pdl.dt * util::diracDelta(pdl.ang(), 5);
+    } else {
+      return -1; // Failure. No need to evaluate further.
+    }
 
-    // Generate rank-ordered list by fitness, fittest last.
-    std::sort(pop.begin(), pop.end(), compareFitness);
+    return 0;
+  }
+
+  Runner::Runner (size_t numGenerations, size_t popSize)
+  : m_pop(popSize, Brain(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE))
+  , m_numGenerations(numGenerations)
+  , m_generation(0)
+  {
+    for (Population::iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      it->initRandomWeights();
+      computeFitness(*it);
+    }
+    std::sort(m_pop.begin(), m_pop.end());
+  }
+
+  bool Runner::isFinished () const {
+    return m_generation >= m_numGenerations;
+  }
+
+  void Runner::step () {
+    Population newPop;
 
     // Elitist step. We preserve some proportion of the population untouched
     // for the next generation.
-    size_t numElite = round(ELITISM * pop.size());
-    size_t numRemain = pop.size() - numElite;
-    for (population::iterator it = pop.end() - 1; it != pop.end() - 1 - numElite; --it) {
+    size_t numElite = static_cast<size_t>( round(ELITISM * m_pop.size()) );
+    size_t numRemain = m_pop.size() - numElite;
+    for (Population::iterator it = m_pop.end() - 1; it != m_pop.end() - 1 - numElite; --it) {
       newPop.push_back(*it);
     }
 
     // Socially liberal step.
     for (size_t i = 0; i < numRemain; i += 1) {
-      Brain offspring = piePick(pop);
+      Brain offspring = piePick(m_pop);
 
       if (util::choose(CROSSOVER_PROB)) {
-        crossover(offspring, piePick(pop));
+        crossover(offspring, piePick(m_pop));
       }
 
       if (util::choose(MUTATION_PROB)) {
@@ -50,85 +95,122 @@ namespace ga {
     }
 
     // Replace population with new population.
-    pop = newPop;
+    m_pop = newPop;
 
     // Compute fitness for next generation
-    for (population::iterator it = pop.begin(); it != pop.end(); ++it) {
-      computeFitness(*it);
+    for(Population::iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      updateFitness(*it);
+    }
+
+    // Generate rank-ordered list by fitness, fittest last.
+    std::sort(m_pop.begin(), m_pop.end());
+
+    // Update the generation count
+    m_generation += 1;
+  }
+
+  void Runner::updateFitness (Brain& brain) {
+    double fitness = 0.0;
+
+    for (size_t i = 0; i < NUM_RUNS; i += 1) {
+      fitness += computeFitness(brain);
+    }
+
+    brain.fitness(fitness / NUM_RUNS);
+  }
+
+  void Runner::fillStats (int& gen, double& min, double& max, double& mean, double& stddev) const {
+    gen = m_generation;
+    min = m_pop[0].fitness();
+    max = m_pop[m_pop.size() - 1].fitness();
+    mean = std::accumulate(m_pop.begin(), m_pop.end(), 0.0) / m_pop.size();
+
+    double sumsqdev = 0.0;
+
+    for (Population::const_iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      sumsqdev += pow(it->fitness() - mean, 2);
+    }
+
+    stddev = sqrt(sumsqdev / m_pop.size());
+  }
+
+  Brain const& Runner::getFittest () const {
+    return m_pop[m_pop.size() - 1];
+  }
+
+  void Runner::printRunData (std::ostream& os, Brain& brain) {
+    double controlTorque;
+    Pendulum pdl;
+
+    os << "# t\ttheta\tthetadot\ttorque\n";
+
+    for (size_t i = 0; i < NUM_RUNS; i += 1) {
+
+      pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
+         .vel(util::rand(-2, 2))
+         .time(0.0);
+
+      os << "# run " << i << "\n";
+
+      while (pdl.time() < MAX_EVAL_TIME) {
+        controlTorque = stepPhysics(brain, pdl);
+
+        os << pdl.time() << "\t"
+           << pdl.ang() << "\t"
+           << (pdl.vel() / pdl.length) << "\t"
+           << controlTorque << "\n";
+      }
+
+      os << "\n\n"; // Separate run blocks for gnuplot
+
     }
   }
 
-  void computeFitness(Brain& brain, bool print) {
+  void Runner::printProperties (std::ostream& os) {
+    os << "# POP_SIZE        = " << m_pop.size()     << "\n"
+       << "# NUM_GENERATIONS = " << m_numGenerations << "\n"
+       << "# INPUT_SIZE      = " << INPUT_SIZE       << "\n"
+       << "# HIDDEN_SIZE     = " << HIDDEN_SIZE      << "\n"
+       << "# OUTPUT_SIZE     = " << OUTPUT_SIZE      << "\n"
+       << "# ELITISM         = " << ELITISM          << "\n"
+       << "# CROSSOVER_PROB  = " << CROSSOVER_PROB   << "\n"
+       << "# MUTATION_PROB   = " << MUTATION_PROB    << "\n"
+       << "# MUTATION_RATE   = " << MUTATION_RATE    << "\n"
+       << "# MUTATION_SIZE   = " << MUTATION_SIZE    << "\n"
+       << "# NUM_RUNS        = " << NUM_RUNS         << "\n"
+       << "# BANG_SIZE       = " << BANG_SIZE        << "\n"
+       << "# MAX_EVAL_TIME   = " << MAX_EVAL_TIME    << "\n"
+       << "# SCORE_ANG       = " << SCORE_ANG        << "\n";
+  }
+
+  double computeFitness(Brain& brain) {
     Pendulum pdl;
     double fitness = 0.0;
 
-    if (print) {
-      // Only do one run, and print it.
-      pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
-         .vel(0.0)
-         .time(0.0);
-
-      computeFitnessForRun(brain, pdl, true);
-
-    } else {
-      for (size_t i = 0; i < NUM_RUNS; i += 1) {
-        pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
-           .vel(0.0)
-           .time(0.0);
-
-        fitness += computeFitnessForRun(brain, pdl);
-      }
-      brain.fitness(fitness / NUM_RUNS);
-    }
-  }
-
-  double computeFitnessForRun(Brain& brain, Pendulum& pdl, bool print) {
-    double fitness = 0.0;
-    std::vector<double> input;
-    std::vector<int> output;
-
-    if (print) {
-      std::cout << "# t\ttheta\tthetadot\ttorque\tfitness\n";
-    }
+    pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG));
 
     while (pdl.time() < MAX_EVAL_TIME) {
-      input.clear();
-
-      input.push_back(pdl.ang());
-      input.push_back(pdl.vel());
-
-      output = brain.feedForward(input);
-
-      pdl.step(BANG_SIZE * output[0]);
-
-      if (print) {
-        std::cout << pdl.time() << "\t" << pdl.ang() << "\t"
-                  << (pdl.vel() / pdl.length) << "\t" << BANG_SIZE * output[0] << "\t"
-                  << fitness << "\n";
-      }
-
-      bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
-      if (inScoringZone) {
-        fitness += pdl.dt * util::diracDelta(pdl.ang());
-      } else {
-        break; // Failure. No need to evaluate further.
-      }
+      stepPhysics(brain, pdl);
+      if (stepFitness(fitness, pdl) == -1) break;
     }
 
     return fitness;
   }
 
-  Brain piePick (population const& pop) {
-    double pieSize = std::accumulate(pop.begin(), pop.end(), 0.0, sumFitness);
+  Brain piePick (Population const& pop) {
+    double pieSize = std::accumulate(pop.begin(), pop.end(), 0.0);
     double subTotal = 0.0;
     double pickPoint = util::rand(0, pieSize);
 
-    population::const_iterator pick;
+    Population::const_iterator pick;
 
     // Find the index that that point in the pie corresponds to.
-    for (population::const_iterator it = pop.begin(); it != pop.end(); ++it) {
+    for (Population::const_iterator it = pop.begin(); it != pop.end(); ++it) {
       subTotal += it->fitness();
-      if (subTotal >= pickPoint) pick = it;
+      if (subTotal >= pickPoint) {
+        pick = it;
+        break;
+      }
     }
 
     return *pick;
@@ -194,29 +276,6 @@ namespace ga {
 
     brain.weightsHidden(wHidden);
     brain.weightsOutput(wOutput);
-  }
-
-  bool compareFitness (Brain const& a, Brain const& b) {
-    return (a.fitness() < b.fitness());
-  }
-
-  double sumFitness (double& a, Brain const& b) {
-    return (a + b.fitness());
-  }
-
-  void printProperties (std::ostream& os) {
-    os << "# INPUT_SIZE     = " << INPUT_SIZE     << "\n"
-       << "# HIDDEN_SIZE    = " << HIDDEN_SIZE    << "\n"
-       << "# OUTPUT_SIZE    = " << OUTPUT_SIZE    << "\n"
-       << "# ELITISM        = " << ELITISM        << "\n"
-       << "# CROSSOVER_PROB = " << CROSSOVER_PROB << "\n"
-       << "# MUTATION_PROB  = " << MUTATION_PROB  << "\n"
-       << "# MUTATION_RATE  = " << MUTATION_RATE  << "\n"
-       << "# MUTATION_SIZE  = " << MUTATION_SIZE  << "\n"
-       << "# NUM_RUNS       = " << NUM_RUNS       << "\n"
-       << "# BANG_SIZE      = " << BANG_SIZE      << "\n"
-       << "# MAX_EVAL_TIME  = " << MAX_EVAL_TIME  << "\n"
-       << "# SCORE_ANG      = " << SCORE_ANG      << "\n";
   }
 
 }

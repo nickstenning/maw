@@ -1,3 +1,0 @@
-Basic physical simulation of a ball bouncing on a plane. Example use:
-
-./build/Debug/maw | head -400 | grep '^1' | cut -f3 > data && gnuplot -e "plot 'data'; pause -1"

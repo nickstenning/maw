@@ -27,6 +27,9 @@ public:
 
   std::vector<int> feedForward(std::vector<double> const& input);
 
+  friend bool operator<(Brain const& lhs, Brain const& rhs);
+  friend double operator+(double const& lhs, Brain const& rhs);
+
   friend std::ostream& operator<<(std::ostream&, Brain const&);
   friend class BrainDotPrinter;
 

@@ -19,7 +19,8 @@ Weights randomWeights(size_t layer1, size_t layer2) {
 }
 
 Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
-: m_numInput(numInput)
+: m_fitness(0.0)
+, m_numInput(numInput)
 , m_numHidden(numHidden)
 , m_numOutput(numOutput)
 , m_layerInput()
@@ -27,7 +28,6 @@ Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
 , m_layerOutput()
 , m_weightsIH()
 , m_weightsHO()
-, m_fitness(0.0)
 {
   initLayer(m_layerInput, m_numInput);
   initLayer(m_layerHidden, m_numHidden);
@@ -128,6 +128,14 @@ inline int Brain::terminationFunction (double x) {
   } else {
     return 0;
   }
+}
+
+bool operator< (Brain const& lhs, Brain const& rhs) {
+  return lhs.fitness() < rhs.fitness();
+}
+
+double operator+ (double const& lhs, Brain const& rhs) {
+  return lhs + rhs.fitness();
 }
 
 // How to print a brain
