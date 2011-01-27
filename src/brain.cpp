@@ -19,7 +19,8 @@ Weights randomWeights(size_t layer1, size_t layer2) {
 }
 
 Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
-: m_numInput(numInput)
+: m_fitness(0.0)
+, m_numInput(numInput)
 , m_numHidden(numHidden)
 , m_numOutput(numOutput)
 , m_layerInput()
@@ -27,7 +28,6 @@ Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
 , m_layerOutput()
 , m_weightsIH()
 , m_weightsHO()
-, m_fitness(0.0)
 {
   initLayer(m_layerInput, m_numInput);
   initLayer(m_layerHidden, m_numHidden);

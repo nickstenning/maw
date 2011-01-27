@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <numeric>
 #include <assert.h>
+#include <cmath>
 
 #include "pendulum.h"
 #include "brain.h"
@@ -41,7 +42,7 @@ namespace GA {
    * @return Status: -1 results in evaluation being aborted.
   **/
   int stepFitness(double& fitness, Pendulum& pdl) {
-    bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
+    bool inScoringZone = std::abs(pdl.ang()) < SCORE_ANG;
     if (inScoringZone) {
       fitness += pdl.dt * util::diracDelta(pdl.ang(), 5);
     } else {
@@ -72,7 +73,7 @@ namespace GA {
 
     // Elitist step. We preserve some proportion of the population untouched
     // for the next generation.
-    size_t numElite = round(ELITISM * m_pop.size());
+    size_t numElite = static_cast<size_t>( round(ELITISM * m_pop.size()) );
     size_t numRemain = m_pop.size() - numElite;
     for (Population::iterator it = m_pop.end() - 1; it != m_pop.end() - 1 - numElite; --it) {
       newPop.push_back(*it);
