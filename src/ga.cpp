@@ -160,7 +160,7 @@ namespace GA {
            << controlTorque << "\n";
       }
 
-      os "\n\n"; // Separate run blocks for gnuplot
+      os << "\n\n"; // Separate run blocks for gnuplot
 
     }
   }
