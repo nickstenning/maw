@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <signal.h>
 
 #include "ga.h"
 #include "brain.h"
@@ -11,7 +12,16 @@
 #define COLWIDTH        14
 #define COL             std::setw( COLWIDTH )
 
+bool abortGA = false;
+
+void abortEarly(int) {
+  abortGA = true;
+}
+
 int main (int argc, char* const argv[]) {
+  // Can send USR1 to stop evolution early.
+  signal(SIGUSR1, abortEarly);
+
   std::cout << std::setprecision(6) << std::fixed;
 
   unsigned int seed = util::initRNG();
@@ -23,7 +33,6 @@ int main (int argc, char* const argv[]) {
 
   if (argc == 2) {
     numGenerations = atoi(argv[1]);
-
   }
 
   // Initialise GA population
@@ -37,7 +46,7 @@ int main (int argc, char* const argv[]) {
             << COL << "sdFit" << "\n";
 
   // GA
-  while (!runner.isFinished()) {
+  while (!runner.isFinished() and !abortGA) {
     runner.step();
 
     fittest = &runner.getFittest();

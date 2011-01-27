@@ -10,7 +10,7 @@
 
 // NN properties
 #define INPUT_SIZE  2
-#define HIDDEN_SIZE 5
+#define HIDDEN_SIZE 1
 #define OUTPUT_SIZE 1
 
 // Proportion of the fitness-rank-ordered population guaranteed to be saved.
