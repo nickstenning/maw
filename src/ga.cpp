@@ -11,6 +11,46 @@
 
 namespace GA {
 
+  /**
+   * Feed the state variables into the brain, feed forward, and advance the
+   * physics using the output of the brain as a controlling torque.
+   *
+   * @return Applied control torque
+  **/
+  double stepPhysics(Brain& brain, Pendulum& pdl) {
+    std::vector<double> input;
+    std::vector<int> output;
+
+    input.push_back(pdl.ang());
+    input.push_back(pdl.vel());
+
+    output = brain.feedForward(input);
+
+    double controlTorque = BANG_SIZE * output[0];
+    double noiseTorque   = util::rand(-NOISE_LEVEL, NOISE_LEVEL);
+
+    pdl.step(controlTorque + noiseTorque);
+
+    return controlTorque;
+  }
+
+  /**
+   * Return the fitness increment for the current timestep. Called once per
+   * physics timestep.
+   *
+   * @return Status: -1 results in evaluation being aborted.
+  **/
+  int stepFitness(double& fitness, Pendulum& pdl) {
+    bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
+    if (inScoringZone) {
+      fitness += pdl.dt * util::diracDelta(pdl.ang(), 5);
+    } else {
+      return -1; // Failure. No need to evaluate further.
+    }
+
+    return 0;
+  }
+
   Runner::Runner (size_t numGenerations, size_t popSize)
   : m_pop(popSize, Brain(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE))
   , m_numGenerations(numGenerations)
@@ -91,10 +131,8 @@ namespace GA {
   }
 
   void Runner::printRunData (std::ostream& os, Brain& brain) {
+    double controlTorque;
     Pendulum pdl;
-
-    std::vector<double> input;
-    std::vector<int> output;
 
     os << "# t\ttheta\tthetadot\ttorque\n";
 
@@ -107,20 +145,12 @@ namespace GA {
       os << "# run " << i << "\n";
 
       while (pdl.time() < MAX_EVAL_TIME) {
-        input.clear();
-
-        input.push_back(pdl.ang());
-        input.push_back(pdl.vel());
-
-        output = brain.feedForward(input);
-
-        pdl.step(BANG_SIZE * output[0] + util::rand(-NOISE_LEVEL, NOISE_LEVEL));
+        controlTorque = stepPhysics(brain, pdl);
 
         os << pdl.time() << "\t"
            << pdl.ang() << "\t"
            << (pdl.vel() / pdl.length) << "\t"
-           << BANG_SIZE * output[0]
-           << "\n";
+           << controlTorque << "\n";
       }
 
     }
@@ -146,27 +176,12 @@ namespace GA {
   double computeFitness(Brain& brain) {
     Pendulum pdl;
     double fitness = 0.0;
-    std::vector<double> input;
-    std::vector<int> output;
 
     pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG));
 
     while (pdl.time() < MAX_EVAL_TIME) {
-      input.clear();
-
-      input.push_back(pdl.ang());
-      input.push_back(pdl.vel());
-
-      output = brain.feedForward(input);
-
-      pdl.step(BANG_SIZE * output[0] + util::rand(-NOISE_LEVEL, NOISE_LEVEL));
-
-      bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
-      if (inScoringZone) {
-        fitness += pdl.dt * util::diracDelta(pdl.ang());
-      } else {
-        break; // Failure. No need to evaluate further.
-      }
+      stepPhysics(brain, pdl);
+      if (stepFitness(fitness, pdl) == -1) break;
     }
 
     return fitness;

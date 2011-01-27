@@ -8,7 +8,7 @@
 #include "brain_dot_printer.h"
 #include "util.h"
 
-#define COLWIDTH        10
+#define COLWIDTH        14
 #define COL             std::setw( COLWIDTH )
 
 int main (int argc, char* const argv[]) {

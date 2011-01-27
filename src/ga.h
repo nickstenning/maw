@@ -17,7 +17,7 @@
 #define ELITISM 0.2
 
 // Crossover probability for any given member of the new generation.
-#define CROSSOVER_PROB 0
+#define CROSSOVER_PROB 0.2
 
 // Mutation probability (chance we do any mutation at all)
 #define MUTATION_PROB 1.0
@@ -25,14 +25,14 @@
 // Maybe set at 1 / number of neurons available to mutate?
 #define MUTATION_RATE 1.0 / ((INPUT_SIZE * HIDDEN_SIZE) + (HIDDEN_SIZE * OUTPUT_SIZE))
 // Size of weight change
-#define MUTATION_SIZE 4.0
+#define MUTATION_SIZE 2.0
 
 // How many random init conds to average over?
 #define NUM_RUNS 3
 
 // Pendulum config
 #define BANG_SIZE     10.0
-#define NOISE_LEVEL   BANG_SIZE * 4.0
+#define NOISE_LEVEL   0.0
 #define MAX_EVAL_TIME 100.0
 #define PI            3.141592653589793238462643
 #define SCORE_ANG     PI/2.0
