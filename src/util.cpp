@@ -9,7 +9,7 @@ unsigned int util::initRNG (unsigned int seed) {
 }
 
 double util::rand (double a, double b) {
-  double normed = static_cast<double>(::rand()) / RAND_MAX;
+  double normed = static_cast<double>(::random()) / (RAND_MAX + 1.0);
   return (b - a) * normed + a;
 }
 

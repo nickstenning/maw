@@ -7,8 +7,11 @@ compiler = commands.getoutput('which llvm-g++ || echo -n "g++"')
 
 targets  = {
     '2d': {
-        'libs': ['libzmq'],
         'sources': ['2d', 'ga', 'brain', 'brain_dot_printer', 'pendulum', 'util']
+    },
+    'brainsock': {
+        'libs': ['libzmq'],
+        'sources': ['brainsock', 'zhelpers', 'pendulum', 'util']
     }
 }
 
@@ -21,15 +24,15 @@ cflags  = '''-g -O2 -ansi -pedantic
 
 def cflags_for_target(target):
     if 'libs' in targets[target]:
-        commands.getoutput('pkg-config --cflags ' + ''.join(targets[target]['libs'])).split()
+        return commands.getoutput('pkg-config --cflags ' + ''.join(targets[target]['libs'])).split()
     else:
-        []
+        return []
 
 def libs_for_target(target):
     if 'libs' in targets[target]:
-        commands.getoutput('pkg-config --libs ' + ''.join(targets[target]['libs'])).split()
+        return commands.getoutput('pkg-config --libs ' + ''.join(targets[target]['libs'])).split()
     else:
-        []
+        return []
 
 def build():
     for target in targets:
