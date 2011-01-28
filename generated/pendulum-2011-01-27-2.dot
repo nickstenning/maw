@@ -1,9 +1,0 @@
-digraph brain {
-  splines=false; nodesep=1; ranksep="1.5 equally"; rankdir=LR;
-  I0 -> H0 [headlabel=-12.582,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
-  I1 -> H0 [headlabel=-1.391,color="#ff7f0e",fontcolor="#ff7f0e",fontsize=10,labeldistance=3];
-  H0 -> O0 [headlabel=9.567,color="#1f77b4",fontcolor="#1f77b4",fontsize=10,labeldistance=3];
-  { rank=same; I0 I1 }
-  { rank=same; H0 }
-  { rank=same; O0 }
-}

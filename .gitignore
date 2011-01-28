@@ -1,9 +1,4 @@
 /build/
-/data/
 .DS_Store
 .deps
-*.pbxuser
-*.mode1v3
-*.perspectivev3
-*.tm_build_errors
 *.tmproj
