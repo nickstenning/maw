@@ -2,6 +2,7 @@
 #define ZHELPERS_H
 
 #include <string>
+#include <sstream>
 
 namespace zmq {
   class socket_t;
