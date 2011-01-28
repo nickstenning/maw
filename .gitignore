@@ -2,3 +2,5 @@
 .DS_Store
 .deps
 *.tmproj
+*.pyc
+*.pyo
