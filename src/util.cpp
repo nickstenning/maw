@@ -4,12 +4,12 @@
 #include "util.h"
 
 unsigned int util::initRNG (unsigned int seed) {
-  srand(seed);
+  srandom(seed);
   return seed;
 }
 
 double util::rand (double a, double b) {
-  double normed = static_cast<double>(::random()) / (RAND_MAX + 1.0);
+  double normed = static_cast<double>(random()) / (RAND_MAX + 1.0);
   return (b - a) * normed + a;
 }
 
