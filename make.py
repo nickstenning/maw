@@ -6,12 +6,12 @@ from fabricate import *
 compiler = commands.getoutput('which llvm-g++ || echo -n "g++"')
 
 targets  = {
-    '2d': {
-        'sources': ['2d', 'ga', 'brain', 'brain_dot_printer', 'pendulum', 'util']
+    'evolve': {
+        'sources': ['evolve', 'ga', 'brain', 'brain_dot_printer', 'pendulum', 'util']
     },
-    'brainsock': {
+    'simulate': {
         'libs': ['libzmq'],
-        'sources': ['brainsock', 'zhelpers', 'pendulum', 'util']
+        'sources': ['simulate', 'zhelpers', 'pendulum', 'util']
     }
 }
 
