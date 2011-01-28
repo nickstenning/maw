@@ -11,7 +11,7 @@ public:
   Pendulum();
   ~Pendulum();
 
-  void step(double externalTorque);
+  void step(double externalTorque, double ext_dt = Pendulum::dt);
 
   double const& time() const;
   double const& ang() const;
