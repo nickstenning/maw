@@ -12,6 +12,9 @@ targets  = {
     'simulate': {
         'libs': ['libzmq'],
         'sources': ['simulate', 'zhelpers', 'brain', 'pendulum', 'util']
+    },
+    'randombrain': {
+        'sources': ['randombrain', 'brain', 'util']
     }
 }
 

@@ -19,7 +19,6 @@ int main (int /*argc*/, char* const /*argv*/[]) {
 
   Pendulum pendulum;
   Brain brain;
-
   std::cin >> brain;
 
   zmq::context_t ctx(1);
