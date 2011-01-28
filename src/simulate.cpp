@@ -11,8 +11,7 @@ int process_comm(zmq::socket_t& socket, Pendulum& pendulum, double& torque);
 int process_data(zmq::socket_t& socket, Pendulum& pendulum, double& torque);
 
 int main (int /*argc*/, char* const /*argv*/[]) {
-  unsigned int seed = util::initRNG();
-  std::cout << "# RNG_SEED = " << seed << "\n";
+  util::initRNG();
 
   Pendulum pendulum;
   // Brain brain;
@@ -73,14 +72,11 @@ int process_comm(zmq::socket_t& socket, Pendulum& /*pendulum*/, double& torque) 
 
 int process_data(zmq::socket_t& socket, Pendulum& pendulum, double& torque) {
   std::istringstream s_in( s_recv(socket) );
-  double dt;
 
+  double dt;
   s_in >> dt;
 
-  double start = pendulum.time();
-  while (pendulum.time() < start + dt) {
-    pendulum.step(torque);
-  }
+  pendulum.step(torque, dt);
 
   std::ostringstream s_out;
   s_out << pendulum.ang();
