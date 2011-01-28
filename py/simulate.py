@@ -59,11 +59,11 @@ window = pyglet.window.Window(480, 480)
 @window.event
 def on_key_press(symbol, modifiers):
     if symbol == key.RIGHT:
-        comm.send("torque 5.0")
+        comm.send("torque 1")
         assert comm.recv() == "OK"
 
     elif symbol == key.LEFT:
-        comm.send("torque -5.0")
+        comm.send("torque -1")
         assert comm.recv() == "OK"
 
     elif symbol == key.ESCAPE:
@@ -72,7 +72,7 @@ def on_key_press(symbol, modifiers):
 @window.event
 def on_key_release(symbol, modifiers):
     if symbol == key.RIGHT or symbol == key.LEFT:
-        comm.send("torque 0.0")
+        comm.send("torque 0")
         assert comm.recv() == "OK"
 
 @window.event

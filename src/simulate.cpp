@@ -1,22 +1,26 @@
 #include <sstream>
+#include <vector>
 #include <unistd.h>
 #include "zmq.h"
 
-// #include "brain.h"
+#include "brain.h"
 #include "pendulum.h"
 #include "util.h"
 #include "zhelpers.h"
 
-int process_comm(zmq::socket_t& socket, Pendulum& pendulum, double& torque);
-int process_data(zmq::socket_t& socket, Pendulum& pendulum, double& torque);
+#define USER_TORQUE       20.0
+#define CONTROLLER_TORQUE 10.0
+
+int process_comm(zmq::socket_t&, Pendulum&, Brain&, int& torqueDir);
+int process_data(zmq::socket_t&, Pendulum&, Brain&, int& torqueDir);
 
 int main (int /*argc*/, char* const /*argv*/[]) {
   util::initRNG();
 
   Pendulum pendulum;
-  // Brain brain;
+  Brain brain;
 
-  // brain << std::cin;
+  std::cin >> brain;
 
   zmq::context_t ctx(1);
 
@@ -33,28 +37,42 @@ int main (int /*argc*/, char* const /*argv*/[]) {
   };
 
   // Initialize pendulum
-  pendulum.ang(0.1);
+  pendulum.ang(util::rand(-3, 3));
 
-  double torque = 0.0;
+  int torqueDir = 0;
 
   while (1) {
     zmq::poll(&poll_items[0], 2, -1);
 
     // Got command
     if (poll_items[0].revents & ZMQ_POLLIN) {
-      process_comm(comm, pendulum, torque);
+      process_comm(comm, pendulum, brain, torqueDir);
     }
 
     // Got request for data
     if (poll_items[1].revents & ZMQ_POLLIN) {
-      process_data(data, pendulum, torque);
+      process_data(data, pendulum, brain, torqueDir);
     }
   }
 
   return 0;
 }
 
-int process_comm(zmq::socket_t& socket, Pendulum& /*pendulum*/, double& torque) {
+double getControlTorque(Pendulum& pendulum, Brain& brain) {
+  std::vector<double> input;
+  std::vector<int> output;
+
+  input.push_back(pendulum.ang());
+  input.push_back(pendulum.vel());
+
+  output = brain.feedForward(input);
+
+  double controlTorque = CONTROLLER_TORQUE * output[0];
+
+  return controlTorque;
+}
+
+int process_comm(zmq::socket_t& socket, Pendulum& /*pendulum*/, Brain& /*brain*/, int& torqueDir) {
   std::istringstream s_in( s_recv(socket) );
   std::string cmd;
 
@@ -62,7 +80,7 @@ int process_comm(zmq::socket_t& socket, Pendulum& /*pendulum*/, double& torque) 
 
   if (cmd.compare("torque") != -1) {
     // Set torque from message body.
-    s_in >> torque;
+    s_in >> torqueDir;
   }
 
   s_send(socket, "OK");
@@ -70,13 +88,15 @@ int process_comm(zmq::socket_t& socket, Pendulum& /*pendulum*/, double& torque) 
   return 0;
 }
 
-int process_data(zmq::socket_t& socket, Pendulum& pendulum, double& torque) {
+int process_data(zmq::socket_t& socket, Pendulum& pendulum, Brain& brain, int& torqueDir) {
   std::istringstream s_in( s_recv(socket) );
 
   double dt;
   s_in >> dt;
 
-  pendulum.step(torque, dt);
+  double controlTorque = getControlTorque(pendulum, brain);
+
+  pendulum.step(controlTorque + USER_TORQUE * torqueDir, dt);
 
   std::ostringstream s_out;
   s_out << pendulum.ang();

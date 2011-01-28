@@ -11,7 +11,7 @@ targets  = {
     },
     'simulate': {
         'libs': ['libzmq'],
-        'sources': ['simulate', 'zhelpers', 'pendulum', 'util']
+        'sources': ['simulate', 'zhelpers', 'brain', 'pendulum', 'util']
     }
 }
 
