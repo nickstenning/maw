@@ -10,6 +10,7 @@ class BrainDotPrinter;
 
 class Brain {
 public:
+  Brain();
   Brain(size_t numInput, size_t numHidden, size_t numOutput);
   ~Brain();
 
@@ -31,6 +32,8 @@ public:
   friend double operator+(double const& lhs, Brain const& rhs);
 
   friend std::ostream& operator<<(std::ostream&, Brain const&);
+  friend std::istream& operator>> (std::istream& is, Brain& b);
+
   friend class BrainDotPrinter;
 
 protected:
@@ -47,7 +50,8 @@ protected:
   Weights m_weightsIH;
   Weights m_weightsHO;
 
-  void initLayer(Layer& l, size_t numNeurons);
+  void initLayers();
+  void initWeights();
 
   inline double activationFunction(double x);
   inline int    terminationFunction(double x);

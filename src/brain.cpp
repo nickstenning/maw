@@ -1,22 +1,29 @@
 #include <vector>
 #include <cmath>
+#include <assert.h>
 
 #include "util.h"
 #include "brain.h"
 
-Weights randomWeights(size_t layer1, size_t layer2) {
-  Weights w(layer1);
-
+void randomWeights(Weights& w, size_t layer1, size_t layer2) {
   for (size_t i = 0; i < layer1; i += 1) {
-    std::vector<double> x(layer2);
-    w[i] = x;
-
     for (size_t j = 0; j < layer2; j += 1) {
       w[i][j] = util::rand(-1, 1);
     }
   }
-  return w;
 }
+
+Brain::Brain()
+: m_fitness(0.0)
+, m_numInput(0)
+, m_numHidden(0)
+, m_numOutput(0)
+, m_layerInput()
+, m_layerHidden()
+, m_layerOutput()
+, m_weightsIH()
+, m_weightsHO()
+{}
 
 Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
 : m_fitness(0.0)
@@ -29,16 +36,15 @@ Brain::Brain(size_t numInput, size_t numHidden, size_t numOutput)
 , m_weightsIH()
 , m_weightsHO()
 {
-  initLayer(m_layerInput, m_numInput);
-  initLayer(m_layerHidden, m_numHidden);
-  initLayer(m_layerOutput, m_numOutput);
+  initLayers();
+  initWeights();
 }
 
 Brain::~Brain() {}
 
 void Brain::initRandomWeights() {
-  m_weightsIH = randomWeights(m_numInput, m_numHidden);
-  m_weightsHO = randomWeights(m_numHidden, m_numOutput);
+  randomWeights(m_weightsIH, m_numInput, m_numHidden);
+  randomWeights(m_weightsHO, m_numHidden, m_numOutput);
 }
 
 double const& Brain::fitness() const {
@@ -102,12 +108,15 @@ std::vector<int> Brain::feedForward (std::vector<double> const& input) {
   return output;
 }
 
-void Brain::initLayer(Layer& layer, size_t numNeurons) {
-  layer.clear();
+void Brain::initLayers() {
+  m_layerInput = Layer(m_numInput, 0.0);
+  m_layerHidden = Layer(m_numHidden, 0.0);
+  m_layerOutput = Layer(m_numOutput, 0.0);
+}
 
-  for (size_t i = 0; i < numNeurons; i += 1) {
-    layer.push_back(0.0);
-  }
+void Brain::initWeights() {
+  m_weightsIH = Weights(m_numInput, std::vector<double>(m_numHidden));
+  m_weightsHO = Weights(m_numHidden, std::vector<double>(m_numOutput));
 }
 
 bool Brain::topologyIsCompatibleWith(Brain const& rhs) const {
@@ -138,13 +147,62 @@ double operator+ (double const& lhs, Brain const& rhs) {
   return lhs + rhs.fitness();
 }
 
-// How to print a brain
+// Serialize a brain
 std::ostream& operator<< (std::ostream& os, Brain const& b) {
-  os << "<Brain"
-     << " ϕ:" << b.m_fitness
-     << " i:" << b.m_numInput
-     << " h:" << b.m_numHidden
-     << " o:" << b.m_numOutput
-     << ">";
+  // format version
+  os << "1\n";
+  // topology
+  os << b.m_numInput << " " << b.m_numHidden << " " << b.m_numOutput << "\n";
+
+  size_t i, j;
+
+  // weightsIH
+  for (i = 0; i < b.m_numInput; i += 1) {
+    for (j = 0; j < b.m_numHidden; j += 1) {
+      os << b.m_weightsIH[i][j] << " ";
+    }
+  }
+  os << "\n";
+
+  // weightsHO
+  for (i = 0; i < b.m_numHidden; i += 1) {
+    for (j = 0; j < b.m_numOutput; j += 1) {
+      os << b.m_weightsHO[i][j] << " ";
+    }
+  }
+  os << "\n";
+
   return os;
+}
+
+// Deserialize a brain
+std::istream& operator>> (std::istream& is, Brain& b) {
+  int version;
+  is >> version;
+
+  assert(version == 1);
+
+  is >> b.m_numInput >> b.m_numHidden >> b.m_numOutput;
+
+  b.initLayers();
+  b.initWeights();
+
+  size_t i, j;
+
+  // weightsIH
+  for (i = 0; i < b.m_numInput; i += 1) {
+    for (j = 0; j < b.m_numHidden; j += 1) {
+      is >> b.m_weightsIH[i][j];
+    }
+  }
+
+
+  // weightsHO
+  for (i = 0; i < b.m_numHidden; i += 1) {
+    for (j = 0; j < b.m_numOutput; j += 1) {
+      is >> b.m_weightsHO[i][j];
+    }
+  }
+
+  return is;
 }
