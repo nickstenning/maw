@@ -26,7 +26,8 @@ cflags  = '''-g -O2 -ansi -pedantic
              -Wunused-function -Wunused-label -Wunused-parameter
              -Wunused-value -Wunused-variable
              -Wpointer-arith -Wcast-qual -Wwrite-strings
-             -D__USE_FIXED_PROTOTYPES__'''.split()
+             -D__USE_FIXED_PROTOTYPES__
+             -Ivendor'''.split()
 
 def cflags_for_target(target):
     if 'libs' in targets[target]:

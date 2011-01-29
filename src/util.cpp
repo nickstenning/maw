@@ -1,7 +1,11 @@
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
+#include "mersenne_twister.h"
 #include "util.h"
+
+static MTRand rng;
 
 unsigned long util::initRNG () {
   unsigned long seed;
@@ -15,13 +19,12 @@ unsigned long util::initRNG () {
     seed = std::time(0);
   }
 
-  srandom(seed);
+  rng.seed(seed);
   return seed;
 }
 
 double util::rand (double a, double b) {
-  double normed = static_cast<double>(random()) / (RAND_MAX + 1.0);
-  return (b - a) * normed + a;
+  return (b - a) * rng() + a;
 }
 
 bool util::choose (double prob) {
