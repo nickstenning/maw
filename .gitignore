@@ -1,4 +1,5 @@
 /build/
+/doc/html/
 .DS_Store
 .deps
 *.tmproj
