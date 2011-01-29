@@ -146,52 +146,6 @@ namespace GA {
   void Runner::sortPopulation() {
     std::sort(m_pop.begin(), m_pop.end(), pointer_comparison<Evolvable>());
   }
-
-  // void Runner::printRunData (std::ostream& os, Brain& brain) {
-  //   double controlTorque;
-  //   Pendulum pdl;
-  //
-  //   os << "# t\ttheta\tthetadot\ttorque\n";
-  //
-  //   for (size_t i = 0; i < NUM_RUNS; i += 1) {
-  //
-  //     pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
-  //        .vel(util::rand(-2, 2))
-  //        .time(0.0);
-  //
-  //     os << "# run " << i << "\n";
-  //
-  //     while (pdl.time() < MAX_EVAL_TIME) {
-  //       controlTorque = stepPhysics(brain, pdl);
-  //
-  //       os << pdl.time() << "\t"
-  //          << pdl.ang() << "\t"
-  //          << (pdl.vel() / pdl.length) << "\t"
-  //          << controlTorque << "\n";
-  //     }
-  //
-  //     os << "\n\n"; // Separate run blocks for gnuplot
-  //
-  //   }
-  // }
-
-  // void Runner::printProperties (std::ostream& os) {
-  //   os << "# POP_SIZE        = " << m_pop.size()     << "\n"
-  //      << "# NUM_GENERATIONS = " << m_numGenerations << "\n"
-  //      << "# INPUT_SIZE      = " << INPUT_SIZE       << "\n"
-  //      << "# HIDDEN_SIZE     = " << HIDDEN_SIZE      << "\n"
-  //      << "# OUTPUT_SIZE     = " << OUTPUT_SIZE      << "\n"
-  //      << "# ELITISM         = " << ELITISM          << "\n"
-  //      << "# CROSSOVER_PROB  = " << CROSSOVER_PROB   << "\n"
-  //      << "# MUTATION_PROB   = " << MUTATION_PROB    << "\n"
-  //      << "# MUTATION_RATE   = " << MUTATION_RATE    << "\n"
-  //      << "# MUTATION_SIZE   = " << MUTATION_SIZE    << "\n"
-  //      << "# NUM_RUNS        = " << NUM_RUNS         << "\n"
-  //      << "# BANG_SIZE       = " << BANG_SIZE        << "\n"
-  //      << "# MAX_EVAL_TIME   = " << MAX_EVAL_TIME    << "\n"
-  //      << "# SCORE_ANG       = " << SCORE_ANG        << "\n";
-  // }
-
 }
 
 
