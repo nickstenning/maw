@@ -13,12 +13,12 @@ int main (int argc, char* const argv[]) {
     unsigned int seed = util::initRNG();
     std::cerr << "# RNG_SEED = " << seed << "\n";
 
-    int in_size = atoi(argv[1]);
-    int hi_size = atoi(argv[2]);
-    int ou_size = atoi(argv[3]);
+    size_t in_size = atoi(argv[1]);
+    size_t hi_size = atoi(argv[2]);
+    size_t ou_size = atoi(argv[3]);
 
     Brain b(in_size, hi_size, ou_size);
-    b.initRandomWeights();
+    b.setRandomWeights();
 
     std::cout << b;
   }

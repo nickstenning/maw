@@ -4,81 +4,97 @@
 #include <iostream>
 #include <vector>
 
-// GA properties
-#define POP_SIZE        50
-#define NUM_GENERATIONS 5
-
-// NN properties
-#define INPUT_SIZE  2
-#define HIDDEN_SIZE 1
-#define OUTPUT_SIZE 1
-
-// Proportion of the fitness-rank-ordered population guaranteed to be saved.
-#define ELITISM 0.2
-
-// Crossover probability for any given member of the new generation.
-#define CROSSOVER_PROB 0.2
-
-// Mutation probability (chance we do any mutation at all)
-#define MUTATION_PROB 1.0
-// Mutation rate (chance of mutation any one weight).
-// Maybe set at 1 / number of neurons available to mutate?
-#define MUTATION_RATE (1.0 / (INPUT_SIZE * HIDDEN_SIZE + HIDDEN_SIZE * OUTPUT_SIZE))
-// Size of weight change
-#define MUTATION_SIZE 2.0
-
-// How many random init conds to average over?
-#define NUM_RUNS 3
-
-// Pendulum config
-#define BANG_SIZE     10.0
-#define NOISE_LEVEL   0.0
-#define MAX_EVAL_TIME 100.0
-#define PI            3.141592653589793238462643
-#define SCORE_ANG     (PI - 0.1)
-
-class Brain;
-class Pendulum;
+class Evolvable;
+class FitnessFunction;
 
 namespace GA {
 
-  typedef std::vector<Brain> Population;
+  /**
+   * A wrapper around a population of instances of Evolvable.
+  **/
+  typedef std::vector<Evolvable*> Population;
 
-  bool compareFitness (Brain const& a, Brain const& b);
-  double sumFitness (double& a, Brain const& b);
+  /**
+   * Pick members from a population, weighted towards those with higher fitness.
+  **/
+  Evolvable* roulettePick(Population& pop);
 
-  double computeFitness (Brain& brain);
-
-  void crossover (Brain&, Brain const&);
-  void mutate (Brain&);
-
-  Brain piePick (Population const& pop);
-
+  /**
+   * A Runner helps create and perform GA on a Population of Evolvable objects.
+  **/
   class Runner
   {
   public:
-    Runner (size_t numGenerations = NUM_GENERATIONS, size_t popSize = POP_SIZE);
+    Runner (Evolvable* prototype,
+            FitnessFunction* fitnessFunction,
+            size_t numGenerations,
+            size_t popSize);
+
+    ~Runner ();
+
+    Runner& elitism (float p);
+    Runner& crossoverProb (float p);
+    Runner& mutationProb (float p);
 
     bool isFinished () const;
+    Runner& step ();
 
-    void step ();
+    Evolvable const* getFittest ();
 
-    void updateFitness (Brain& brain);
-
-    void fillStats(int& gen, double& min, double& max, double& mean, double& stddev) const;
-    Brain const& getFittest() const;
-
-    void printRunData (std::ostream& os, Brain& brain);
-    void printProperties (std::ostream& os);
+    void fillStats (int& gen, double& min, double& max, double& mean, double& stddev) const;
 
   protected:
+    void sortPopulation ();
+
+    // No copying
+    Runner(const GA::Runner&);
+    Runner& operator=(const GA::Runner&);
+
+  private:
     Population m_pop;
+
+    Evolvable* m_prototype;
+    FitnessFunction* m_fitnessFunc;
 
     size_t m_numGenerations;
     size_t m_generation;
 
+    float m_elitism;
+    float m_crossoverProb;
+    float m_mutationProb;
   };
-
 }
+
+/**
+ * pointer_comparison allows us to use std::sort on a std::vector<Class*>
+**/
+template <typename T>
+class pointer_comparison
+{
+public:
+  const bool operator() (T const* a, T const* b) const {
+    // check for 0
+    if (a == 0) {
+      return b != 0; // if b is also 0, then they are equal, hence a is not < than b
+    } else if (b == 0) {
+      return false;
+    } else {
+      return *a < *b;
+    }
+  }
+};
+
+/**
+ * pointer_comparison allows us to use std::accumulate on a std::vector<Class*>
+**/
+template <typename T>
+class pointer_accumulate
+{
+public:
+  const double operator() (double const a, T const* b) const {
+    return a + *b;
+  }
+};
+
 
 #endif // GA_H

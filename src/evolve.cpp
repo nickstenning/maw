@@ -1,16 +1,13 @@
-#include <vector>
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>
 #include <signal.h>
 
 #include "ga.h"
 #include "brain.h"
-#include "brain_dot_printer.h"
+#include "pendulum_fitness_function.h"
 #include "util.h"
 
-#define COLWIDTH        14
-#define COL             std::setw( COLWIDTH )
+#define COL std::setw( 14 )
 
 bool abortGA = false;
 
@@ -19,24 +16,33 @@ void abortEarly(int) {
 }
 
 int main (int argc, char* const argv[]) {
-  // Can send USR1 to stop evolution early.
+  std::cout << std::setprecision(6) << std::fixed;
+  std::cerr << std::setprecision(6) << std::fixed;
+
+  // Send USR1 to the process to stop evolution early.
   signal(SIGUSR1, abortEarly);
 
-  std::cout << std::setprecision(6) << std::fixed;
+  size_t numGenerations, populationSize;
 
-  unsigned int seed = util::initRNG();
-  std::cout << "# RNG_SEED = " << seed << "\n";
-
-  Brain const* fittest = NULL;
-
-  int numGenerations = 5;
-
-  if (argc == 2) {
+  if (argc != 3) {
+    std::cerr << "Usage: evolve <NUM_GENERATIONS> <POPULATION_SIZE>\n";
+    return 1;
+  } else {
     numGenerations = atoi(argv[1]);
+    populationSize = atoi(argv[2]);
   }
 
+  // Init RNG
+  unsigned int seed = util::initRNG();
+  std::cerr << "# RNG_SEED = " << seed << "\n";
+
   // Initialise GA population
-  GA::Runner runner(numGenerations);
+  GA::Runner runner(
+    new Brain(2, 1, 1),
+    new PendulumFitnessFunction(),
+    numGenerations,
+    populationSize
+  );
 
   std::cerr << std::left;
   std::cerr << COL << "# gen"
@@ -46,14 +52,11 @@ int main (int argc, char* const argv[]) {
             << COL << "sdFit" << "\n";
 
   // GA
+  int gen;
+  double min, max, mean, stddev;
+
   while (!runner.isFinished() and !abortGA) {
     runner.step();
-
-    fittest = &runner.getFittest();
-
-    int gen;
-    double min, max, mean, stddev;
-
     runner.fillStats(gen, min, max, mean, stddev);
 
     // Print generation stats
@@ -64,25 +67,9 @@ int main (int argc, char* const argv[]) {
               << COL << stddev << "\n";
   }
 
-  // print data for run to stdout
-  std::cout << "# FITNESS = " << fittest->fitness() << "\n"
-            << "# \n";
-
-  runner.printProperties(std::cout);
-
-  std::cout << "# \n";
-
-  BrainDotPrinter bp(std::cout);
-  bp.prefix("# ");
-  bp << *fittest << "\n";
-
-  // Make a copy we can futz with:
-  Brain fittestRunnable = *fittest;
-  runner.printRunData(std::cout, fittestRunnable);
-
-  // Clean up:
-  fittest = NULL;
-  delete fittest;
+  // Print best solution to stdout
+  Brain const* fittest = dynamic_cast<Brain const*>( runner.getFittest() );
+  std::cout << *fittest << std::endl;
 
   return 0;
 }

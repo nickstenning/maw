@@ -3,33 +3,32 @@
 
 #include <vector>
 
-typedef std::vector< double > Layer;
-typedef std::vector< std::vector<double> > Weights;
+#include "evolvable.h"
+
+#define MUTATION_SIZE 2.0
 
 class BrainDotPrinter;
 
-class Brain {
+class Brain : public Evolvable
+{
 public:
+  typedef std::vector< double > Layer;
+  typedef std::vector< std::vector<double> > WeightMatrix;
+
   Brain();
   Brain(size_t numInput, size_t numHidden, size_t numOutput);
-  ~Brain();
 
-  void initRandomWeights();
+  virtual void gaInit();
+  virtual Evolvable* clone ();
+  virtual Evolvable* clone (Evolvable* copy);
+  virtual Evolvable* mutate ();
+  virtual Evolvable* crossover (Evolvable const* other);
 
-  double const& fitness() const;
-  Brain const& fitness(double const&);
-
-  Weights const& weightsHidden() const;
-  Brain& weightsHidden(Weights const&);
-  Weights const& weightsOutput() const;
-  Brain& weightsOutput(Weights const&);
+  void setRandomWeights();
 
   bool topologyIsCompatibleWith(Brain const& rhs) const;
 
   std::vector<int> feedForward(std::vector<double> const& input);
-
-  friend bool operator<(Brain const& lhs, Brain const& rhs);
-  friend double operator+(double const& lhs, Brain const& rhs);
 
   friend std::ostream& operator<<(std::ostream&, Brain const&);
   friend std::istream& operator>> (std::istream& is, Brain& b);
@@ -37,8 +36,13 @@ public:
   friend class BrainDotPrinter;
 
 protected:
-  double m_fitness;
+  void initLayers();
+  void initWeights();
 
+  inline double activationFunction(double x);
+  inline int    terminationFunction(double x);
+
+private:
   size_t m_numInput;
   size_t m_numHidden;
   size_t m_numOutput;
@@ -47,14 +51,11 @@ protected:
   Layer m_layerHidden;
   Layer m_layerOutput;
 
-  Weights m_weightsIH;
-  Weights m_weightsHO;
+  WeightMatrix m_weightsIH;
+  WeightMatrix m_weightsHO;
 
-  void initLayers();
-  void initWeights();
-
-  inline double activationFunction(double x);
-  inline int    terminationFunction(double x);
+  double m_mutationRate;
+  double m_mutationSize;
 };
 
 // Define operator for template in "util.h"
