@@ -15,6 +15,9 @@ targets  = {
     },
     'nngen': {
         'sources': ['nngen', 'nn', 'util']
+    },
+    'nn2dot': {
+        'sources': ['nn2dot', 'nn', 'nn_dot_printer', 'util']
     }
 }
 
