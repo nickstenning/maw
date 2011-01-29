@@ -33,7 +33,7 @@ int main (int argc, char* const argv[]) {
   }
 
   // Init RNG
-  unsigned int seed = util::initRNG();
+  unsigned long seed = util::initRNG();
   std::cerr << "# RNG_SEED = " << seed << "\n";
 
   // Initialise GA population

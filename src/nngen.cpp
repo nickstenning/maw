@@ -10,7 +10,7 @@ int main (int argc, char* const argv[]) {
     std::cerr << "Usage: nngen <INPUT_SIZE> <HIDDEN_SIZE> <OUTPUT_SIZE>\n";
     return 1;
   } else {
-    unsigned int seed = util::initRNG();
+    unsigned long seed = util::initRNG();
     std::cerr << "# RNG_SEED = " << seed << "\n";
 
     size_t in_size = atoi(argv[1]);

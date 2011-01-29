@@ -3,10 +3,17 @@
 
 #include "util.h"
 
-unsigned int util::initRNG (unsigned int seed) {
+unsigned long util::initRNG () {
+  unsigned long seed;
   char const* envSeed;
+
   envSeed = getenv("MAW_RNG_SEED");
-  if (envSeed != NULL) seed = atoi(envSeed);
+
+  if (envSeed != NULL) {
+    seed = strtoul(envSeed, NULL, 0);
+  } else {
+    seed = std::time(0);
+  }
 
   srandom(seed);
   return seed;

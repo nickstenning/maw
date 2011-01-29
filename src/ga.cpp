@@ -12,7 +12,7 @@
 namespace GA {
 
   Evolvable* roulettePick(Population& pop) {
-    double wheelSize = std::accumulate(pop.begin(), pop.end(), 0.0, pointer_accumulate<Evolvable>());
+    double wheelSize = std::accumulate(pop.begin(), pop.end(), 0.0, util::pointer_accumulate<Evolvable>());
     double subTotal = 0.0;
     double pickPoint = util::rand(0, wheelSize);
 
@@ -127,7 +127,7 @@ namespace GA {
     gen = m_generation;
     min = m_pop[0]->fitness();
     max = m_pop[m_pop.size() - 1]->fitness();
-    mean = std::accumulate(m_pop.begin(), m_pop.end(), 0.0, pointer_accumulate<Evolvable>()) / m_pop.size();
+    mean = std::accumulate(m_pop.begin(), m_pop.end(), 0.0, util::pointer_accumulate<Evolvable>()) / m_pop.size();
 
     double sumsqdev = 0.0;
 
@@ -144,7 +144,7 @@ namespace GA {
   }
 
   void Runner::sortPopulation() {
-    std::sort(m_pop.begin(), m_pop.end(), pointer_comparison<Evolvable>());
+    std::sort(m_pop.begin(), m_pop.end(), util::pointer_compare<Evolvable>());
   }
 }
 

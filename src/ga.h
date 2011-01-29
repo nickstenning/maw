@@ -65,36 +65,5 @@ namespace GA {
   };
 }
 
-/**
- * pointer_comparison allows us to use std::sort on a std::vector<Class*>
-**/
-template <typename T>
-class pointer_comparison
-{
-public:
-  const bool operator() (T const* a, T const* b) const {
-    // check for 0
-    if (a == 0) {
-      return b != 0; // if b is also 0, then they are equal, hence a is not < than b
-    } else if (b == 0) {
-      return false;
-    } else {
-      return *a < *b;
-    }
-  }
-};
-
-/**
- * pointer_comparison allows us to use std::accumulate on a std::vector<Class*>
-**/
-template <typename T>
-class pointer_accumulate
-{
-public:
-  const double operator() (double const a, T const* b) const {
-    return a + *b;
-  }
-};
-
 
 #endif // GA_H
