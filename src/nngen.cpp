@@ -1,13 +1,13 @@
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 
-#include "brain.h"
+#include "nn.h"
 #include "util.h"
 
 int main (int argc, char* const argv[]) {
 
   if (argc != 4) {
-    std::cerr << "Usage: randombrain <INPUT_SIZE> <HIDDEN_SIZE> <OUTPUT_SIZE>\n";
+    std::cerr << "Usage: nngen <INPUT_SIZE> <HIDDEN_SIZE> <OUTPUT_SIZE>\n";
     return 1;
   } else {
     unsigned int seed = util::initRNG();
@@ -17,10 +17,10 @@ int main (int argc, char* const argv[]) {
     size_t hi_size = atoi(argv[2]);
     size_t ou_size = atoi(argv[3]);
 
-    Brain b(in_size, hi_size, ou_size);
-    b.setRandomWeights();
+    NN nn(in_size, hi_size, ou_size);
+    nn.setRandomWeights();
 
-    std::cout << b;
+    std::cout << nn;
   }
 
 }

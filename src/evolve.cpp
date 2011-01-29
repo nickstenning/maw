@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include <signal.h>
+#include <csignal>
 
 #include "ga.h"
 #include "brain.h"

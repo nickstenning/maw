@@ -1,8 +1,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 #include "zmq.h"
 

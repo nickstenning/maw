@@ -1,9 +1,13 @@
 #include <cmath>
-#include <iostream>
+#include <cstdlib>
 
 #include "util.h"
 
 unsigned int util::initRNG (unsigned int seed) {
+  char const* envSeed;
+  envSeed = getenv("MAW_RNG_SEED");
+  if (envSeed != NULL) seed = atoi(envSeed);
+
   srandom(seed);
   return seed;
 }

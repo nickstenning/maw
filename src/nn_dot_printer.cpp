@@ -4,10 +4,10 @@
 #include <iomanip>
 #include <sstream>
 
-#include "brain.h"
-#include "brain_dot_printer.h"
+#include "nn.h"
+#include "nn_dot_printer.h"
 
-BrainDotPrinter::BrainDotPrinter(std::ostream& os)
+NNDotPrinter::NNDotPrinter(std::ostream& os)
 : m_os(&os)
 , m_colours()
 , m_prefix("")
@@ -15,31 +15,34 @@ BrainDotPrinter::BrainDotPrinter(std::ostream& os)
   initColours();
 }
 
-BrainDotPrinter::BrainDotPrinter(BrainDotPrinter const& bp)
-: m_os(bp.m_os)
-, m_colours(bp.m_colours)
-, m_prefix(bp.m_prefix)
+NNDotPrinter::NNDotPrinter(NNDotPrinter const& p)
+: m_os(p.m_os) // We don't own this pointer, so this is fine.
+, m_colours(p.m_colours)
+, m_prefix(p.m_prefix)
 {}
 
-BrainDotPrinter::~BrainDotPrinter() {
+NNDotPrinter::~NNDotPrinter() {
   m_os = NULL;
+  delete m_os;
 }
 
-std::string const& BrainDotPrinter::prefix() const {
+std::string const& NNDotPrinter::prefix() const {
   return m_prefix;
 }
 
-BrainDotPrinter& BrainDotPrinter::prefix(const char p[]) {
+NNDotPrinter& NNDotPrinter::prefix(const char p[]) {
   m_prefix = p;
   return *this;
 }
 
-BrainDotPrinter& BrainDotPrinter::operator= (BrainDotPrinter const& bp) {
-  m_os = bp.m_os;
+NNDotPrinter& NNDotPrinter::operator= (NNDotPrinter const& p) {
+  m_os = p.m_os;
+  m_colours = p.m_colours;
+  m_prefix = p.m_prefix;
   return *this;
 }
 
-BrainDotPrinter& BrainDotPrinter::operator<< (Brain const& b) {
+NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
   size_t i, j;
 
   std::ostream& os = *m_os;
@@ -54,23 +57,23 @@ BrainDotPrinter& BrainDotPrinter::operator<< (Brain const& b) {
   rankStrH << "  { rank=same;";
   rankStrO << "  { rank=same;";
 
-  for (i = 0; i < b.m_numInput; i += 1) {
+  for (i = 0; i < nn.m_numInput; i += 1) {
     rankStrI << " I" << i;
-    for (j = 0; j < b.m_numHidden; j += 1) {
+    for (j = 0; j < nn.m_numHidden; j += 1) {
       os << m_prefix;
-      printWeight(os, "I", i, "H", j, b.m_weightsIH[i][j]);
+      printWeight(os, "I", i, "H", j, nn.m_weightsIH[i][j]);
     }
   }
 
-  for (i = 0; i < b.m_numHidden; i += 1) {
+  for (i = 0; i < nn.m_numHidden; i += 1) {
     rankStrH << " H" << i;
-    for (j = 0; j < b.m_numOutput; j += 1) {
+    for (j = 0; j < nn.m_numOutput; j += 1) {
       os << m_prefix;
-      printWeight(os, "H", i, "O", j, b.m_weightsHO[i][j]);
+      printWeight(os, "H", i, "O", j, nn.m_weightsHO[i][j]);
     }
   }
 
-  for (i = 0; i < b.m_numOutput; i += 1) {
+  for (i = 0; i < nn.m_numOutput; i += 1) {
     rankStrO << " O" << i;
   }
 
@@ -87,7 +90,7 @@ BrainDotPrinter& BrainDotPrinter::operator<< (Brain const& b) {
   return *this;
 }
 
-void BrainDotPrinter::printWeight(std::ostream& os, std::string lab_i, size_t i, std::string lab_j, size_t j, double val) {
+void NNDotPrinter::printWeight(std::ostream& os, std::string lab_i, size_t i, std::string lab_j, size_t j, double val) {
   std::string& col = m_colours[i % m_colours.size()];
 
   os << "  " << lab_i << i << " -> " << lab_j << j;
@@ -96,8 +99,7 @@ void BrainDotPrinter::printWeight(std::ostream& os, std::string lab_i, size_t i,
   os << "fontsize=10,labeldistance=3];\n";
 }
 
-
-void BrainDotPrinter::initColours() {
+void NNDotPrinter::initColours() {
   m_colours.push_back("#1f77b4");
   m_colours.push_back("#ff7f0e");
   m_colours.push_back("#2ca02c");
