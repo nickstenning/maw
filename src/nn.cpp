@@ -1,3 +1,4 @@
+#include <istream>
 #include <vector>
 #include <cmath>
 #include <stdexcept>
@@ -5,97 +6,113 @@
 #include "util.h"
 #include "nn.h"
 
-void randomWeights(NN::WeightMatrix& w, size_t layer1, size_t layer2) {
-  for (size_t i = 0; i < layer1; i += 1) {
-    for (size_t j = 0; j < layer2; j += 1) {
-      w[i][j] = util::rand(-1, 1);
-    }
-  }
-}
-
 NN::NN()
-: m_numInput(0)
-, m_numHidden(0)
-, m_numOutput(0)
-, m_layerInput()
-, m_layerHidden()
-, m_layerOutput()
-, m_weightsIH()
-, m_weightsHO()
+: m_layers()
+, m_weights()
 {}
 
-NN::NN(size_t numInput, size_t numHidden, size_t numOutput)
-: m_numInput(numInput)
-, m_numHidden(numHidden)
-, m_numOutput(numOutput)
-, m_layerInput()
-, m_layerHidden()
-, m_layerOutput()
-, m_weightsIH()
-, m_weightsHO()
+NN::NN(std::vector<size_t> layerSizes)
+: m_layers()
+, m_weights()
 {
-  initLayers();
+  initLayers(layerSizes);
   initWeights();
 }
 
-void NN::setRandomWeights()
+NN::NN(std::istream& is)
+: m_layers()
+, m_weights()
 {
-  randomWeights(m_weightsIH, m_numInput, m_numHidden);
-  randomWeights(m_weightsHO, m_numHidden, m_numOutput);
+  is >> *this;
 }
 
-std::vector<int> NN::feedForward (std::vector<double> const& input)
+
+void NN::setRandomWeights()
 {
-  for(size_t i = 0; i < m_numInput; i += 1) m_layerInput[i] = input[i];
+  for (size_t i = 0; i < m_weights.size(); i += 1) {
+    setRandomWeightsForMatrix(i);
+  }
+}
 
-  // Propagate to hidden layer
-  for(size_t j = 0; j < m_numHidden; j += 1) {
-    m_layerHidden[j] = 0.0;
+void NN::setRandomWeightsForMatrix(size_t index) {
+  weight_matrix& mx = m_weights[index];
 
-    for(size_t k = 0; k < m_numInput; k += 1) {
-      m_layerHidden[j] += m_layerInput[k] * m_weightsIH[k][j];
+  for (size_t i = 0; i < m_layers[index].size(); i += 1) {
+    for (size_t j = 0; j < m_layers[index + 1].size(); j += 1) {
+      mx[i][j] = util::rand(-1, 1);
     }
+  }
+}
 
-    m_layerHidden[j] = activationFunction( m_layerHidden[j] );
+std::vector<int> NN::feedForward (layer const& input) {
+  // Copy input if correct length
+  if (m_layers[0].size() != input.size()) {
+    throw std::runtime_error("Input to NN::feedForward of incorrect size");
+  }
+  m_layers[0] = input;
+
+  // Propagate, layer by layer.
+  for(size_t i = 0; i < m_layers.size() - 1; i += 1) {
+    feedForwardLayer(i);
   }
 
-  // Propagate to output layer
-  for(size_t j = 0; j < m_numOutput; j += 1) {
-    m_layerOutput[j] = 0.0;
-
-    for(size_t k = 0; k < m_numHidden; k += 1) {
-      m_layerOutput[j] += m_layerHidden[k] * m_weightsHO[k][j];
-    }
-
-    m_layerOutput[j] = activationFunction( m_layerOutput[j] );
-  }
-
+  // Terminate last layer, and copy output.
   std::vector<int> output;
-  for(size_t i = 0; i < m_numOutput; i += 1) {
-    int pinnedOutput = terminationFunction( m_layerOutput[i] );
+  layer& outputLayer = m_layers[m_layers.size() - 1];
+
+  for(size_t i = 0; i < outputLayer.size(); i += 1) {
+    int pinnedOutput = terminationFunction( outputLayer[i] );
     output.push_back(pinnedOutput);
   }
 
   return output;
 }
 
-void NN::initLayers()
-{
-  m_layerInput = Layer(m_numInput, 0.0);
-  m_layerHidden = Layer(m_numHidden, 0.0);
-  m_layerOutput = Layer(m_numOutput, 0.0);
+void NN::feedForwardLayer (size_t index) {
+  layer& send = m_layers[index];
+  layer& recv = m_layers[index + 1];
+  weight_matrix& mx = m_weights[index];
+
+  for(size_t j = 0; j < recv.size(); j += 1) {
+    recv[j] = 0.0; // Clear receiving neuron's previous state.
+
+    for(size_t i = 0; i < send.size(); i += 1) {
+      recv[j] += send[i] * mx[i][j];
+    }
+
+    recv[j] = activationFunction( recv[j] );
+  }
 }
 
-void NN::initWeights()
-{
-  m_weightsIH = WeightMatrix(m_numInput, Layer(m_numHidden));
-  m_weightsHO = WeightMatrix(m_numHidden, Layer(m_numOutput));
+void NN::initLayers (std::vector<size_t> layerSizes) {
+  m_layers = layers(layerSizes.size());
+
+  // Init layers with neuron output values of 0.
+  for (size_t i = 0; i < layerSizes.size(); i += 1) {
+    m_layers[i] = layer(layerSizes[i], 0);
+  }
+}
+
+void NN::initWeights () {
+  m_weights = weights(m_layers.size() - 1);
+
+  // Init weights. This is a feed-forward network so there is a weight_matrix
+  // connecting every pair of adjacent layers.
+  for (size_t i = 0; i < m_weights.size(); i += 1) {
+    layer const& send = m_layers[i];
+    layer const& recv = m_layers[i+1];
+    m_weights[i] = weight_matrix(send.size(), weight_vector(recv.size(), 0));
+  }
 }
 
 bool NN::topologyIsCompatibleWith(NN const& rhs) const {
-  return (m_numInput == rhs.m_numInput &&
-          m_numHidden == rhs.m_numHidden &&
-          m_numOutput == rhs.m_numOutput);
+  if (m_layers.size() != rhs.m_layers.size()) return false;
+
+  for (size_t i = 0; i < m_layers.size(); i += 1) {
+    if (m_layers[i].size() != rhs.m_layers[i].size()) return false;
+  }
+
+  return true;
 }
 
 inline double NN::activationFunction (double x) {
@@ -116,60 +133,59 @@ inline int NN::terminationFunction (double x) {
 
 // Serialize a brain
 std::ostream& operator<< (std::ostream& os, NN const& nn) {
-  // format version
-  os << "1\n";
-  // topology
-  os << nn.m_numInput << " " << nn.m_numHidden << " " << nn.m_numOutput << "\n";
+  // number of layers
+  os << nn.m_layers.size() << "\n";
 
-  size_t i, j;
-
-  // weightsIH
-  for (i = 0; i < nn.m_numInput; i += 1) {
-    for (j = 0; j < nn.m_numHidden; j += 1) {
-      os << nn.m_weightsIH[i][j] << " ";
-    }
+  // layers
+  for (NN::layers_ci it = nn.m_layers.begin(); it != nn.m_layers.end(); ++it) {
+    os << it->size() << " ";
   }
   os << "\n";
 
-  // weightsHO
-  for (i = 0; i < nn.m_numHidden; i += 1) {
-    for (j = 0; j < nn.m_numOutput; j += 1) {
-      os << nn.m_weightsHO[i][j] << " ";
+  size_t k, i, j;
+  // weights
+  for (k = 0; k < nn.m_weights.size(); k += 1) {
+    NN::weight_matrix const& mx = nn.m_weights[k];
+    NN::layer const& send = nn.m_layers[k];
+    NN::layer const& recv = nn.m_layers[k+1];
+
+    for (i = 0; i < send.size(); i += 1) {
+      for (j = 0; j < recv.size(); j += 1) {
+        os << mx[i][j] << " ";
+      }
     }
+
+    os << "\n";
   }
-  os << "\n";
 
   return os;
 }
 
 // Deserialize a NN
 std::istream& operator>> (std::istream& is, NN& nn) {
-  int version;
-  is >> version;
+  size_t numLayers;
+  is >> numLayers;
+  std::vector<size_t> layerSizes(numLayers);
 
-  if (version != 1) {
-    throw std::runtime_error("Cannot deserialize a NN from unknown serialization version!");
+  for (size_t i = 0; i < numLayers; i += 1) {
+    is >> layerSizes[i];
   }
 
-  is >> nn.m_numInput >> nn.m_numHidden >> nn.m_numOutput;
-
-  nn.initLayers();
+  nn.initLayers(layerSizes);
   nn.initWeights();
 
-  size_t i, j;
+  size_t k, i, j;
 
-  // weightsIH
-  for (i = 0; i < nn.m_numInput; i += 1) {
-    for (j = 0; j < nn.m_numHidden; j += 1) {
-      is >> nn.m_weightsIH[i][j];
-    }
-  }
+  // weights
+  for (k = 0; k < nn.m_weights.size(); k += 1) {
+    NN::weight_matrix& mx = nn.m_weights[k];
+    NN::layer& send = nn.m_layers[k];
+    NN::layer& recv = nn.m_layers[k+1];
 
-
-  // weightsHO
-  for (i = 0; i < nn.m_numHidden; i += 1) {
-    for (j = 0; j < nn.m_numOutput; j += 1) {
-      is >> nn.m_weightsHO[i][j];
+    for (i = 0; i < send.size(); i += 1) {
+      for (j = 0; j < recv.size(); j += 1) {
+        is >> mx[i][j];
+      }
     }
   }
 

@@ -43,57 +43,51 @@ NNDotPrinter& NNDotPrinter::operator= (NNDotPrinter const& p) {
 }
 
 NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
-  size_t i, j;
+  size_t k, i, j;
 
   std::ostream& os = *m_os;
-  os << std::setprecision(3);
 
   os << m_prefix << "digraph brain {\n";
   os << m_prefix << "  splines=false; nodesep=1; ranksep=\"1.5 equally\"; rankdir=LR;\n";
 
-  std::ostringstream rankStrI, rankStrH, rankStrO;
+  for (k = 0; k < nn.m_weights.size(); k += 1) {
+    NN::weight_matrix const& mx = nn.m_weights[k];
+    NN::layer const& send = nn.m_layers[k];
+    NN::layer const& recv = nn.m_layers[k+1];
 
-  rankStrI << "  { rank=same;";
-  rankStrH << "  { rank=same;";
-  rankStrO << "  { rank=same;";
+    std::ostringstream rankStr;
+    rankStr << "  { rank=same;";
 
-  for (i = 0; i < nn.m_numInput; i += 1) {
-    rankStrI << " I" << i;
-    for (j = 0; j < nn.m_numHidden; j += 1) {
-      os << m_prefix;
-      printWeight(os, "I", i, "H", j, nn.m_weightsIH[i][j]);
+    for (i = 0; i < send.size(); i += 1) {
+      rankStr << " L" << k << "_" << i;
+
+      for (j = 0; j < recv.size(); j += 1) {
+        os << m_prefix;
+        printWeight(os, k, i, k+1, j, mx[i][j]);
+      }
     }
+
+    os << m_prefix << rankStr.str() << " }\n";
   }
 
-  for (i = 0; i < nn.m_numHidden; i += 1) {
-    rankStrH << " H" << i;
-    for (j = 0; j < nn.m_numOutput; j += 1) {
-      os << m_prefix;
-      printWeight(os, "H", i, "O", j, nn.m_weightsHO[i][j]);
-    }
+  std::ostringstream rankStr;
+  rankStr << "  { rank=same;";
+  NN::layer const& lastLayer = nn.m_layers[nn.m_layers.size() - 1];
+  for (i = 0; i < lastLayer.size(); i += 1) {
+    rankStr << " L" << nn.m_layers.size() - 1 << "_" << i;
   }
+  os << m_prefix << rankStr.str() << " }\n";
 
-  for (i = 0; i < nn.m_numOutput; i += 1) {
-    rankStrO << " O" << i;
-  }
-
-  rankStrI << " }\n";
-  rankStrH << " }\n";
-  rankStrO << " }\n";
-
-  os << m_prefix << rankStrI.str()
-     << m_prefix << rankStrH.str()
-     << m_prefix << rankStrO.str();
 
   os << m_prefix << "}";
 
   return *this;
 }
 
-void NNDotPrinter::printWeight(std::ostream& os, std::string lab_i, size_t i, std::string lab_j, size_t j, double val) {
+void NNDotPrinter::printWeight(std::ostream& os, size_t layer_i, size_t i, size_t layer_j, size_t j, double val) {
   std::string& col = m_colours[i % m_colours.size()];
 
-  os << "  " << lab_i << i << " -> " << lab_j << j;
+  os << "  L" << layer_i << "_" << i << " -> L" << layer_j << "_" << j;
   os << " [headlabel=" << val << ",";
   os << "color=\"" << col << "\",fontcolor=\"" << col << "\",";
   os << "fontsize=10,labeldistance=3];\n";

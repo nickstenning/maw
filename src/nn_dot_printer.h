@@ -29,7 +29,7 @@ protected:
   std::vector<std::string> m_colours;
   std::string m_prefix;
 
-  void printWeight(std::ostream&, std::string, size_t, std::string, size_t, double);
+  void printWeight(std::ostream&, size_t, size_t, size_t, size_t, double);
   void initColours();
 };
 

@@ -23,4 +23,4 @@ public:
   static const btScalar wheelRadius;
 private:
   btVector3 const& m_position;
-}
+};

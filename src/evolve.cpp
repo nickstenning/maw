@@ -38,7 +38,7 @@ int main (int argc, char* const argv[]) {
 
   // Initialise GA population
   GA::Runner runner(
-    new Brain(2, 1, 1),
+    new Brain(std::cin),
     new PendulumFitnessFunction(),
     numGenerations,
     populationSize
