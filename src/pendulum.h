@@ -2,7 +2,6 @@
 #define PENDULUM_H
 
 #include <vector>
-#include <cmath>
 
 typedef std::vector<double> (*rkBlock)(double, double, double);
 

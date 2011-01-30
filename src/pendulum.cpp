@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "pendulum.h"
 
 const double Pendulum::pi      = 3.141592653589793238462643;
