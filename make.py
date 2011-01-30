@@ -11,7 +11,7 @@ targets  = {
     },
     'simulate': {
         'libs': ['libzmq'],
-        'sources': ['simulate', 'zhelpers', 'nn', 'pendulum', 'util']
+        'sources': ['simulate', 'zhelpers', 'unicycle_2d', 'util']
     },
     'nngen': {
         'sources': ['nngen', 'nn', 'util']
@@ -21,10 +21,8 @@ targets  = {
     }
 }
 
-cflags  = '''-g -O2 -ansi -pedantic
+cflags  = '''-g -O2 -ansi -pedantic-errors -Werror
              -Wall -Wextra -Wconversion -Wshadow -Weffc++
-             -Wunused-function -Wunused-label -Wunused-parameter
-             -Wunused-value -Wunused-variable
              -Wpointer-arith -Wcast-qual -Wwrite-strings
              -D__USE_FIXED_PROTOTYPES__
              -Ivendor'''.split()
