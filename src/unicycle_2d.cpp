@@ -13,8 +13,8 @@ const double Unicycle2D::wheelMass   = 5;   // kg
 
 static const double pi = 3.141592653589793238462643;
 static const double g  = 9.81; // m s^-2
-static const double M = Unicycle2D::wheelMass;
-static const double m = Unicycle2D::seatMass;
+static const double m = Unicycle2D::wheelMass;
+static const double M = Unicycle2D::seatMass;
 static const double l = Unicycle2D::postLength;
 static const double r = Unicycle2D::wheelRadius;
 
@@ -22,21 +22,21 @@ static const double r = Unicycle2D::wheelRadius;
 static const double angMax = (pi / 2.0) + asin(r / l);
 
 // Rolling friction accel maximum
-static const double fricRoll = (0.03 * M * g) / (r * M);
+static const double fricRoll = (0.03 * m * g) / (r * m);
 // Seat sliding friction force maximum
-static const double fricSlide = (0.3 * m * g) / M;
+static const double fricSlide = (0.5 * M * g) / m;
 
 // MoI of wheel
-static const double I = (M*r*r) / 2.0;
+static const double I = (m*r*r) / 2.0;
 
 // KE of wheel, and of seat due to linear motion
-static const double A = (I + M*r*r + m*r*r) / 2.0;
+static const double A = (I + m*r*r + M*r*r) / 2.0;
 // KE of seat
-static const double B = m * l * l / 2.0;
+static const double B = M * l * l / 2.0;
 // Coupling
-static const double C = m * r * l;
+static const double C = M * r * l;
 // Gravitational PE
-static const double D = m * g * l;
+static const double D = M * g * l;
 
 // 2D unicycle equations of motion.
 //
@@ -47,22 +47,19 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
   double /*w = s[2],*/ ddt_w;
   double dwdt = s[3], ddt_dwdt;
 
-  // This gets used a lot so let's just compute it once:
-  double ccp = C * cos(p);
-
   // \frac{d}{dt} p = \dot{p}
   ddt_p = dpdt;
 
-  // \frac{d}{dt} \dot{p} = \ddot{p} = \frac{C \dot{p}^2 - 2 A D / C \cos{p}}{C \cos{p} - 4 A B / C \cos{p}} \sin{p}
-  double ddt_dpdt_numer = sin(p) * (C * dpdt * dpdt - (2.0 * A * D) / ccp);
-  double ddt_dpdt_denom = ccp - (4.0 * A * B) / ccp;
+  // \frac{d}{dt} \dot{p} = \ddot{p} = \frac{(C \dot{p})^2 \cos{p} - 2 A D}{(C \cos{p})^2 - 4 A B} \sin{p}
+  double ddt_dpdt_numer = sin(p) * (pow(C * dpdt, 2) * cos(p) - 2.0 * A * D);
+  double ddt_dpdt_denom = pow(C * cos(p), 2) - 4.0 * A * B;
   ddt_dpdt = ddt_dpdt_numer / ddt_dpdt_denom;
 
   // \frac{d}{dt} w = \dot{w}
   ddt_w = dwdt;
 
   // \frac{d}{dt} \dot{w} = \ddot{w} = \frac{D \sin{p} - 2 B \ddot{p}}{C \cos {p}}
-  ddt_dwdt = (D * sin(p) - 2.0 * B * ddt_dpdt) / ccp;
+  ddt_dwdt = (D * sin(p) - 2.0 * B * ddt_dpdt) / C * cos(p);
 
   // Simple static friction model
   double wheelAccel = fabs(ddt_dwdt);
