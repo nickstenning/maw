@@ -7,9 +7,9 @@
 
 const double Unicycle2D::dt          = 0.01; // s
 const double Unicycle2D::postLength  = 1;   // m
-const double Unicycle2D::seatMass    = 0.1;   // kg
+const double Unicycle2D::seatMass    = 20;   // kg
 const double Unicycle2D::wheelRadius = 0.2; // m
-const double Unicycle2D::wheelMass   = 1;   // kg
+const double Unicycle2D::wheelMass   = 5;   // kg
 
 static const double pi = 3.141592653589793238462643;
 static const double g  = 9.81; // m s^-2
@@ -17,6 +17,14 @@ static const double M = Unicycle2D::wheelMass;
 static const double m = Unicycle2D::seatMass;
 static const double l = Unicycle2D::postLength;
 static const double r = Unicycle2D::wheelRadius;
+
+// Hard limit to seat motion
+static const double angMax = (pi / 2.0) + asin(r / l);
+
+// Rolling friction accel maximum
+static const double fricRoll = (0.03 * M * g) / (r * M);
+// Seat sliding friction force maximum
+static const double fricSlide = (0.3 * m * g) / M;
 
 // MoI of wheel
 static const double I = (M*r*r) / 2.0;
@@ -39,10 +47,11 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
   double /*w = s[2],*/ ddt_w;
   double dwdt = s[3], ddt_dwdt;
 
+  // This gets used a lot so let's just compute it once:
+  double ccp = C * cos(p);
+
   // \frac{d}{dt} p = \dot{p}
   ddt_p = dpdt;
-
-  double ccp = C * cos(p);
 
   // \frac{d}{dt} \dot{p} = \ddot{p} = \frac{C \dot{p}^2 - 2 A D / C \cos{p}}{C \cos{p} - 4 A B / C \cos{p}} \sin{p}
   double ddt_dpdt_numer = sin(p) * (C * dpdt * dpdt - (2.0 * A * D) / ccp);
@@ -55,22 +64,20 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
   // \frac{d}{dt} \dot{w} = \ddot{w} = \frac{D \sin{p} - 2 B \ddot{p}}{C \cos {p}}
   ddt_dwdt = (D * sin(p) - 2.0 * B * ddt_dpdt) / ccp;
 
-  // double fric = 10.0 + 1.0 * r * dw_0;
-  //
-  // if (dw_0 < 0) {
-  //   d_dw -= fric / (M * r);
-  // } else if (dw_0 > 0) {
-  //   d_dw += fric / (M * r);
-  // }
+  // Simple static friction model
+  double wheelAccel = fabs(r * ddt_dwdt);
 
-  double limit = (pi / 2) + asin(r / l);
-  // Angular limit -- don't allow seat below floor:
-  if (fabs(p) >= limit) {
-    std::cout << "hit limit\n";
-    if (p > 0) {
-      ddt_p = std::min(0.0, ddt_p);
-    } else if (p < 0) {
-      ddt_p = std::max(0.0, ddt_p);
+  if (dwdt < 0) {
+    ddt_dwdt += std::max(wheelAccel, fricRoll);
+  } else if (dwdt > 0) {
+    ddt_dwdt -= std::max(wheelAccel, fricRoll);
+  }
+
+  if (fabs(p) >= angMax) {
+    if (dwdt < 0) {
+      ddt_dwdt += std::max(wheelAccel, fricSlide);
+    } else if (dwdt > 0) {
+      ddt_dwdt -= std::max(wheelAccel, fricSlide);
     }
   }
 
@@ -120,6 +127,17 @@ void Unicycle2D::rk_step(double h, rkFunc func) {
   m_dpdt   = s[1];
   m_w      = s[2];
   m_dwdt   = s[3];
+
+  // Angular limit -- don't allow seat below floor.
+  if (fabs(m_p) >= angMax) {
+    if (m_p > 0.0) {
+      m_p = angMax;
+      m_dpdt = std::min(0.0, m_dpdt);
+    } else {
+      m_p = -angMax;
+      m_dpdt = std::max(0.0, m_dpdt);
+    }
+  }
 }
 
 double const Unicycle2D::T() const {
