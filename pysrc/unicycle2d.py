@@ -60,10 +60,10 @@ class Unicycle2D(object):
     def __init__(self, window, p=0, w=0):
         self.origin_x = window.width // 2
         self.origin_y = window.height // 4
-        self.scale_factor = window.height // 3
+        self.scale_factor = window.height // 2
 
         self.wheel = Wheel(self.scale_factor * self.wheel_radius)
-        # self.seat = Seat()
+        self.seat = Seat()
 
         glEnable(GL_LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE)
@@ -84,20 +84,16 @@ class Unicycle2D(object):
         self.seat_y = self.y + self.scale_factor * self.post_length * cos(p)
 
         self.wheel.update(self.x, self.y, w)
-        # self.seat.update(self.seat_x, self.seat_y, p)
+        self.seat.update(self.seat_x, self.seat_y, p)
 
     def draw(self):
+        self.wheel.draw()
+
+        # Seatpost
         glColor3f(0.4, 0.4, 0.4)
         glLineWidth(2.0)
-
-        self.wheel.draw()
         pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
             ('v2f', (self.x, self.y, self.seat_x, self.seat_y))
         )
 
-        glColor3f(0.4, 0.4, 0.4)
-        glLineWidth(0.5)
-        pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
-            ('v2f', (self.x, self.y, self.x, self.y + self.scale_factor * self.post_length))
-        )
-        # self.seat.draw()
+        self.seat.draw()
