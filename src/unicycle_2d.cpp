@@ -1,18 +1,18 @@
 #include <cmath>
-#include <cstdlib>
+#include <algorithm>
 
 #include "util.h"
+#include "vector.h"
 #include "unicycle_2d.h"
 
-const double Unicycle2D::pi      = 3.141592653589793238462643;
-const double Unicycle2D::g       = 9.81; // m s^-2
-const double Unicycle2D::dt      = 0.01; // s
-
+const double Unicycle2D::dt          = 0.01; // s
 const double Unicycle2D::postLength  = 1;   // m
-const double Unicycle2D::seatMass    = 10;  // kg
+const double Unicycle2D::seatMass    = 0.1;   // kg
 const double Unicycle2D::wheelRadius = 0.2; // m
-const double Unicycle2D::wheelMass   = 10;   // kg
+const double Unicycle2D::wheelMass   = 1;   // kg
 
+static const double pi = 3.141592653589793238462643;
+static const double g  = 9.81; // m s^-2
 static const double M = Unicycle2D::wheelMass;
 static const double m = Unicycle2D::seatMass;
 static const double l = Unicycle2D::postLength;
@@ -28,39 +28,67 @@ static const double B = m * l * l / 2.0;
 // Coupling
 static const double C = m * r * l;
 // Gravitational PE
-static const double D = m*l*Unicycle2D::g;
+static const double D = m * g * l;
 
 // 2D unicycle equations of motion.
 //
 // Note no explicit dependence on angle of wheel (as we'd expect from symmetry).
-std::vector<double> physics (double p_0, double dp_0, double /*w_0*/, double dw_0) {
-  std::vector<double> result;
+Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
+  double p    = s[0], ddt_p;
+  double dpdt = s[1], ddt_dpdt;
+  double /*w = s[2],*/ ddt_w;
+  double dwdt = s[3], ddt_dwdt;
 
-  double C_cos_p = C * cos(p_0);
+  // \frac{d}{dt} p = \dot{p}
+  ddt_p = dpdt;
 
-  double d_p = dp_0;
-  result.push_back(d_p);
+  double ccp = C * cos(p);
 
-  double d_dp_numer = sin(p_0) * ((C * dp_0 - D) * dp_0 - (2.0 * A * D)/C_cos_p);
-  double d_dp_denom = C_cos_p - (4.0 * A * B)/C_cos_p;
-  double d_dp = d_dp_denom / d_dp_numer;
-  result.push_back(d_dp);
+  // \frac{d}{dt} \dot{p} = \ddot{p} = \frac{C \dot{p}^2 - 2 A D / C \cos{p}}{C \cos{p} - 4 A B / C \cos{p}} \sin{p}
+  double ddt_dpdt_numer = sin(p) * (C * dpdt * dpdt - (2.0 * A * D) / ccp);
+  double ddt_dpdt_denom = ccp - (4.0 * A * B) / ccp;
+  ddt_dpdt = ddt_dpdt_numer / ddt_dpdt_denom;
 
-  double d_w = dw_0;
-  result.push_back(d_w);
+  // \frac{d}{dt} w = \dot{w}
+  ddt_w = dwdt;
 
-  double d_dw = (D * sin(p_0) - 2.0 * B * d_dp) / C_cos_p;
-  result.push_back(d_dw);
+  // \frac{d}{dt} \dot{w} = \ddot{w} = \frac{D \sin{p} - 2 B \ddot{p}}{C \cos {p}}
+  ddt_dwdt = (D * sin(p) - 2.0 * B * ddt_dpdt) / ccp;
 
-  return result;
+  // double fric = 10.0 + 1.0 * r * dw_0;
+  //
+  // if (dw_0 < 0) {
+  //   d_dw -= fric / (M * r);
+  // } else if (dw_0 > 0) {
+  //   d_dw += fric / (M * r);
+  // }
+
+  double limit = (pi / 2) + asin(r / l);
+  // Angular limit -- don't allow seat below floor:
+  if (fabs(p) >= limit) {
+    std::cout << "hit limit\n";
+    if (p > 0) {
+      ddt_p = std::min(0.0, ddt_p);
+    } else if (p < 0) {
+      ddt_p = std::max(0.0, ddt_p);
+    }
+  }
+
+  Unicycle2D::state ddt_s;
+  ddt_s[0] = ddt_p;
+  ddt_s[1] = ddt_dpdt;
+  ddt_s[2] = ddt_w;
+  ddt_s[3] = ddt_dwdt;
+
+  return ddt_s;
 }
 
 Unicycle2D::Unicycle2D()
 : m_t(0.0)
 , m_p(0.0)
-, m_dp(0.0)
+, m_dpdt(0.0)
 , m_w(0.0)
-, m_dw(0.0)
+, m_dwdt(0.0)
 {}
 
 void Unicycle2D::step(double ext_dt) {
@@ -71,91 +99,56 @@ void Unicycle2D::step(double ext_dt) {
     rk_step(dt, physics);
   }
   rk_step(ext_dt, physics);
-
-  double limit = (pi / 2) + asin(r / l);
-  // Angular limit -- don't allow seat below floor:
-  if (m_p > limit) {
-    std::cout << "hit limit pos\n";
-    m_p = limit;
-  }
-  if (m_p < -limit) {
-    std::cout << "hit limit neg\n";
-    m_p = -limit;
-  }
-
-  // Maximum speed
-  // if (m_dp > 10 * pi)  m_dp = 10 * pi;
-  // if (m_dp < -10 * pi) m_dp = -10 * pi;
-  // if (m_dw > 10 * pi)  m_dw = 10 * pi;
-  // if (m_dw < -10 * pi) m_dw = -10 * pi;
-
-  m_t += dt;
 }
 
-void Unicycle2D::rk_step(double h, rkBlock func) {
-  typedef std::vector<double> state;
+void Unicycle2D::rk_step(double h, rkFunc func) {
+  state s;
+  s[0] = m_p;
+  s[1] = m_dpdt;
+  s[2] = m_w;
+  s[3] = m_dwdt;
 
-  state c1_v = func(m_p, m_dp, m_w, m_dw);
-  double c1_p  = h * c1_v[0];
-  double c1_w  = h * c1_v[2];
-  double c1_dp = h * c1_v[1];
-  double c1_dw = h * c1_v[3];
+  state c1 = func(m_t,           s)            * h;
+  state c2 = func(m_t + h / 2.0, s + c1 / 2.0) * h;
+  state c3 = func(m_t + h / 2.0, s + c2 / 2.0) * h;
+  state c4 = func(m_t + h,       s + c3)       * h;
 
-  state c2_v = func(m_p + c1_p/2, m_dp + c1_dp/2, m_w + c1_w/2, m_dw + c1_dw/2);
-  double c2_p  = h * c2_v[0];
-  double c2_w  = h * c2_v[2];
-  double c2_dp = h * c2_v[1];
-  double c2_dw = h * c2_v[3];
+  s   += (c1 + 2.0 * c2 + 2.0 * c3 + c4) / 6.0;
+  m_t += h;
 
-  state c3_v = func(m_p + c2_p/2, m_dp + c2_dp/2, m_w + c2_w/2, m_dw + c2_dw/2);
-  double c3_p  = h * c3_v[0];
-  double c3_w  = h * c3_v[2];
-  double c3_dp = h * c3_v[1];
-  double c3_dw = h * c3_v[3];
-
-  state c4_v = func(m_p + c3_p, m_dp + c3_dp, m_w + c3_w, m_dw + c3_dw);
-  double c4_p  = h * c4_v[0];
-  double c4_w  = h * c4_v[2];
-  double c4_dp = h * c4_v[1];
-  double c4_dw = h * c4_v[3];
-
-  m_p += (c1_p + 2*c2_p + 2*c3_p + c4_p)/6;
-  m_w += (c1_w + 2*c2_w + 2*c3_w + c4_w)/6;
-  m_dp = (c1_dp + 2*c2_dp + 2*c3_dp + c4_dp)/6;
-  m_dw = (c1_dw + 2*c2_dw + 2*c3_dw + c4_dw)/6;
+  m_p      = s[0];
+  m_dpdt   = s[1];
+  m_w      = s[2];
+  m_dwdt   = s[3];
 }
 
 double const Unicycle2D::T() const {
-  double T_wheel = ((I + M * r * r) * m_dw * m_dw) / 2.0;
-  double T_seat = (m * (r * r * m_dw * m_dw + l * l * m_dp * m_dp)) / 2.0;
-  double T_coupling = m * r * l * m_dw * m_dp * cos(m_p);
-  return T_wheel + T_seat + T_coupling;
+  return A * m_dwdt * m_dwdt + B * m_dpdt * m_dpdt + C * m_dwdt * m_dpdt * cos(m_p);
 }
 
 double const Unicycle2D::V() const {
-  return m * g * l * cos(m_p);
+  return D * cos(m_p);
 }
 
 double const& Unicycle2D::t() const { return m_t; }
-
-double const& Unicycle2D::p() const { return m_p; }
-double const& Unicycle2D::dp() const { return m_dp; }
-
-double const& Unicycle2D::w() const { return m_w; }
-double const& Unicycle2D::dw() const { return m_dw; }
 
 Unicycle2D& Unicycle2D::t(double const& t_) {
   m_t = t_;
   return *this;
 }
 
+double const& Unicycle2D::p() const { return m_p; }
+double const& Unicycle2D::dpdt() const { return m_dpdt; }
+double const& Unicycle2D::w() const { return m_w; }
+double const& Unicycle2D::dwdt() const { return m_dwdt; }
+
 Unicycle2D& Unicycle2D::p(double const& p_) {
   m_p = p_;
   return *this;
 }
 
-Unicycle2D& Unicycle2D::dp(double const& dp_) {
-  m_dp = dp_;
+Unicycle2D& Unicycle2D::dpdt(double const& dpdt_) {
+  m_dpdt = dpdt_;
   return *this;
 }
 
@@ -164,7 +157,7 @@ Unicycle2D& Unicycle2D::w(double const& w_) {
   return *this;
 }
 
-Unicycle2D& Unicycle2D::dw(double const& dw_) {
-  m_dw = dw_;
+Unicycle2D& Unicycle2D::dwdt(double const& dwdt_) {
+  m_dwdt = dwdt_;
   return *this;
 }

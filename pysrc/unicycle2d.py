@@ -94,4 +94,10 @@ class Unicycle2D(object):
         pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
             ('v2f', (self.x, self.y, self.seat_x, self.seat_y))
         )
+
+        glColor3f(0.4, 0.4, 0.4)
+        glLineWidth(0.5)
+        pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
+            ('v2f', (self.x, self.y, self.x, self.y + self.scale_factor * self.post_length))
+        )
         # self.seat.draw()

@@ -81,7 +81,7 @@ void Pendulum::step(double externalTorque, double ext_dt) {
   m_time += dt;
 }
 
-void Pendulum::rk_step(double h, double torque, rkBlock func) {
+void Pendulum::rk_step(double h, double torque, rkFunc func) {
   typedef std::vector<double> state;
 
   state c1_v = func(m_ang, m_vel, torque);

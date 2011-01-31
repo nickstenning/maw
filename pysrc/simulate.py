@@ -22,7 +22,7 @@ def on_draw():
     unicycle.draw()
 
 def update(dt):
-    data.send(str(dt * 10))
+    data.send(str(dt))
     state = data.recv().split()
     p = float( state[0] )
     w = float( state[1] )

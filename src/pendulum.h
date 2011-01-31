@@ -3,7 +3,7 @@
 
 #include <vector>
 
-typedef std::vector<double> (*rkBlock)(double, double, double);
+typedef std::vector<double> (*rkFunc)(double, double, double);
 
 class Pendulum {
 public:
@@ -31,7 +31,7 @@ protected:
   double m_ang;
   double m_vel;
 
-  void rk_step(double h, double t, rkBlock func);
+  void rk_step(double h, double t, rkFunc func);
 };
 
 #endif // PENDULUM_H

@@ -11,7 +11,7 @@ targets  = {
     },
     'simulate': {
         'libs': ['libzmq'],
-        'sources': ['simulate', 'zhelpers', 'unicycle_2d', 'util']
+        'sources': ['simulate', 'zhelpers', 'unicycle_2d', 'vector', 'util']
     },
     'nngen': {
         'sources': ['nngen', 'nn', 'util']

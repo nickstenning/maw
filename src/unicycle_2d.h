@@ -1,34 +1,32 @@
 #ifndef UNICYCLE_2D_H
 #define UNICYCLE_2D_H
 
-#include <vector>
-#include <cmath>
-
-typedef std::vector<double> (*rkBlock)(double p, double dp, double w, double dw);
+#include "vector.h"
 
 class Unicycle2D {
 public:
+  typedef Vector<4> state;
+  typedef state (*rkFunc)(double const& t, state const& s);
+
   Unicycle2D();
 
   void step(double ext_dt = Unicycle2D::dt);
 
   double const& t() const;
   double const& p() const;
-  double const& dp() const;
+  double const& dpdt() const;
   double const& w() const;
-  double const& dw() const;
+  double const& dwdt() const;
 
   double const T() const;
   double const V() const;
 
   Unicycle2D& t(double const& t);
   Unicycle2D& p(double const& p);
-  Unicycle2D& dp(double const& dp);
+  Unicycle2D& dpdt(double const& dpdt);
   Unicycle2D& w(double const& w);
-  Unicycle2D& dw(double const& dw);
+  Unicycle2D& dwdt(double const& dwdt);
 
-  static const double pi;
-  static const double g;
   static const double postLength;
   static const double seatMass;
   static const double wheelRadius;
@@ -36,14 +34,14 @@ public:
   static const double dt;
 
 protected:
-  void rk_step(double h, rkBlock func);
+  void rk_step(double h, rkFunc func);
 
 private:
   double m_t;
-  double m_p;  /**< Seatpost angle */
-  double m_dp; /**< Seatpost angular velocity (per unit time) */
-  double m_w;  /**< Wheel angle */
-  double m_dw; /**< Wheel angular velocity (per unit time) */
+  double m_p;    /**< Seatpost angle */
+  double m_dpdt; /**< Seatpost angular velocity */
+  double m_w;    /**< Wheel angle */
+  double m_dwdt; /**< Wheel angular velocity */
 };
 
 #endif // UNICYCLE_2D_H

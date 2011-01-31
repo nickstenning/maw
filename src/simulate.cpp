@@ -57,6 +57,9 @@ int process_comm(zmq::socket_t& socket, Unicycle2D& uni) {
 
   // Set random start position
   uni.p(util::rand(-1, 1));
+  uni.dpdt(0);
+  uni.w(0);
+  uni.dwdt(0);
 
   s_send(socket, "OK");
 
