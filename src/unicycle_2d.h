@@ -6,11 +6,11 @@
 class Unicycle2D {
 public:
   typedef Vector<4> state;
-  typedef state (*rkFunc)(double const& t, state const& s);
+  typedef state (*rkFunc)(double const& t, state const& s, double const& F_w, double const& F_p);
 
   Unicycle2D();
 
-  void step(double ext_dt = Unicycle2D::dt);
+  void step(double ext_dt = Unicycle2D::dt, double F_w = 0.0, double F_p = 0.0);
 
   double const& t() const;
   double const& p() const;
@@ -34,7 +34,7 @@ public:
   static const double dt;
 
 protected:
-  void rk_step(double h, rkFunc func);
+  void rk_step(double h, double F_w, double F_p, rkFunc func);
 
 private:
   double m_t;

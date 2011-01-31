@@ -7,6 +7,8 @@
 #include "zhelpers.h"
 #include "util.h"
 
+double fw = 0.0, fp = 0.0;
+
 int process_comm(zmq::socket_t&, Unicycle2D&);
 int process_data(zmq::socket_t&, Unicycle2D&);
 
@@ -43,7 +45,7 @@ int main (int /*argc*/, char* const /*argv*/[]) {
       process_data(data, uni);
     }
 
-    std::cout << uni.T() << " + " << uni.V() << " = " << uni.T() + uni.V() << "\n";
+    // std::cout << uni.T() << " + " << uni.V() << " = " << uni.T() + uni.V() << "\n";
   }
 
   return 0;
@@ -55,11 +57,22 @@ int process_comm(zmq::socket_t& socket, Unicycle2D& uni) {
 
   s_in >> cmd;
 
-  // Set random start position
-  uni.p(util::rand(-1, 1));
-  uni.dpdt(0);
-  uni.w(0);
-  uni.dwdt(0);
+  std::cout << "cmd: " << cmd << "\n";
+
+  if (cmd.compare("fw") == 0) {
+    s_in >> fw;
+  }
+
+  if (cmd.compare("fp") == 0) {
+    s_in >> fp;
+  }
+
+  if (cmd.compare("rst") == 0) {
+    uni.p(util::rand(-0.001, 0.001))
+       .dpdt(0.0)
+       .w(0.0)
+       .dwdt(0.0);
+  }
 
   s_send(socket, "OK");
 
@@ -72,7 +85,7 @@ int process_data(zmq::socket_t& socket, Unicycle2D& uni) {
   double dt;
   s_in >> dt;
 
-  uni.step(dt);
+  uni.step(dt, fw, fp);
 
   std::ostringstream s_out;
   s_out << uni.p() << " " << uni.w();

@@ -14,8 +14,29 @@ def on_key_press(symbol, modifiers):
     if symbol == key.SPACE:
         comm.send("rst")
         assert comm.recv() == "OK"
+    elif symbol == key.G:
+        comm.send("fw -50.0")
+        assert comm.recv() == "OK"
+    elif symbol == key.H:
+        comm.send("fw 50.0")
+        assert comm.recv() == "OK"
+    elif symbol == key.T:
+        comm.send("fp -500.0")
+        assert comm.recv() == "OK"
+    elif symbol == key.Y:
+        comm.send("fp 500.0")
+        assert comm.recv() == "OK"
     elif symbol == key.ESCAPE:
         window.has_exit = True
+
+@window.event
+def on_key_release(symbol, modifiers):
+    if symbol == key.G or symbol == key.H:
+        comm.send("fw 0.0")
+        assert comm.recv() == "OK"
+    elif symbol == key.T or symbol == key.Y:
+        comm.send("fp 0.0")
+        assert comm.recv() == "OK"
 
 @window.event
 def on_draw():
@@ -34,7 +55,6 @@ def update(dt):
     state = data.recv().split()
     p = float( state[0] )
     w = float( state[1] )
-    print p, w
     unicycle.update(p, w)
 
 pyglet.clock.schedule_interval(update, 1/30.)

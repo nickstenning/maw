@@ -41,7 +41,7 @@ static const double D = M * g * l;
 // 2D unicycle equations of motion.
 //
 // Note no explicit dependence on angle of wheel (as we'd expect from symmetry).
-Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
+Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s, double const& F_w, double const& F_p) {
   double p    = s[0], ddt_p;
   double dpdt = s[1], ddt_dpdt;
   double /*w = s[2],*/ ddt_w;
@@ -51,7 +51,7 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
   ddt_p = dpdt;
 
   // \frac{d}{dt} \dot{p} = \ddot{p} = \frac{(C \dot{p})^2 \cos{p} - 2 A D}{(C \cos{p})^2 - 4 A B} \sin{p}
-  double ddt_dpdt_numer = sin(p) * (pow(C * dpdt, 2) * cos(p) - 2.0 * A * D);
+  double ddt_dpdt_numer = C * F_w * cos(p) + pow(C * dpdt, 2) * cos(p) * sin(p) - 2.0 * A * (F_p + D * sin(p));
   double ddt_dpdt_denom = pow(C * cos(p), 2) - 4.0 * A * B;
   ddt_dpdt = ddt_dpdt_numer / ddt_dpdt_denom;
 
@@ -59,7 +59,7 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
   ddt_w = dwdt;
 
   // \frac{d}{dt} \dot{w} = \ddot{w} = \frac{D \sin{p} - 2 B \ddot{p}}{C \cos {p}}
-  ddt_dwdt = (D * sin(p) - 2.0 * B * ddt_dpdt) / C * cos(p);
+  ddt_dwdt = (F_p + D * sin(p) - 2.0 * B * ddt_dpdt) / C * cos(p);
 
   // Simple static friction model
   double wheelAccel = fabs(ddt_dwdt);
@@ -95,27 +95,27 @@ Unicycle2D::Unicycle2D()
 , m_dwdt(0.0)
 {}
 
-void Unicycle2D::step(double ext_dt) {
+void Unicycle2D::step(double ext_dt, double F_w, double F_p) {
   // Unicycle2D::dt provides a minimum physics resolution, but ext_dt can specify
   // that it wants the simulation to run for longer in a single call to step().
   while (ext_dt > dt) {
     ext_dt -= dt;
-    rk_step(dt, physics);
+    rk_step(dt, F_w, F_p, physics);
   }
-  rk_step(ext_dt, physics);
+  rk_step(ext_dt, F_w, F_p, physics);
 }
 
-void Unicycle2D::rk_step(double h, rkFunc func) {
+void Unicycle2D::rk_step(double h, double F_w, double F_p, rkFunc func) {
   state s;
   s[0] = m_p;
   s[1] = m_dpdt;
   s[2] = m_w;
   s[3] = m_dwdt;
 
-  state c1 = func(m_t,           s)            * h;
-  state c2 = func(m_t + h / 2.0, s + c1 / 2.0) * h;
-  state c3 = func(m_t + h / 2.0, s + c2 / 2.0) * h;
-  state c4 = func(m_t + h,       s + c3)       * h;
+  state c1 = func(m_t,           s, F_w, F_p)            * h;
+  state c2 = func(m_t + h / 2.0, s + c1 / 2.0, F_w, F_p) * h;
+  state c3 = func(m_t + h / 2.0, s + c2 / 2.0, F_w, F_p) * h;
+  state c4 = func(m_t + h,       s + c3, F_w, F_p)       * h;
 
   s   += (c1 + 2.0 * c2 + 2.0 * c3 + c4) / 6.0;
   m_t += h;
