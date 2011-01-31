@@ -65,19 +65,19 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s) {
   ddt_dwdt = (D * sin(p) - 2.0 * B * ddt_dpdt) / ccp;
 
   // Simple static friction model
-  double wheelAccel = fabs(r * ddt_dwdt);
+  double wheelAccel = fabs(ddt_dwdt);
 
   if (dwdt < 0) {
-    ddt_dwdt += std::max(wheelAccel, fricRoll);
+    ddt_dwdt += std::min(wheelAccel, fricRoll);
   } else if (dwdt > 0) {
-    ddt_dwdt -= std::max(wheelAccel, fricRoll);
+    ddt_dwdt -= std::min(wheelAccel, fricRoll);
   }
 
   if (fabs(p) >= angMax) {
     if (dwdt < 0) {
-      ddt_dwdt += std::max(wheelAccel, fricSlide);
+      ddt_dwdt += std::min(wheelAccel, fricSlide);
     } else if (dwdt > 0) {
-      ddt_dwdt -= std::max(wheelAccel, fricSlide);
+      ddt_dwdt -= std::min(wheelAccel, fricSlide);
     }
   }
 
