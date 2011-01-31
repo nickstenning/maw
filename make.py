@@ -7,11 +7,11 @@ compiler = commands.getoutput('which llvm-g++ || echo -n "g++"')
 
 targets  = {
     'evolve': {
-        'sources': ['evolve', 'ga', 'evolvable', 'nn', 'brain', 'pendulum', 'fitness_function', 'pendulum_fitness_function', 'util']
+        'sources': ['evolve', 'ga', 'evolvable', 'nn', 'brain', 'unicycle_2d', 'fitness_function', 'unicycle_2d_fitness_function', 'util']
     },
     'simulate': {
         'libs': ['libzmq'],
-        'sources': ['simulate', 'zhelpers', 'unicycle_2d', 'vector', 'util']
+        'sources': ['simulate', 'zhelpers', 'nn', 'unicycle_2d', 'vector', 'util']
     },
     'nngen': {
         'sources': ['nngen', 'nn', 'util']

@@ -62,7 +62,7 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s, doub
   ddt_dwdt = (F_p + D * sin(p) - 2.0 * B * ddt_dpdt) / C * cos(p);
 
   // Simple static friction model
-  double wheelAccel = fabs(ddt_dwdt);
+  double wheelAccel = std::abs(ddt_dwdt);
 
   if (dwdt < 0) {
     ddt_dwdt += std::min(wheelAccel, fricRoll);
@@ -70,7 +70,7 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s, doub
     ddt_dwdt -= std::min(wheelAccel, fricRoll);
   }
 
-  if (fabs(p) >= angMax) {
+  if (std::abs(p) >= angMax) {
     if (dwdt < 0) {
       ddt_dwdt += std::min(wheelAccel, fricSlide);
     } else if (dwdt > 0) {
@@ -126,7 +126,7 @@ void Unicycle2D::rk_step(double h, double F_w, double F_p, rkFunc func) {
   m_dwdt   = s[3];
 
   // Angular limit -- don't allow seat below floor.
-  if (fabs(m_p) >= angMax) {
+  if (std::abs(m_p) >= angMax) {
     if (m_p > 0.0) {
       m_p = angMax;
       m_dpdt = std::min(0.0, m_dpdt);

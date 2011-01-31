@@ -15,16 +15,16 @@ def on_key_press(symbol, modifiers):
         comm.send("rst")
         assert comm.recv() == "OK"
     elif symbol == key.G:
-        comm.send("fw -50.0")
+        comm.send("fw -20.0")
         assert comm.recv() == "OK"
     elif symbol == key.H:
-        comm.send("fw 50.0")
+        comm.send("fw 20.0")
         assert comm.recv() == "OK"
     elif symbol == key.T:
-        comm.send("fp -500.0")
+        comm.send("fp -20.0")
         assert comm.recv() == "OK"
     elif symbol == key.Y:
-        comm.send("fp 500.0")
+        comm.send("fp 20.0")
         assert comm.recv() == "OK"
     elif symbol == key.ESCAPE:
         window.has_exit = True
