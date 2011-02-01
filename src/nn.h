@@ -1,29 +1,21 @@
 #ifndef NN_H
 #define NN_H
 
-#include <istream>
+#include <iostream>
 #include <vector>
 
 class NN
 {
 public:
-  typedef std::vector<double> layer;
-  typedef layer::iterator layer_i;
-  typedef layer::const_iterator layer_ci;
+  typedef std::vector<double> layer_t;
+  typedef std::vector<layer_t> layers_t;
 
-  typedef std::vector<layer> layers;
-  typedef layers::iterator layers_i;
-  typedef layers::const_iterator layers_ci;
+  typedef std::vector<double> weight_vector_t;
+  typedef std::vector<weight_vector_t> weight_matrix_t;
+  typedef std::vector<weight_matrix_t> weights_t;
 
-  typedef std::vector<double> weight_vector;
-  typedef weight_vector::iterator weight_vector_i;
-  typedef weight_vector::const_iterator weight_vector_ci;
-
-  typedef std::vector<weight_vector> weight_matrix;
-  typedef weight_matrix::iterator weight_matrix_i;
-  typedef weight_matrix::const_iterator weight_matrix_ci;
-
-  typedef std::vector<weight_matrix> weights;
+  typedef layer_t input_t;
+  typedef std::vector<int> output_t;
 
   NN();
   NN(std::vector<size_t> layerSizes);
@@ -35,6 +27,9 @@ public:
   bool topologyIsCompatibleWith(NN const& rhs) const;
 
   std::vector<int> feedForward(std::vector<double> const& input);
+
+  layers_t const& layers() const { return m_layers; }
+  weights_t const& weights() const { return m_weights; }
 
   // TODO: remove this friendship and provide accessors for the things Brain
   // wants to modify.
@@ -51,13 +46,11 @@ protected:
   void setRandomWeightsForMatrix (size_t index);
   void feedForwardLayer (size_t index);
 
-
   inline double activationFunction(double x);
   inline int    terminationFunction(double x);
-
 private:
-  layers m_layers;
-  weights m_weights;
+  layers_t m_layers;
+  weights_t m_weights;
 };
 
 #endif // NN_H

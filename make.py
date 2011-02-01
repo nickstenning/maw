@@ -18,6 +18,9 @@ targets  = {
     },
     'nn2dot': {
         'sources': ['nn2dot', 'nn', 'nn_dot_printer', 'util']
+    },
+    'feedforward': {
+        'sources': ['feedforward', 'nn', 'util']
     }
 }
 

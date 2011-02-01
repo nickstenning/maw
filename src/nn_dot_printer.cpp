@@ -1,8 +1,8 @@
 #include <iostream>
-#include <string>
-#include <vector>
 #include <iomanip>
+#include <string>
 #include <sstream>
+#include <vector>
 
 #include "nn.h"
 #include "nn_dot_printer.h"
@@ -47,13 +47,14 @@ NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
 
   std::ostream& os = *m_os;
 
+  os << std::fixed;
   os << m_prefix << "digraph brain {\n";
   os << m_prefix << "  splines=false; nodesep=1; ranksep=\"1.5 equally\"; rankdir=LR;\n";
 
   for (k = 0; k < nn.m_weights.size(); k += 1) {
-    NN::weight_matrix const& mx = nn.m_weights[k];
-    NN::layer const& send = nn.m_layers[k];
-    NN::layer const& recv = nn.m_layers[k+1];
+    NN::weight_matrix_t const& mx = nn.m_weights[k];
+    NN::layer_t const& send = nn.m_layers[k];
+    NN::layer_t const& recv = nn.m_layers[k+1];
 
     std::ostringstream rankStr;
     rankStr << "  { rank=same;";
@@ -72,7 +73,7 @@ NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
 
   std::ostringstream rankStr;
   rankStr << "  { rank=same;";
-  NN::layer const& lastLayer = nn.m_layers[nn.m_layers.size() - 1];
+  NN::layer_t const& lastLayer = nn.m_layers[nn.m_layers.size() - 1];
   for (i = 0; i < lastLayer.size(); i += 1) {
     rankStr << " L" << nn.m_layers.size() - 1 << "_" << i;
   }

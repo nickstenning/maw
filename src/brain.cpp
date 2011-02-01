@@ -65,9 +65,9 @@ Evolvable* Brain::mutate ()
   // adding num in [-m_mutationSize,m_mutationSize)
 
   for (k = 0; k < m_weights.size(); k += 1) {
-    NN::weight_matrix& mx = m_weights[k];
-    NN::layer& send = m_layers[k];
-    NN::layer& recv = m_layers[k+1];
+    NN::weight_matrix_t& mx = m_weights[k];
+    NN::layer_t& send = m_layers[k];
+    NN::layer_t& recv = m_layers[k+1];
 
     for (i = 0; i < send.size(); i += 1) {
       for (j = 0; j < recv.size(); j += 1) {
@@ -99,9 +99,9 @@ Evolvable* Brain::crossover (Evolvable const* other) {
   // For each non-input neuron, we randomly choose a parent, and copy all
   // input weights from that parent.
   for (k = 0; k < m_weights.size(); k += 1) {
-    NN::weight_matrix& mx = m_weights[k];
-    NN::layer& send = m_layers[k];
-    NN::layer& recv = m_layers[k+1];
+    NN::weight_matrix_t& mx = m_weights[k];
+    NN::layer_t& send = m_layers[k];
+    NN::layer_t& recv = m_layers[k+1];
 
     for (j = 0; j < recv.size(); j += 1) {
       if (util::choose(0.5)) {
