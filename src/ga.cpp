@@ -40,9 +40,15 @@ namespace GA {
   , m_crossoverProb(0.2)
   , m_mutationProb(1.0)
   {
-    for (Population::iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
-      *it = m_prototype->clone();
-      (*it)->gaInit();
+    size_t numElite = static_cast<size_t>( round(m_elitism * m_pop.size()) );
+
+    for (size_t i = 0; i < m_pop.size(); i += 1) {
+      m_pop[i] = m_prototype->clone();
+
+      // Only do random init for non-elite members. This allows us to feed a
+      // good network into evolve and seed some proportion (m_elitism) of the
+      // population with this network.
+      if (i > numElite) m_pop[i]->gaInit();
     }
   }
 
