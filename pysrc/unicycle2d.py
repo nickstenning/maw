@@ -35,23 +35,29 @@ class Wheel(object):
     def draw(self):
         glBegin(GL_TRIANGLE_FAN)
         glVertex2f(self.x, self.y)
-
-        self._draw_ang_range(0.4, 0, 90)
-        self._draw_ang_range(0.8, 90, 180)
-        self._draw_ang_range(0.4, 180, 270)
-        self._draw_ang_range(0.8, 270, 360)
-
+        glColor3f(0.4, 0.4, 0.4)
+        self._draw_ang_range(0,   90)
+        glColor3f(0.8, 0.8, 0.8)
+        self._draw_ang_range(90,  180)
+        glColor3f(0.4, 0.4, 0.4)
+        self._draw_ang_range(180, 270)
+        glColor3f(0.8, 0.8, 0.8)
+        self._draw_ang_range(270, 360)
         glEnd()
 
-    def _draw_ang_range(self, shade, from_ang, to_ang):
-        glColor3f(shade, shade, shade)
+        glBegin(GL_LINE_LOOP)
+        glColor3f(0.2, 0.2, 0.2)
+        self._draw_ang_range(0, 360)
+        glEnd()
+
+    def _draw_ang_range(self, from_ang, to_ang, resolution=5):
         ang = from_ang
         while ang <= to_ang:
             glVertex2f(
                 self.x + self.radius * sin(radians(ang + self.rotation)),
                 self.y + self.radius * cos(radians(ang + self.rotation))
             )
-            ang += 5
+            ang += resolution
 
 class Unicycle2D(object):
     post_length  = 1.0
@@ -64,15 +70,6 @@ class Unicycle2D(object):
 
         self.wheel = Wheel(self.scale_factor * self.wheel_radius)
         self.seat = Seat()
-
-        glEnable(GL_LINE_SMOOTH)
-        glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE)
-
-        # Enable Blending
-        glEnable(GL_BLEND)
-
-        # Specifies pixel arithmetic
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         self.update(p, w)
 

@@ -9,6 +9,15 @@ from unicycle2d import Unicycle2D
 
 window = pyglet.window.Window(1200, 400)
 
+glEnable(GL_LINE_SMOOTH)
+glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE)
+
+# Enable Blending
+glEnable(GL_BLEND)
+
+# Specifies pixel arithmetic
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
 @window.event
 def on_key_press(symbol, modifiers):
     if symbol == key.SPACE:
