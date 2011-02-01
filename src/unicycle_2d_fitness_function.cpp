@@ -57,5 +57,5 @@ void Unicycle2DFitnessFunction::step (Brain* brain) {
 
   double controlForce = BANG_SIZE * output[0];
 
-  m_uni.step(m_uni.dt, controlForce);
+  m_uni.step(m_uni.dt, controlForce + util::rand(-NOISE_SIZE, NOISE_SIZE));
 }
