@@ -35,7 +35,7 @@ double Unicycle2DFitnessFunction::operator() (Evolvable* obj) {
 
     bool inScoringZone = std::abs(m_uni.p()) < SCORE_ANG;
     if (inScoringZone) {
-      fitness += m_uni.dt * util::diracDelta(m_uni.p(), 5);
+      fitness += m_uni.dt * (util::diracDelta(m_uni.p(), 4) + util::diracDelta(m_uni.dpdt()));
     } else {
       break; // Failure. No need to evaluate further.
     }
