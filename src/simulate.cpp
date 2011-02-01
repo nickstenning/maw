@@ -8,7 +8,7 @@
 #include "zhelpers.h"
 #include "util.h"
 
-static const double CONTROLLER_FORCE = 10.0;
+static const double CONTROLLER_FORCE = 20.0;
 
 double fw = 0.0, fp = 0.0;
 
@@ -81,8 +81,6 @@ int process_comm(zmq::socket_t& socket, Unicycle2D& uni, NN& /*nn*/) {
 
   s_in >> cmd;
 
-  std::cout << "cmd: " << cmd << "\n";
-
   if (cmd.compare("fw") == 0) {
     s_in >> fw;
   }
@@ -113,7 +111,7 @@ int process_data(zmq::socket_t& socket, Unicycle2D& uni, NN& nn) {
   uni.step(dt, controlForce + fw, fp);
 
   std::ostringstream s_out;
-  s_out << uni.p() << " " << uni.w();
+  s_out << uni.p() << " " << uni.w() << " " << controlForce + fw << " " << fp;
 
   s_send(socket, s_out.str());
 

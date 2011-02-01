@@ -4,7 +4,7 @@ import pyglet
 from pyglet.gl import *
 
 WHEEL_IMAGE = 'media/wheel_overlay.png'
-SEAT_IMAGE = 'media/bob.png'
+SEAT_IMAGE = 'media/seat.png'
 
 def center_anchor(img):
     img.anchor_x = img.width // 2
@@ -48,8 +48,8 @@ class Wheel(object):
         ang = from_ang
         while ang <= to_ang:
             glVertex2f(
-                self.x + self.radius * sin(radians(ang) + self.rotation),
-                self.y + self.radius * cos(radians(ang) + self.rotation)
+                self.x + self.radius * sin(radians(ang + self.rotation)),
+                self.y + self.radius * cos(radians(ang + self.rotation))
             )
             ang += 5
 
@@ -76,15 +76,18 @@ class Unicycle2D(object):
 
         self.update(p, w)
 
-    def update(self, p, w):
+    def update(self, p, w, fw=0, fp=0):
         self.x = self.origin_x + self.scale_factor * self.wheel_radius * w
         self.y = self.origin_y
 
         self.seat_x = self.x + self.scale_factor * self.post_length * sin(p)
         self.seat_y = self.y + self.scale_factor * self.post_length * cos(p)
 
-        self.wheel.update(self.x, self.y, w)
-        self.seat.update(self.seat_x, self.seat_y, p)
+        self.fp = fp
+        self.fw = fw
+
+        self.wheel.update(self.x, self.y, degrees(w))
+        self.seat.update(self.seat_x, self.seat_y, degrees(p))
 
     def draw(self):
         self.wheel.draw()
@@ -94,6 +97,13 @@ class Unicycle2D(object):
         glLineWidth(2.0)
         pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
             ('v2f', (self.x, self.y, self.seat_x, self.seat_y))
+        )
+
+        # Forces
+        glColor3f(0.5, 0.1, 0.1)
+        glLineWidth(2.0)
+        pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
+            ('v2f', (self.x, self.y, self.x + 10 * self.fw, self.y))
         )
 
         self.seat.draw()

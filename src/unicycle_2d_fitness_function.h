@@ -5,7 +5,7 @@
 #include "unicycle_2d.h"
 
 // Unicycle2D config
-#define BANG_SIZE     10.0
+#define BANG_SIZE     20.0
 #define MAX_EVAL_TIME 100.0
 #define PI            3.141592653589793238462643
 #define SCORE_ANG     (PI / 12.0)

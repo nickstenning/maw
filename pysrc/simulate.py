@@ -53,9 +53,11 @@ def on_draw():
 def update(dt):
     data.send(str(dt))
     state = data.recv().split()
-    p = float( state[0] )
-    w = float( state[1] )
-    unicycle.update(p, w)
+    p  = float( state[0] )
+    w  = float( state[1] )
+    fp = float( state[2] )
+    fw = float( state[3] )
+    unicycle.update(p, w, fp, fw)
 
 pyglet.clock.schedule_interval(update, 1/30.)
 
