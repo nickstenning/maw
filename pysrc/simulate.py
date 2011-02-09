@@ -52,7 +52,7 @@ def on_draw():
     window.clear()
 
     # Ground
-    glColor3f(0.1, 0.1, 0.1)
+    glColor3f(0.2, 0.2, 0.2)
     pyglet.graphics.draw(4, pyglet.gl.GL_QUADS,
         ('v2f', (0, 0, 0, window.height // 4 - unicycle.wheel.radius, window.width, window.height // 4 - unicycle.wheel.radius, window.width, 0))
     )
