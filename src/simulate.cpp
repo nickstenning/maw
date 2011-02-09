@@ -1,3 +1,4 @@
+#include <string>
 #include <sstream>
 #include <vector>
 
@@ -12,8 +13,8 @@ static const double CONTROLLER_FORCE = 20.0;
 
 double fw = 0.0, fp = 0.0;
 
-int process_comm(zmq::socket_t&, Unicycle2D&, NN& nn);
-int process_data(zmq::socket_t&, Unicycle2D&, NN& nn);
+std::string process_comm(std::string&, Unicycle2D&, NN& nn);
+std::string process_data(std::string&, Unicycle2D&, NN& nn);
 
 int main (int /*argc*/, char* const /*argv*/[]) {
   util::initRNG();
@@ -41,16 +42,21 @@ int main (int /*argc*/, char* const /*argv*/[]) {
   uni.p(util::rand(-0.001, 0.001));
 
   while (1) {
+    std::string req, rep;
     zmq::poll(&poll_items[0], 2, -1);
 
     // Got command
     if (poll_items[0].revents & ZMQ_POLLIN) {
-      process_comm(comm, uni, nn);
+      s_recv(comm, req);
+      rep = process_comm(req, uni, nn);
+      s_send(comm, rep);
     }
 
     // Got request for data
     if (poll_items[1].revents & ZMQ_POLLIN) {
-      process_data(data, uni, nn);
+      s_recv(data, req);
+      rep = process_data(req, uni, nn);
+      s_send(data, rep);
     }
 
     // std::cout << uni.T() << " + " << uni.V() << " = " << uni.T() + uni.V() << "\n";
@@ -75,8 +81,9 @@ double getControlForce(Unicycle2D& uni, NN& nn) {
   return controlForce;
 }
 
-int process_comm(zmq::socket_t& socket, Unicycle2D& uni, NN& /*nn*/) {
-  std::istringstream s_in( s_recv(socket) );
+std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/) {
+  std::istringstream s_in( msg );
+  std::ostringstream s_out;
   std::string cmd;
 
   s_in >> cmd;
@@ -96,13 +103,14 @@ int process_comm(zmq::socket_t& socket, Unicycle2D& uni, NN& /*nn*/) {
        .dwdt(0.0);
   }
 
-  s_send(socket, "OK");
+  s_out << "OK";
 
-  return 0;
+  return s_out.str();
 }
 
-int process_data(zmq::socket_t& socket, Unicycle2D& uni, NN& nn) {
-  std::istringstream s_in( s_recv(socket) );
+std::string process_data(std::string& msg, Unicycle2D& uni, NN& nn) {
+  std::istringstream s_in( msg );
+  std::ostringstream s_out;
 
   double dt;
   s_in >> dt;
@@ -110,12 +118,9 @@ int process_data(zmq::socket_t& socket, Unicycle2D& uni, NN& nn) {
   double controlForce = getControlForce(uni, nn);
   uni.step(dt, controlForce + fw, fp);
 
-  std::ostringstream s_out;
   s_out << uni.p() << " " << uni.w() << " " << controlForce + fw << " " << fp;
 
-  s_send(socket, s_out.str());
-
-  return 0;
+  return s_out.str();
 }
 
 

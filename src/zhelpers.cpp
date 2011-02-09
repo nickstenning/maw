@@ -1,5 +1,4 @@
 #include <string>
-#include <sstream>
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
@@ -9,28 +8,6 @@
 #include "zhelpers.h"
 
 #define within(num) (int) ((float) (num) * random () / (RAND_MAX + 1.0))
-
-std::string s_recv (zmq::socket_t& socket) {
-  zmq::message_t message;
-  socket.recv(&message);
-
-  std::string string(static_cast<char*>(message.data()), message.size());
-
-  return string;
-}
-
-bool s_send (zmq::socket_t& socket, std::string const& string) {
-  zmq::message_t message(string.size());
-  memcpy(message.data(), string.data(), string.size());
-
-  bool rc = socket.send(message);
-  return rc;
-}
-
-bool s_send (zmq::socket_t& socket, char const string[]) {
-  std::string sstring(string);
-  return s_send(socket, sstring);
-}
 
 void s_set_id (zmq::socket_t& socket) {
   char identity[10];
