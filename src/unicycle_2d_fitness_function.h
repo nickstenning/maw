@@ -23,6 +23,7 @@ protected:
   void step (Brain* brain);
 private:
   Unicycle2D m_uni;
+  double m_target;
 };
 
 #endif // UNICYCLE_2D_FITNESS_FUNCTION_H

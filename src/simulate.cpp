@@ -11,7 +11,7 @@
 
 static const double CONTROLLER_FORCE = 20.0;
 
-double fw = 0.0, fp = 0.0;
+double fw = 0.0, fp = 0.0, tgt = 0.0;
 
 std::string process_comm(std::string&, Unicycle2D&, NN& nn);
 std::string process_data(std::string&, Unicycle2D&, NN& nn);
@@ -73,6 +73,7 @@ double getControlForce(Unicycle2D& uni, NN& nn) {
   input.push_back(uni.dpdt());
   input.push_back(uni.w());
   input.push_back(uni.dwdt());
+  input.push_back(tgt);
 
   output = nn.feedForward(input);
 
@@ -86,6 +87,8 @@ std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/) {
   std::ostringstream s_out;
   std::string cmd;
 
+  std::cout << "comm: " << msg << "\n";
+
   s_in >> cmd;
 
   if (cmd.compare("fw") == 0) {
@@ -94,6 +97,10 @@ std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/) {
 
   if (cmd.compare("fp") == 0) {
     s_in >> fp;
+  }
+
+  if (cmd.compare("tgt") == 0) {
+    s_in >> tgt;
   }
 
   if (cmd.compare("rst") == 0) {

@@ -41,7 +41,7 @@ void Brain::updateMutationRate() {
     numNonInputNeurons += m_layers[i].size() * m_layers[i+1].size();
   }
 
-  m_mutationRate = 1.0/numNonInputNeurons;
+  m_mutationRate = 10 * 1.0/numNonInputNeurons;
 }
 
 Evolvable* Brain::clone() {

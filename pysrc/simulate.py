@@ -35,6 +35,12 @@ def on_key_press(symbol, modifiers):
     elif symbol == key.Y:
         comm.send("fp 20.0")
         assert comm.recv() == "OK"
+    elif symbol == key.RIGHT:
+        comm.send("tgt 0.157")
+        assert comm.recv() == "OK"
+    elif symbol == key.LEFT:
+        comm.send("tgt -0.157")
+        assert comm.recv() == "OK"
     elif symbol == key.ESCAPE:
         window.has_exit = True
 
@@ -45,6 +51,9 @@ def on_key_release(symbol, modifiers):
         assert comm.recv() == "OK"
     elif symbol == key.T or symbol == key.Y:
         comm.send("fp 0.0")
+        assert comm.recv() == "OK"
+    elif symbol == key.LEFT or symbol == key.RIGHT:
+        comm.send("tgt 0.0")
         assert comm.recv() == "OK"
 
 @window.event

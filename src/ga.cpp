@@ -37,8 +37,8 @@ namespace GA {
   , m_numGenerations(numGenerations)
   , m_generation(0)
   , m_elitism(0.2)
-  , m_crossoverProb(0.2)
-  , m_mutationProb(1.0)
+  , m_crossoverProb(0.3)
+  , m_mutationProb(0.7)
   {
     size_t numElite = static_cast<size_t>( round(m_elitism * m_pop.size()) );
 

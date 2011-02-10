@@ -9,6 +9,7 @@
 
 Unicycle2DFitnessFunction::Unicycle2DFitnessFunction()
 : m_uni()
+, m_target(0.0)
 {}
 
 /**
@@ -31,11 +32,22 @@ double Unicycle2DFitnessFunction::operator() (Evolvable* obj) {
        .t(0);
 
   while (m_uni.t() < MAX_EVAL_TIME) {
+    double targetAngle = 0.0;
+
+    if (m_uni.t() > MAX_EVAL_TIME/3.0) {
+      targetAngle = PI/20.0;
+    } else if (m_uni.t() > (2.0 * MAX_EVAL_TIME)/3.0) {
+      targetAngle = -PI/20.0;
+    }
+
+    m_target = targetAngle;
+
     step(brain);
 
     bool inScoringZone = std::abs(m_uni.p()) < SCORE_ANG;
+
     if (inScoringZone) {
-      fitness += m_uni.dt * (util::diracDelta(m_uni.p(), 4) + util::diracDelta(m_uni.dpdt()));
+      fitness += m_uni.dt * util::diracDelta(m_uni.p() - m_target, 5);
     } else {
       break; // Failure. No need to evaluate further.
     }
@@ -52,6 +64,7 @@ void Unicycle2DFitnessFunction::step (Brain* brain) {
   input.push_back(m_uni.dpdt());
   input.push_back(m_uni.w());
   input.push_back(m_uni.dwdt());
+  input.push_back(m_target);
 
   output = brain->feedForward(input);
 
