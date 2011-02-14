@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "pendulum.h"
 
 const double Pendulum::pi      = 3.141592653589793238462643;
@@ -59,8 +61,14 @@ Pendulum& Pendulum::vel(double const& v) {
   return *this;
 }
 
-void Pendulum::step(double externalTorque) {
-  rk_step(dt, externalTorque, physics);
+void Pendulum::step(double externalTorque, double ext_dt) {
+  // Pendulum::dt provides a minimum physics resolution, but ext_dt can specify
+  // that it wants the simulation to run for longer in a single call to step().
+  while (ext_dt > dt) {
+    ext_dt -= dt;
+    rk_step(dt, externalTorque, physics);
+  }
+  rk_step(ext_dt, externalTorque, physics);
 
   // Angular wrap-round
   while (m_ang > pi)  m_ang -= 2 * pi;
@@ -73,7 +81,7 @@ void Pendulum::step(double externalTorque) {
   m_time += dt;
 }
 
-void Pendulum::rk_step(double h, double torque, rkBlock func) {
+void Pendulum::rk_step(double h, double torque, rkFunc func) {
   typedef std::vector<double> state;
 
   state c1_v = func(m_ang, m_vel, torque);

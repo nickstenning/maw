@@ -1,3 +1,14 @@
-plot 'pendulum' u 2:3 w lines
+set xlabel "{/Symbol q}"
+set ylabel "d{/Symbol q} / dt"
+
+set xrange [-pi/2:pi/2]
+set yrange [-pi:pi]
+
+set ytics ("-{/Symbol p}" -pi, "0" 0, "{/Symbol p}" pi);
+set xtics ("-{/Symbol p}/2" -pi/2, "0" 0, "{/Symbol p}/2" pi/2);
+
+plot 'pendulum' index 0 u 2:3 w l t "Run 0", \
+     ''         index 1 u 2:3 w l t "Run 1", \
+     ''         index 2 u 2:3 w l t "Run 2"
 
 pause -1

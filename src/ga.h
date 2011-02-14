@@ -4,56 +4,66 @@
 #include <iostream>
 #include <vector>
 
-// NN properties
-#define INPUT_SIZE  2
-#define HIDDEN_SIZE 5
-#define OUTPUT_SIZE 1
+class Evolvable;
+class FitnessFunction;
 
-// Proportion of the fitness-rank-ordered population guaranteed to be saved.
-#define ELITISM 0.1
+namespace GA {
 
-// Crossover probability for any given member of the new generation.
-#define CROSSOVER_PROB 0.1
+  /**
+   * A wrapper around a population of instances of Evolvable.
+  **/
+  typedef std::vector<Evolvable*> Population;
 
-// Mutation probability (chance we do any mutation at all)
-#define MUTATION_PROB 0.9
-// Mutation rate (chance of mutation any one neuron).
-// Maybe set at 1 / number of neurons available to mutate?
-#define MUTATION_RATE 0.1
-// Size of weight change
-#define MUTATION_SIZE 50.0
+  /**
+   * Pick members from a population, weighted towards those with higher fitness.
+  **/
+  Evolvable* roulettePick(Population& pop);
 
-// How many random init conds to average over?
-#define NUM_RUNS 3
+  /**
+   * A Runner helps create and perform GA on a Population of Evolvable objects.
+  **/
+  class Runner
+  {
+  public:
+    Runner (Evolvable* prototype,
+            FitnessFunction* fitnessFunction,
+            size_t numGenerations,
+            size_t popSize);
 
-// Pendulum config
-#define BANG_SIZE 0.3
-#define EVAL_TIME 10.0
-#define PI        3.141592653589793238462643
-#define INIT_ANG  PI/20.0
-#define SCORE_ANG PI/24.0
+    ~Runner ();
 
-class Brain;
-class Pendulum;
+    Runner& elitism (float p);
+    Runner& crossoverProb (float p);
+    Runner& mutationProb (float p);
 
-namespace ga {
+    bool isFinished () const;
+    Runner& step ();
 
-  typedef std::vector<Brain> population;
+    Evolvable const* getFittest ();
 
-  void init (population&, size_t);
-  void stepGeneration (population&);
+    void fillStats (int& gen, double& min, double& max, double& mean, double& stddev) const;
 
-  bool compareFitness (Brain const& a, Brain const& b);
-  double sumFitness (double& a, Brain const& b);
-  void computeFitness (Brain& brain, bool print = false);
-  double computeFitnessForRun (Brain& brain, Pendulum& pdl, bool print = false);
+  protected:
+    void sortPopulation ();
 
-  Brain piePick (population const& pop);
+    // No copying
+    Runner(const GA::Runner&);
+    Runner& operator=(const GA::Runner&);
 
-  void crossover (Brain&, Brain const&);
-  void mutate (Brain&);
+  private:
+    Population m_pop;
 
-  void printProperties (std::ostream& os);
+    Evolvable* m_prototype;
+    FitnessFunction* m_fitnessFunc;
+
+    size_t m_numGenerations;
+    size_t m_generation;
+
+    float m_elitism;
+    float m_crossoverProb;
+    float m_mutationProb;
+  };
 }
+
 
 #endif // GA_H

@@ -1,221 +1,157 @@
-#include <iostream>
 #include <vector>
-#include <algorithm>
-#include <numeric>
-#include <assert.h>
+#include <algorithm> // std::sort
+#include <numeric>   // std::accumulate
+#include <cmath>     // round
+#include <stdexcept> // std::runtime_error
 
-#include "pendulum.h"
-#include "brain.h"
+#include "evolvable.h"
+#include "fitness_function.h"
 #include "util.h"
 #include "ga.h"
 
-namespace ga {
+namespace GA {
 
-  void init (population& pop, size_t popSize) {
-    for (size_t i = 0; i < popSize; i += 1) {
-      Brain b(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE);
-      b.initRandomWeights();
-      computeFitness(b);
-      pop.push_back(b);
-    }
-  }
-
-  void stepGeneration (population& pop) {
-    population newPop;
-
-    // Generate rank-ordered list by fitness.
-    std::sort(pop.begin(), pop.end(), compareFitness);
-
-    // Elitist step. We preserve some proportion of the population untouched
-    // for the next generation.
-    size_t numElite = round(ELITISM * pop.size());
-    size_t numRemain = pop.size() - numElite;
-    for (population::iterator it = pop.begin(); it != pop.begin() + numElite; ++it) {
-      newPop.push_back(*it);
-    }
-
-    // Socially liberal step.
-    for (size_t i = 0; i < numRemain; i += 1) {
-      Brain offspring = piePick(pop);
-
-      if (util::choose(CROSSOVER_PROB)) {
-        crossover(offspring, piePick(pop));
-      }
-
-      if (util::choose(MUTATION_PROB)) {
-        mutate(offspring);
-      }
-
-      newPop.push_back(offspring);
-    }
-
-    // Replace population with new population.
-    pop = newPop;
-
-    // Compute fitness for next generation
-    for (population::iterator it = pop.begin(); it != pop.end(); ++it) {
-      computeFitness(*it);
-    }
-  }
-
-  void computeFitness(Brain& brain, bool print) {
-    Pendulum pdl;
-    double fitness = 0.0;
-
-    if (print) {
-      // Only do one run, and print it.
-      pdl.ang(util::rand(-INIT_ANG, INIT_ANG))
-         .vel(0.0)
-         .time(0.0);
-
-      computeFitnessForRun(brain, pdl, true);
-
-    } else {
-      for (size_t i = 0; i < NUM_RUNS; i += 1) {
-        pdl.ang(util::rand(-INIT_ANG, INIT_ANG))
-           .vel(0.0)
-           .time(0.0);
-
-        fitness += computeFitnessForRun(brain, pdl);
-      }
-      brain.fitness(fitness / NUM_RUNS);
-    }
-  }
-
-  double computeFitnessForRun(Brain& brain, Pendulum& pdl, bool print) {
-    double fitness = 0.0;
-    std::vector<double> input;
-    std::vector<int> output;
-
-    while (pdl.time() < EVAL_TIME) {
-      input.clear();
-
-      input.push_back(pdl.ang());
-      input.push_back(pdl.vel());
-
-      output = brain.feedForward(input);
-
-      pdl.step(BANG_SIZE * output[0]);
-
-      if (print) {
-        std::cout << pdl.time() << "\t" << pdl.ang() << "\t"
-                  << pdl.vel() << "\t" << BANG_SIZE * output[0] << "\t"
-                  << fitness << "\n";
-      }
-
-      bool inScoringZone = abs(pdl.ang()) < SCORE_ANG;
-      if (inScoringZone) {
-        fitness += (pdl.dt / EVAL_TIME) * util::diracDelta(pdl.ang());
-      } else {
-        fitness = std::max(0.0, fitness - (pdl.dt / EVAL_TIME));
-      }
-    }
-
-    return fitness;
-  }
-
-  Brain piePick (population const& pop) {
-    double pieSize = std::accumulate(pop.begin(), pop.end(), 0.0, sumFitness);
+  Evolvable* roulettePick(Population& pop) {
+    double wheelSize = std::accumulate(pop.begin(), pop.end(), 0.0, util::pointer_accumulate<Evolvable>());
     double subTotal = 0.0;
-    double pickPoint = util::rand(0, pieSize);
+    double pickPoint = util::rand(0, wheelSize);
 
-    population::const_iterator pick;
+    Population::iterator pick;
 
     // Find the index that that point in the pie corresponds to.
-    for (population::const_iterator it = pop.begin(); it != pop.end(); ++it) {
-      subTotal += it->fitness();
-      if (subTotal >= pickPoint) pick = it;
+    for (Population::iterator it = pop.begin(); it != pop.end(); ++it) {
+      subTotal += (*it)->fitness();
+      if (subTotal >= pickPoint) {
+        pick = it;
+        break;
+      }
     }
 
     return *pick;
   }
 
-  void crossover (Brain& brain, Brain const& other) {
-    size_t i, j;
+  Runner::Runner (Evolvable* prototype, FitnessFunction* fitnessFunction, size_t numGenerations, size_t popSize)
+  : m_pop(popSize)
+  , m_prototype(prototype)
+  , m_fitnessFunc(fitnessFunction)
+  , m_numGenerations(numGenerations)
+  , m_generation(0)
+  , m_elitism(0.2)
+  , m_crossoverProb(0.3)
+  , m_mutationProb(0.7)
+  {
+    size_t numElite = static_cast<size_t>( round(m_elitism * m_pop.size()) );
 
-    assert(brain.topologyIsCompatibleWith(other));
+    for (size_t i = 0; i < m_pop.size(); i += 1) {
+      m_pop[i] = m_prototype->clone();
 
-    Weights hidden = brain.weightsHidden();
-    Weights output = brain.weightsOutput();
-    Weights otherHidden = other.weightsHidden();
-    Weights otherOutput = other.weightsOutput();
+      // Only do random init for non-elite members. This allows us to feed a
+      // good network into evolve and seed some proportion (m_elitism) of the
+      // population with this network.
+      if (i > numElite) m_pop[i]->gaInit();
+    }
+  }
 
-    // For each non-input neuron, randomly choose a parent, and copy all
-    // input weights from that parent.
-    for (j = 0; j < hidden[0].size(); j += 1) {
-      if (util::choose(0.5)) {
-        for (i = 0; i < hidden.size(); i += 1) {
-          hidden[i][j] = otherHidden[i][j];
-        }
-      }
+  Runner::~Runner () {
+    for (Population::const_iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      delete *it;
+    }
+    m_pop.clear();
+
+    delete m_prototype;
+    delete m_fitnessFunc;
+  }
+
+  Runner& Runner::elitism(float p) {
+    m_elitism = p;
+    return *this;
+  }
+
+  Runner& Runner::crossoverProb(float p) {
+    m_crossoverProb = p;
+    return *this;
+  }
+
+  Runner& Runner::mutationProb(float p) {
+    m_mutationProb = p;
+    return *this;
+  }
+
+  bool Runner::isFinished () const {
+    return m_generation >= m_numGenerations;
+  }
+
+  Runner& Runner::step () {
+    Population newPop;
+
+    m_generation += 1;
+
+    // Elitist step. We preserve some proportion of the population untouched
+    // for the next generation.
+    size_t numElite = static_cast<size_t>( round(m_elitism * m_pop.size()) );
+
+    for (Population::iterator it = m_pop.end() - 1; it != m_pop.end() - 1 - numElite; --it) {
+      newPop.push_back(m_prototype->clone(*it));
     }
 
-    for (j = 0; j < output[0].size(); j += 1) {
-      if (util::choose(0.5)) {
-        for (i = 0; i < output.size(); i += 1) {
-          output[i][j] = otherOutput[i][j];
-        }
+    // Socially liberal step.
+    size_t numRemain = m_pop.size() - numElite;
+
+    for (size_t i = 0; i < numRemain; i += 1) {
+      Evolvable* obj = m_prototype->clone(roulettePick(m_pop));
+
+      if (util::choose(m_crossoverProb)) {
+        obj->crossover(roulettePick(m_pop));
       }
+
+      if (util::choose(m_mutationProb)) {
+        obj->mutate();
+      }
+
+      newPop.push_back(obj);
     }
 
-    brain.weightsHidden(hidden)
-         .weightsOutput(output);
-  }
+    // Replace population with new population.
+    for (Population::const_iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      delete *it;
+    }
+    m_pop.clear();
+    m_pop = newPop;
 
-  void mutate (Brain& brain) {
-    size_t i, j;
-
-    Weights wHidden = brain.weightsHidden();
-    Weights wOutput = brain.weightsOutput();
-
-    // Mutate each weight with a probability of 1/MUTATION_RATE by
-    // adding num in [-MUTATION_SIZE,MUTATION_SIZE)
-    for (i = 0; i < wHidden.size(); i += 1) {
-      for (j = 0; j < wHidden[i].size(); j += 1) {
-        if (util::choose(MUTATION_RATE)) {
-          // std::cerr << "mI" << j << "H" << i << "\n";
-          wHidden[i][j] += util::rand(-MUTATION_SIZE, MUTATION_SIZE);
-        }
-      }
+    // Compute fitness for next generation
+    for(Population::iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      (*it)->fitness((*m_fitnessFunc)(*it));
     }
 
-    for (i = 0; i < wOutput.size(); i += 1) {
-      for (j = 0; j < wOutput[i].size(); j += 1) {
-        if (util::choose(MUTATION_RATE)) {
-          // std::cerr << "mH" << j << "O" << i << "\n";
-          wOutput[i][j] += util::rand(-MUTATION_SIZE, MUTATION_SIZE);
-        }
-      }
+    // Generate rank-ordered list by fitness, fittest last.
+    sortPopulation();
+
+    return *this;
+  }
+
+  void Runner::fillStats (int& gen, double& min, double& max, double& mean, double& stddev) const {
+    gen = m_generation;
+    min = m_pop[0]->fitness();
+    max = m_pop[m_pop.size() - 1]->fitness();
+    mean = std::accumulate(m_pop.begin(), m_pop.end(), 0.0, util::pointer_accumulate<Evolvable>()) / m_pop.size();
+
+    double sumsqdev = 0.0;
+
+    for (Population::const_iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
+      sumsqdev += pow((*it)->fitness() - mean, 2);
     }
 
-    brain.weightsHidden(wHidden);
-    brain.weightsOutput(wOutput);
+    stddev = sqrt(sumsqdev / m_pop.size());
   }
 
-  bool compareFitness (Brain const& a, Brain const& b) {
-    return (a.fitness() > b.fitness());
+  Evolvable const* Runner::getFittest () {
+    sortPopulation();
+    return m_pop[m_pop.size() - 1];
   }
 
-  double sumFitness (double& a, Brain const& b) {
-    return (a + b.fitness());
+  void Runner::sortPopulation() {
+    std::sort(m_pop.begin(), m_pop.end(), util::pointer_compare<Evolvable>());
   }
-
-  void printProperties (std::ostream& os) {
-    os << "# INPUT_SIZE     = " << INPUT_SIZE     << "\n"
-       << "# HIDDEN_SIZE    = " << HIDDEN_SIZE    << "\n"
-       << "# OUTPUT_SIZE    = " << OUTPUT_SIZE    << "\n"
-       << "# ELITISM        = " << ELITISM        << "\n"
-       << "# CROSSOVER_PROB = " << CROSSOVER_PROB << "\n"
-       << "# MUTATION_PROB  = " << MUTATION_PROB  << "\n"
-       << "# MUTATION_RATE  = " << MUTATION_RATE  << "\n"
-       << "# MUTATION_SIZE  = " << MUTATION_SIZE  << "\n"
-       << "# NUM_RUNS       = " << NUM_RUNS       << "\n"
-       << "# BANG_SIZE      = " << BANG_SIZE      << "\n"
-       << "# EVAL_TIME      = " << EVAL_TIME      << "\n"
-       << "# INIT_ANG       = " << INIT_ANG       << "\n"
-       << "# SCORE_ANG      = " << SCORE_ANG      << "\n";
-  }
-
 }
 
 

@@ -2,16 +2,15 @@
 #define PENDULUM_H
 
 #include <vector>
-#include <cmath>
 
-typedef std::vector<double> (*rkBlock)(double, double, double);
+typedef std::vector<double> (*rkFunc)(double, double, double);
 
 class Pendulum {
 public:
   Pendulum();
   ~Pendulum();
 
-  void step(double externalTorque);
+  void step(double externalTorque, double ext_dt = Pendulum::dt);
 
   double const& time() const;
   double const& ang() const;
@@ -32,7 +31,7 @@ protected:
   double m_ang;
   double m_vel;
 
-  void rk_step(double h, double t, rkBlock func);
+  void rk_step(double h, double t, rkFunc func);
 };
 
 #endif // PENDULUM_H

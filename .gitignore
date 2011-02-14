@@ -1,9 +1,7 @@
 /build/
-/data/
-/generated/
+/doc/html/
 .DS_Store
-*.pbxuser
-*.mode1v3
-*.perspectivev3
-*.tm_build_errors
+.deps
 *.tmproj
+*.pyc
+*.pyo
