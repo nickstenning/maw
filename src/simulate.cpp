@@ -2,7 +2,7 @@
 #include <sstream>
 #include <vector>
 
-#include "zmq.h"
+#include "vendor/zmq.h"
 
 #include "nn.h"
 #include "unicycle_2d.h"

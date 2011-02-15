@@ -2,4 +2,7 @@
 // warnings used to compile maw.
 
 #pragma GCC system_header
-#include "MersenneTwister.h"
+
+#include "BulletGL/GlutStuff.h"
+#include "BulletGL/GLDebugDrawer.h"
+#include "BulletGL/GlutDemoApplication.h"

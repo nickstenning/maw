@@ -21,24 +21,38 @@ targets  = {
     },
     'feedforward': {
         'sources': ['feedforward', 'nn', 'util']
+    },
+    'maw': {
+        'libs': ['bullet', 'gl', 'glu', 'glut'],
+        'sources': [
+            'maw',
+            'maw_world',
+            'vendor/BulletGL/GlutStuff',
+            'vendor/BulletGL/DemoApplication',
+            'vendor/BulletGL/GlutDemoApplication',
+            'vendor/BulletGL/GLDebugDrawer',
+            'vendor/BulletGL/GLDebugFont',
+            'vendor/BulletGL/GL_ShapeDrawer',
+        ]
     }
 }
 
 cflags  = '''-g -O2 -ansi -pedantic-errors -Werror
              -Wall -Wextra -Wconversion -Wshadow -Weffc++
              -Wpointer-arith -Wcast-qual -Wwrite-strings
-             -D__USE_FIXED_PROTOTYPES__
-             -Ivendor'''.split()
+             -D__USE_FIXED_PROTOTYPES__'''.split()
 
 def cflags_for_target(target):
+    flags = []
+
     if 'libs' in targets[target]:
-        return commands.getoutput('pkg-config --cflags ' + ''.join(targets[target]['libs'])).split()
-    else:
-        return []
+        flags += commands.getoutput('pkg-config --cflags ' + (' '.join(targets[target]['libs']) + '| sed -e "s/^-I/-isystem/g" -e "s/ -I/ -isystem/g"')).split()
+
+    return flags
 
 def libs_for_target(target):
     if 'libs' in targets[target]:
-        return commands.getoutput('pkg-config --libs ' + ''.join(targets[target]['libs'])).split()
+        return commands.getoutput('pkg-config --libs ' + (' '.join(targets[target]['libs']))).split()
     else:
         return []
 

@@ -2,7 +2,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "mersenne_twister.h"
+#include "vendor/mersenne_twister.h"
+
 #include "util.h"
 
 static MTRand rng;

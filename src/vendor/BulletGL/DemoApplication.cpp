@@ -15,22 +15,23 @@ subject to the following restrictions:
 
 
 #include "DemoApplication.h"
-#include "LinearMath/btIDebugDraw.h"
-#include "BulletDynamics/Dynamics/btDynamicsWorld.h"
-//#define USE_6DOF 1
-#include "BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"//picking
-#include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"//picking
 
-#include "BulletCollision/CollisionShapes/btCollisionShape.h"
-#include "BulletCollision/CollisionShapes/btBoxShape.h"
-#include "BulletCollision/CollisionShapes/btSphereShape.h"
-#include "BulletCollision/CollisionShapes/btCompoundShape.h"
-#include "BulletCollision/CollisionShapes/btUniformScalingShape.h"
-#include "BulletDynamics/ConstraintSolver/btConstraintSolver.h"
+#include <LinearMath/btIDebugDraw.h>
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
+#include <BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h> // picking
+#include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h> // picking
+
+#include <BulletCollision/CollisionShapes/btCollisionShape.h>
+#include <BulletCollision/CollisionShapes/btBoxShape.h>
+#include <BulletCollision/CollisionShapes/btSphereShape.h>
+#include <BulletCollision/CollisionShapes/btCompoundShape.h>
+#include <BulletCollision/CollisionShapes/btUniformScalingShape.h>
+#include <BulletDynamics/ConstraintSolver/btConstraintSolver.h>
 #include "GL_ShapeDrawer.h"
-#include "LinearMath/btQuickprof.h"
-#include "LinearMath/btDefaultMotionState.h"
-#include "LinearMath/btSerializer.h"
+
+#include <LinearMath/btQuickprof.h>
+#include <LinearMath/btDefaultMotionState.h>
+#include <LinearMath/btSerializer.h>
 #include "GLDebugFont.h"
 
 
@@ -58,6 +59,8 @@ extern int gTotalBytesAlignedAllocs;
 DemoApplication::DemoApplication()
 //see btIDebugDraw.h for modes
 :
+m_profileIterator(),
+m_clock(),
 m_dynamicsWorld(0),
 m_pickConstraint(0),
 m_shootBoxShape(0),
@@ -79,12 +82,10 @@ m_glutScreenWidth(0),
 m_glutScreenHeight(0),
 m_ortho(0),
 m_ShootBoxInitialSpeed(40.f),
+
 m_stepping(true),
 m_singleStep(false),
 m_idle(false),
-
-m_profileIterator(),
-m_clock(),
 m_lastKey(),
 m_shapeDrawer(),
 

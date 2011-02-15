@@ -1,7 +1,7 @@
 #ifndef ZHELPERS_H
 #define ZHELPERS_H
 
-#include "zmq.h"
+#include "vendor/zmq.h"
 #include <string>
 
 namespace zmq {

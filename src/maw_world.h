@@ -1,23 +1,21 @@
 #ifndef MAW_WORLD_H
 #define MAW_WORLD_H
 
-#include <BulletDynamics/btBulletDynamicsCommon.h>
-
-#include "GLDebugDrawer.h"
-#include "GlutDemoApplication.h"
+#include "vendor/bullet.h"
+#include "vendor/BulletGL/GlutDemoApplication.h"
 
 class MawWorld : public GlutDemoApplication {
 public:
   void initPhysics();
-	void endPhysics();
+  void endPhysics();
 
   void stepSimulation(float dt);
 
   MawWorld();
   ~MawWorld() { endPhysics(); }
 
-  virtual void clientMoveAndDisplay();
-  virtual void displayCallback();
+  void clientMoveAndDisplay();
+  void displayCallback();
 
   void addUnicycle(btVector3 const& pos);
 

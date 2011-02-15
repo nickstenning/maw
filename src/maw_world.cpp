@@ -1,12 +1,15 @@
+#include "vendor/BulletGL/GLDebugDrawer.h"
+
 #include "maw_world.h"
 
 MawWorld::MawWorld ()
-: m_collisionConfiguration(0)
+: GlutDemoApplication()
+, m_debugDrawer(new GLDebugDrawer())
+, m_collisionConfiguration(0)
 , m_dispatcher(0)
 , m_broadphase(0)
 , m_solver(0)
 , m_collisionShapes()
-, m_debugDrawer(new GLDebugDrawer())
 {
   setTexturing(true);
   setShadows(true);
@@ -58,10 +61,10 @@ void MawWorld::endPhysics() {
     if (body && body->getMotionState()) {
       // remove constraints
       while (body->getNumConstraintRefs()) {
-				btTypedConstraint* constraint = body->getConstraintRef(0);
-				m_dynamicsWorld->removeConstraint(constraint);
-				delete constraint;
-			}
+        btTypedConstraint* constraint = body->getConstraintRef(0);
+        m_dynamicsWorld->removeConstraint(constraint);
+        delete constraint;
+      }
 
       delete body->getMotionState();
     }
@@ -116,5 +119,71 @@ void MawWorld::displayCallback(void) {
 
   glFlush();
   glutSwapBuffers();
+}
+
+void MawWorld::addUnicycle(btVector3 const& pos) {
+  const btScalar forkWidth   = 0.05;
+  const btScalar forkLength  = 0.8;
+  const btScalar wheelWidth  = 0.05;
+  const btScalar wheelRadius = 0.4;
+
+  // Make the unicycle fork
+  btCompoundShape* forkShape = new btCompoundShape();
+  {
+    float totalForkWidth = 2 * (forkWidth + wheelWidth);
+    btCollisionShape* forkLeg = new btBoxShape(btVector3(forkWidth/2, forkWidth/2, forkLength/2));
+    btCollisionShape* forkTop = new btBoxShape(btVector3(totalForkWidth/2, forkWidth/2, forkWidth/2));
+    btCollisionShape* seat = new btCapsuleShape(btScalar(totalForkWidth * 0.5), btScalar(forkLength * 0.2));
+
+    m_collisionShapes.push_back(forkLeg);
+    m_collisionShapes.push_back(forkTop);
+    m_collisionShapes.push_back(seat);
+
+    btTransform forkLegATrans, forkLegBTrans, forkTopTrans, seatTrans;
+    forkLegATrans.setIdentity();
+    forkLegBTrans.setIdentity();
+    forkTopTrans.setIdentity();
+    seatTrans.setIdentity();
+
+    forkLegATrans.setOrigin(btVector3(-(totalForkWidth/2 - forkWidth/2), 0, 0));
+    forkLegBTrans.setOrigin(btVector3( (totalForkWidth/2 - forkWidth/2), 0, 0));
+    forkTopTrans.setOrigin(btVector3(0, 0, forkLength/2 - forkLength/2));
+    seatTrans.setOrigin(btVector3(0, 0, (forkLength * 1.2)/2));
+
+    forkShape->addChildShape(forkLegATrans, forkLeg);
+    forkShape->addChildShape(forkLegBTrans, forkLeg);
+    forkShape->addChildShape(forkTopTrans, forkTop);
+    forkShape->addChildShape(seatTrans, seat);
+  }
+
+  // Make the unicycle wheel
+
+  btCollisionShape* wheelShape = new btCylinderShapeX(btVector3(wheelWidth/2, wheelRadius, wheelRadius));
+
+  m_collisionShapes.push_back(forkShape);
+  m_collisionShapes.push_back(wheelShape);
+
+  btTransform forkTrans, wheelTrans;
+  forkTrans.setIdentity();
+  wheelTrans.setIdentity();
+
+  forkTrans.setOrigin(pos);
+  wheelTrans.setOrigin(pos + btVector3(0, 0, -forkLength/2));
+
+  btRigidBody* forkBody  = localCreateRigidBody(1, forkTrans, forkShape);
+  btRigidBody* wheelBody = localCreateRigidBody(0.5, wheelTrans, wheelShape);
+
+  btVector3 pivotInWheel1(wheelWidth, 0, 0);
+  btVector3 pivotInFork1(wheelWidth, 0, -forkLength/2);
+  btVector3 pivotInWheel2(-wheelWidth, 0, 0);
+  btVector3 pivotInFork2(-wheelWidth, 0, -forkLength/2);
+  btVector3 axisInWheel(1, 0, 0);
+  btVector3 axisInFork(1, 0, 0);
+
+  btTypedConstraint* hinge1 = new btHingeConstraint(*wheelBody, *forkBody, pivotInWheel1, pivotInFork1, axisInWheel, axisInFork);
+  btTypedConstraint* hinge2 = new btHingeConstraint(*wheelBody, *forkBody, pivotInWheel1, pivotInFork1, axisInWheel, axisInFork);
+
+  m_dynamicsWorld->addConstraint(hinge1);
+  m_dynamicsWorld->addConstraint(hinge2);
 }
 

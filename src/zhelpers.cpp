@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include "zmq.h"
+#include "vendor/zmq.h"
 
 #include "zhelpers.h"
 
