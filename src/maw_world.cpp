@@ -11,8 +11,8 @@ MawWorld::MawWorld ()
 , m_solver(0)
 , m_collisionShapes()
 {
-  setTexturing(true);
-  setShadows(true);
+  // setTexturing(true);
+  // setShadows(true);
 }
 
 void MawWorld::initPhysics() {
@@ -22,7 +22,7 @@ void MawWorld::initPhysics() {
   m_ele = 150;
   m_azi = 200;
   m_forwardAxis = 1;
-  setCameraDistance(5.f);
+  m_cameraDistance = 5.0;
 
   // Create dynamicsWorld
   m_collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -43,7 +43,7 @@ void MawWorld::initPhysics() {
   groundTransform.setIdentity();
   groundTransform.setOrigin(btVector3(0,0,-1));
 
-  localCreateRigidBody(0.f, groundTransform, groundShape);
+  localCreateRigidBody(0.0, groundTransform, groundShape);
 
   addUnicycle(btVector3(0, 0, 0.8));
 }

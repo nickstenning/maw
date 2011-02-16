@@ -23,11 +23,11 @@ class GlutDemoApplication : public DemoApplication
 {
 public:
 
-	void specialKeyboard(int key, int x, int y);
+  void specialKeyboard(int key, int x, int y);
 
-	virtual void swapBuffers();
+  virtual void swapBuffers();
 
-	virtual	void	updateModifierKeys();
+  virtual	void	updateModifierKeys();
 
 };
 #endif //GLUT_DEMO_APPLICATION_H

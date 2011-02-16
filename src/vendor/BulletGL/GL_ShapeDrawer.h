@@ -27,7 +27,10 @@ class GL_ShapeDrawer
 {
 protected:
   struct ShapeCache {
-    struct Edge { btVector3 n[2]; int v[2]; };
+    struct Edge {
+      btVector3 n[2];
+      int v[2];
+    };
 
     ShapeCache(const btConvexShape* s) : m_shapehull(s), m_edges() {}
 
@@ -44,23 +47,26 @@ protected:
   ShapeCache* cache(btConvexShape*);
 
 public:
-    GL_ShapeDrawer();
+  GL_ShapeDrawer();
 
-    virtual ~GL_ShapeDrawer();
+  virtual ~GL_ShapeDrawer();
 
-    // drawOpenGL might allocate temporary memory, stores pointer in shape userpointer
-    virtual void drawOpenGL(btScalar* m, btCollisionShape* shape, const btVector3& color,int debugMode,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax);
-    virtual void drawShadow(btScalar* m, const btVector3& extrusion, btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax);
+  // drawOpenGL might allocate temporary memory, stores pointer in shape userpointer
+  virtual void drawOpenGL(btScalar* m, btCollisionShape* shape, const btVector3& color, int debugMode, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax);
+  virtual void drawShadow(btScalar* m, const btVector3& extrusion, btCollisionShape* shape, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax);
 
-    bool enableTexture(bool enable) { bool p=m_textureenabled;m_textureenabled=enable;return(p); }
-    bool hasTextureEnabled() const
-    {
-      return m_textureenabled;
-    }
+  bool enableTexture(bool enable) {
+    bool p = m_textureenabled;
+    m_textureenabled = enable;
+    return(p);
+  }
+  bool hasTextureEnabled() const {
+    return m_textureenabled;
+  }
 
-    static void drawCylinder(float radius, float halfHeight, int upAxis);
-    void drawSphere(btScalar r, int lats, int longs);
-    static void drawCoordSystem();
+  static void drawCylinder(float radius, float halfHeight, int upAxis);
+  void drawSphere(btScalar r, int lats, int longs);
+  static void drawCoordSystem();
 
 };
 

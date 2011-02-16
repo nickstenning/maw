@@ -22,28 +22,28 @@ static DemoApplication* gDemoApplication = 0;
 
 static  void glutKeyboardCallback(unsigned char key, int x, int y)
 {
-  gDemoApplication->keyboardCallback(key,x,y);
+  gDemoApplication->keyboardCallback(key, x, y);
 }
 
 static  void glutKeyboardUpCallback(unsigned char key, int x, int y)
 {
-  gDemoApplication->keyboardUpCallback(key,x,y);
+  gDemoApplication->keyboardUpCallback(key, x, y);
 }
 
 static void glutSpecialKeyboardCallback(int key, int x, int y)
 {
-  gDemoApplication->specialKeyboard(key,x,y);
+  gDemoApplication->specialKeyboard(key, x, y);
 }
 
 static void glutSpecialKeyboardUpCallback(int key, int x, int y)
 {
-  gDemoApplication->specialKeyboardUp(key,x,y);
+  gDemoApplication->specialKeyboardUp(key, x, y);
 }
 
 
 static void glutReshapeCallback(int w, int h)
 {
-  gDemoApplication->reshape(w,h);
+  gDemoApplication->reshape(w, h);
 }
 
 static void glutMoveAndDisplayCallback()
@@ -53,13 +53,13 @@ static void glutMoveAndDisplayCallback()
 
 static void glutMouseFuncCallback(int button, int state, int x, int y)
 {
-  gDemoApplication->mouseFunc(button,state,x,y);
+  gDemoApplication->mouseFunc(button, state, x, y);
 }
 
 
-static void glutMotionFuncCallback(int x,int y)
+static void glutMotionFuncCallback(int x, int y)
 {
-  gDemoApplication->mouseMotionFunc(x,y);
+  gDemoApplication->mouseMotionFunc(x, y);
 }
 
 
@@ -69,7 +69,8 @@ static void glutDisplayCallback(void)
 }
 
 
-int glutmain(int argc, char **argv,int width,int height,const char* title,DemoApplication* demoApp) {
+int glutmain(int argc, char** argv, int width, int height, const char* title, DemoApplication* demoApp)
+{
 
   gDemoApplication = demoApp;
 
@@ -79,7 +80,7 @@ int glutmain(int argc, char **argv,int width,int height,const char* title,DemoAp
   glutInitWindowSize(width, height);
   glutCreateWindow(title);
 
-  gDemoApplication->myinit(); 
+  gDemoApplication->myinit();
 
   glutKeyboardFunc(glutKeyboardCallback);
   glutKeyboardUpFunc(glutKeyboardUpCallback);

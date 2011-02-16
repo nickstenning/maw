@@ -5,27 +5,27 @@
 #include "GlutStuff.h"
 
 GLDebugDrawer::GLDebugDrawer()
-: m_debugMode(0)
+  : m_debugMode(0)
 {}
 
-void GLDebugDrawer::drawLine (const btVector3& from,const btVector3& to,const btVector3& fromColor, const btVector3& toColor)
+void GLDebugDrawer::drawLine (const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor)
 {
   glBegin(GL_LINES);
-    glColor3f(fromColor.getX(), fromColor.getY(), fromColor.getZ());
-    glVertex3d(from.getX(), from.getY(), from.getZ());
-    glColor3f(toColor.getX(), toColor.getY(), toColor.getZ());
-    glVertex3d(to.getX(), to.getY(), to.getZ());
+  glColor3f(fromColor.getX(), fromColor.getY(), fromColor.getZ());
+  glVertex3d(from.getX(), from.getY(), from.getZ());
+  glColor3f(toColor.getX(), toColor.getY(), toColor.getZ());
+  glVertex3d(to.getX(), to.getY(), to.getZ());
   glEnd();
 }
 
-void GLDebugDrawer::drawLine (const btVector3& from,const btVector3& to,const btVector3& color)
+void GLDebugDrawer::drawLine (const btVector3& from, const btVector3& to, const btVector3& color)
 {
-  drawLine(from,to,color,color);
+  drawLine(from, to, color, color);
 }
 
 void GLDebugDrawer::drawSphere (const btVector3& p, btScalar radius, const btVector3& color)
 {
-  glColor4f (color.getX(), color.getY(), color.getZ(), btScalar(1.0f));
+  glColor4f (color.getX(), color.getY(), color.getZ(), btScalar(1.0));
   glPushMatrix ();
   glTranslatef (p.getX(), p.getY(), p.getZ());
 
@@ -35,12 +35,12 @@ void GLDebugDrawer::drawSphere (const btVector3& p, btScalar radius, const btVec
   int i, j;
   for(i = 0; i <= lats; i++) {
     btScalar lat0 = SIMD_PI * (-btScalar(0.5) + (btScalar) (i - 1) / lats);
-    btScalar z0  = radius*sin(lat0);
-    btScalar zr0 =  radius*cos(lat0);
+    btScalar z0  = radius * sin(lat0);
+    btScalar zr0 =  radius * cos(lat0);
 
     btScalar lat1 = SIMD_PI * (-btScalar(0.5) + (btScalar) i / lats);
-    btScalar z1 = radius*sin(lat1);
-    btScalar zr1 = radius*cos(lat1);
+    btScalar z1 = radius * sin(lat1);
+    btScalar zr1 = radius * cos(lat1);
 
     glBegin(GL_QUAD_STRIP);
     for(j = 0; j <= longs; j++) {
@@ -61,24 +61,24 @@ void GLDebugDrawer::drawSphere (const btVector3& p, btScalar radius, const btVec
 
 void GLDebugDrawer::drawBox (const btVector3& boxMin, const btVector3& boxMax, const btVector3& color, btScalar alpha)
 {
-  btVector3 halfExtent = (boxMax - boxMin) * btScalar(0.5f);
-  btVector3 center = (boxMax + boxMin) * btScalar(0.5f);
+  btVector3 halfExtent = (boxMax - boxMin) * btScalar(0.5);
+  btVector3 center = (boxMax + boxMin) * btScalar(0.5);
   glColor4f (color.getX(), color.getY(), color.getZ(), alpha);
   glPushMatrix ();
   glTranslatef (center.getX(), center.getY(), center.getZ());
-  glScaled(2*halfExtent[0], 2*halfExtent[1], 2*halfExtent[2]);
+  glScaled(2 * halfExtent[0], 2 * halfExtent[1], 2 * halfExtent[2]);
   glPopMatrix ();
 }
 
 void GLDebugDrawer::drawTriangle (const btVector3& a, const btVector3& b, const btVector3& c, const btVector3& color, btScalar alpha)
 {
-  const btVector3 n=btCross(b-a,c-a).normalized();
+  const btVector3 n = btCross(b - a, c - a).normalized();
   glBegin(GL_TRIANGLES);
-    glColor4f(color.getX(), color.getY(), color.getZ(),alpha);
-    glNormal3d(n.getX(),n.getY(),n.getZ());
-    glVertex3d(a.getX(),a.getY(),a.getZ());
-    glVertex3d(b.getX(),b.getY(),b.getZ());
-    glVertex3d(c.getX(),c.getY(),c.getZ());
+  glColor4f(color.getX(), color.getY(), color.getZ(), alpha);
+  glNormal3d(n.getX(), n.getY(), n.getZ());
+  glVertex3d(a.getX(), a.getY(), a.getZ());
+  glVertex3d(b.getX(), b.getY(), b.getZ());
+  glVertex3d(c.getX(), c.getY(), c.getZ());
   glEnd();
 }
 
@@ -94,18 +94,18 @@ void GLDebugDrawer::draw3dText (const btVector3& location, const char*)
 
 void GLDebugDrawer::reportErrorWarning (const char* warningString)
 {
-  printf("%s\n",warningString);
+  printf("%s\n", warningString);
 }
 
 void GLDebugDrawer::drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int /*lifeTime*/, const btVector3& color)
 {
   btVector3 to = pointOnB + normalOnB * distance;
   const btVector3& from = pointOnB;
-  glColor4f(color.getX(), color.getY(), color.getZ(), 1.f);
+  glColor4f(color.getX(), color.getY(), color.getZ(), 1.0);
 
   glBegin(GL_LINES);
-    glVertex3d(from.getX(), from.getY(), from.getZ());
-    glVertex3d(to.getX(), to.getY(), to.getZ());
+  glVertex3d(from.getX(), from.getY(), from.getZ());
+  glVertex3d(to.getX(), to.getY(), to.getZ());
   glEnd();
 
   glRasterPos3f(from.x(),  from.y(),  from.z());
