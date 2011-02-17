@@ -266,15 +266,14 @@ void DemoApplication::keyboardCallback(unsigned char key, int /*x*/, int /*y*/)
     case 's': clientMoveAndDisplay();  break;
     case ' ': clientResetScene();      break;
 
-    case 'w':toggleDebugFlag(btIDebugDraw::DBG_DrawWireframe);        break;
-    case 'a':toggleDebugFlag(btIDebugDraw::DBG_DrawAabb);             break;
-    case 'c':toggleDebugFlag(btIDebugDraw::DBG_DrawContactPoints);    break;
-    case 'C':toggleDebugFlag(btIDebugDraw::DBG_DrawConstraints);      break;
-    case 'L':toggleDebugFlag(btIDebugDraw::DBG_DrawConstraintLimits); break;
-    case 'd':toggleDebugFlag(btIDebugDraw::DBG_NoDeactivation);       break;
+    case 'w': toggleDebugFlag(btIDebugDraw::DBG_DrawWireframe);        break;
+    case 'a': toggleDebugFlag(btIDebugDraw::DBG_DrawAabb);             break;
+    case 'c': toggleDebugFlag(btIDebugDraw::DBG_DrawContactPoints);    break;
+    case 'C': toggleDebugFlag(btIDebugDraw::DBG_DrawConstraints);      break;
+    case 'L': toggleDebugFlag(btIDebugDraw::DBG_DrawConstraintLimits); break;
+    case 'd': toggleDebugFlag(btIDebugDraw::DBG_NoDeactivation);       break;
 
-    default:
-      break;
+    default: break;
   }
 }
 
