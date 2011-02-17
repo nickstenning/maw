@@ -4,7 +4,8 @@
 
 #include "nn.h"
 
-int main (unsigned int argc, char* const argv[]) {
+int main (unsigned int argc, char* const argv[])
+{
 
   if (argc == 1) {
     std::cerr << "Usage: feedforward [<INPUT_0>, <INPUT_1>, ...]" << std::endl;

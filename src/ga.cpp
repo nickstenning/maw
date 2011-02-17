@@ -9,9 +9,11 @@
 #include "util.h"
 #include "ga.h"
 
-namespace GA {
+namespace GA
+{
 
-  Evolvable* roulettePick(Population& pop) {
+  Evolvable* roulettePick(Population& pop)
+  {
     double wheelSize = std::accumulate(pop.begin(), pop.end(), 0.0, util::pointer_accumulate<Evolvable>());
     double subTotal = 0.0;
     double pickPoint = util::rand(0, wheelSize);
@@ -31,14 +33,14 @@ namespace GA {
   }
 
   Runner::Runner (Evolvable* prototype, FitnessFunction* fitnessFunction, size_t numGenerations, size_t popSize)
-  : m_pop(popSize)
-  , m_prototype(prototype)
-  , m_fitnessFunc(fitnessFunction)
-  , m_numGenerations(numGenerations)
-  , m_generation(0)
-  , m_elitism(0.2)
-  , m_crossoverProb(0.3)
-  , m_mutationProb(0.7)
+    : m_pop(popSize)
+    , m_prototype(prototype)
+    , m_fitnessFunc(fitnessFunction)
+    , m_numGenerations(numGenerations)
+    , m_generation(0)
+    , m_elitism(0.2)
+    , m_crossoverProb(0.3)
+    , m_mutationProb(0.7)
   {
     size_t numElite = static_cast<size_t>( round(m_elitism * m_pop.size()) );
 
@@ -48,11 +50,14 @@ namespace GA {
       // Only do random init for non-elite members. This allows us to feed a
       // good network into evolve and seed some proportion (m_elitism) of the
       // population with this network.
-      if (i > numElite) m_pop[i]->gaInit();
+      if (i > numElite) {
+        m_pop[i]->gaInit();
+      }
     }
   }
 
-  Runner::~Runner () {
+  Runner::~Runner ()
+  {
     for (Population::const_iterator it = m_pop.begin(); it != m_pop.end(); ++it) {
       delete *it;
     }
@@ -62,26 +67,31 @@ namespace GA {
     delete m_fitnessFunc;
   }
 
-  Runner& Runner::elitism(float p) {
+  Runner& Runner::elitism(float p)
+  {
     m_elitism = p;
     return *this;
   }
 
-  Runner& Runner::crossoverProb(float p) {
+  Runner& Runner::crossoverProb(float p)
+  {
     m_crossoverProb = p;
     return *this;
   }
 
-  Runner& Runner::mutationProb(float p) {
+  Runner& Runner::mutationProb(float p)
+  {
     m_mutationProb = p;
     return *this;
   }
 
-  bool Runner::isFinished () const {
+  bool Runner::isFinished () const
+  {
     return m_generation >= m_numGenerations;
   }
 
-  Runner& Runner::step () {
+  Runner& Runner::step ()
+  {
     Population newPop;
 
     m_generation += 1;
@@ -129,7 +139,8 @@ namespace GA {
     return *this;
   }
 
-  void Runner::fillStats (int& gen, double& min, double& max, double& mean, double& stddev) const {
+  void Runner::fillStats (int& gen, double& min, double& max, double& mean, double& stddev) const
+  {
     gen = m_generation;
     min = m_pop[0]->fitness();
     max = m_pop[m_pop.size() - 1]->fitness();
@@ -144,12 +155,14 @@ namespace GA {
     stddev = sqrt(sumsqdev / m_pop.size());
   }
 
-  Evolvable const* Runner::getFittest () {
+  Evolvable const* Runner::getFittest ()
+  {
     sortPopulation();
     return m_pop[m_pop.size() - 1];
   }
 
-  void Runner::sortPopulation() {
+  void Runner::sortPopulation()
+  {
     std::sort(m_pop.begin(), m_pop.end(), util::pointer_compare<Evolvable>());
   }
 }

@@ -7,7 +7,8 @@
 /**
  * Container for util namespace.
 **/
-namespace util {
+namespace util
+{
   /**
    * Simple helper to initialize RNG.
    *
@@ -77,7 +78,8 @@ namespace util {
  * Teach IOStream how to print a std::vector<whatever>
 **/
 template<typename T>
-std::ostream& operator<<(std::ostream& os, std::vector<T> const& list) {
+std::ostream& operator<<(std::ostream& os, std::vector<T> const& list)
+{
   typename std::vector<T>::const_iterator i = list.begin();
 
   if (i == list.end()) {

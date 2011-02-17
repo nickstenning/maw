@@ -4,7 +4,8 @@
 #include "vendor/bullet.h"
 #include "vendor/BulletGL/GlutDemoApplication.h"
 
-class MawWorld : public GlutDemoApplication {
+class MawWorld : public GlutDemoApplication
+{
 public:
   void initPhysics();
   void endPhysics();
@@ -12,7 +13,9 @@ public:
   void stepSimulation(float dt);
 
   MawWorld();
-  ~MawWorld() { endPhysics(); }
+  ~MawWorld() {
+    endPhysics();
+  }
 
   void clientMoveAndDisplay();
   void displayCallback();

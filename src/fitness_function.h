@@ -10,7 +10,9 @@ class FitnessFunction
 {
 public:
   virtual ~FitnessFunction() {};
-  virtual double operator() (Evolvable*) { return 0; };
+  virtual double operator() (Evolvable*) {
+    return 0;
+  };
 };
 
 #endif // FITNESS_FUNCTION_H

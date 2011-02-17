@@ -22,15 +22,15 @@ static const double r = Unicycle2D::wheelRadius;
 static const double angMax = (pi / 2.0) + asin(r / l);
 
 // Rolling friction accel maximum
-static const double fricRoll = (0.03 * m * g) / (r * m);
+static const double fricRoll = (0.03 * m* g) / (r* m);
 // Seat sliding friction force maximum
-static const double fricSlide = (0.5 * M * g) / m;
+static const double fricSlide = (0.5 * M* g) / m;
 
 // MoI of wheel
-static const double I = (m*r*r) / 2.0;
+static const double I = (m* r* r) / 2.0;
 
 // KE of wheel, and of seat due to linear motion
-static const double A = (I + m*r*r + M*r*r) / 2.0;
+static const double A = (I + m* r* r + M* r* r) / 2.0;
 // KE of seat
 static const double B = M * l * l / 2.0;
 // Coupling
@@ -41,7 +41,8 @@ static const double D = M * g * l;
 // 2D unicycle equations of motion.
 //
 // Note no explicit dependence on angle of wheel (as we'd expect from symmetry).
-Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s, double const& F_w, double const& F_p) {
+Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s, double const& F_w, double const& F_p)
+{
   double p    = s[0], ddt_p;
   double dpdt = s[1], ddt_dpdt;
   double /*w = s[2],*/ ddt_w;
@@ -88,14 +89,15 @@ Unicycle2D::state physics (double const& /*t*/, Unicycle2D::state const& s, doub
 }
 
 Unicycle2D::Unicycle2D()
-: m_t(0.0)
-, m_p(0.0)
-, m_dpdt(0.0)
-, m_w(0.0)
-, m_dwdt(0.0)
+  : m_t(0.0)
+  , m_p(0.0)
+  , m_dpdt(0.0)
+  , m_w(0.0)
+  , m_dwdt(0.0)
 {}
 
-void Unicycle2D::step(double ext_dt, double F_w, double F_p) {
+void Unicycle2D::step(double ext_dt, double F_w, double F_p)
+{
   // Unicycle2D::dt provides a minimum physics resolution, but ext_dt can specify
   // that it wants the simulation to run for longer in a single call to step().
   while (ext_dt > dt) {
@@ -105,7 +107,8 @@ void Unicycle2D::step(double ext_dt, double F_w, double F_p) {
   rk_step(ext_dt, F_w, F_p, physics);
 }
 
-void Unicycle2D::rk_step(double h, double F_w, double F_p, rkFunc func) {
+void Unicycle2D::rk_step(double h, double F_w, double F_p, rkFunc func)
+{
   state s;
   s[0] = m_p;
   s[1] = m_dpdt;
@@ -137,42 +140,64 @@ void Unicycle2D::rk_step(double h, double F_w, double F_p, rkFunc func) {
   }
 }
 
-double const Unicycle2D::T() const {
+double const Unicycle2D::T() const
+{
   return A * m_dwdt * m_dwdt + B * m_dpdt * m_dpdt + C * m_dwdt * m_dpdt * cos(m_p);
 }
 
-double const Unicycle2D::V() const {
+double const Unicycle2D::V() const
+{
   return D * cos(m_p);
 }
 
-double const& Unicycle2D::t() const { return m_t; }
+double const& Unicycle2D::t() const
+{
+  return m_t;
+}
 
-Unicycle2D& Unicycle2D::t(double const& t_) {
+Unicycle2D& Unicycle2D::t(double const& t_)
+{
   m_t = t_;
   return *this;
 }
 
-double const& Unicycle2D::p() const { return m_p; }
-double const& Unicycle2D::dpdt() const { return m_dpdt; }
-double const& Unicycle2D::w() const { return m_w; }
-double const& Unicycle2D::dwdt() const { return m_dwdt; }
+double const& Unicycle2D::p() const
+{
+  return m_p;
+}
+double const& Unicycle2D::dpdt() const
+{
+  return m_dpdt;
+}
+double const& Unicycle2D::w() const
+{
+  return m_w;
+}
+double const& Unicycle2D::dwdt() const
+{
+  return m_dwdt;
+}
 
-Unicycle2D& Unicycle2D::p(double const& p_) {
+Unicycle2D& Unicycle2D::p(double const& p_)
+{
   m_p = p_;
   return *this;
 }
 
-Unicycle2D& Unicycle2D::dpdt(double const& dpdt_) {
+Unicycle2D& Unicycle2D::dpdt(double const& dpdt_)
+{
   m_dpdt = dpdt_;
   return *this;
 }
 
-Unicycle2D& Unicycle2D::w(double const& w_) {
+Unicycle2D& Unicycle2D::w(double const& w_)
+{
   m_w = w_;
   return *this;
 }
 
-Unicycle2D& Unicycle2D::dwdt(double const& dwdt_) {
+Unicycle2D& Unicycle2D::dwdt(double const& dwdt_)
+{
   m_dwdt = dwdt_;
   return *this;
 }

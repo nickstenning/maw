@@ -7,7 +7,8 @@
 
 class NN;
 
-class NNDotPrinter {
+class NNDotPrinter
+{
 public:
   NNDotPrinter(std::ostream& os);
   NNDotPrinter(NNDotPrinter const& bp);

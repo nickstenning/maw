@@ -16,7 +16,8 @@ double fw = 0.0, fp = 0.0, tgt = 0.0;
 std::string process_comm(std::string&, Unicycle2D&, NN& nn);
 std::string process_data(std::string&, Unicycle2D&, NN& nn);
 
-int main (int /*argc*/, char* const /*argv*/[]) {
+int main (int /*argc*/, char* const /*argv*/[])
+{
   util::initRNG();
 
   NN nn;
@@ -65,13 +66,13 @@ int main (int /*argc*/, char* const /*argv*/[]) {
   return 0;
 }
 
-double getControlForce(Unicycle2D& uni, NN& nn) {
+double getControlForce(Unicycle2D& uni, NN& nn)
+{
   std::vector<double> input;
   std::vector<int> output;
 
   input.push_back(uni.p());
   input.push_back(uni.dpdt());
-  input.push_back(uni.w());
   input.push_back(uni.dwdt());
   input.push_back(tgt);
 
@@ -82,7 +83,8 @@ double getControlForce(Unicycle2D& uni, NN& nn) {
   return controlForce;
 }
 
-std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/) {
+std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/)
+{
   std::istringstream s_in( msg );
   std::ostringstream s_out;
   std::string cmd;
@@ -105,9 +107,9 @@ std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/) {
 
   if (cmd.compare("rst") == 0) {
     uni.p(util::rand(-0.001, 0.001))
-       .dpdt(0.0)
-       .w(0.0)
-       .dwdt(0.0);
+    .dpdt(0.0)
+    .w(0.0)
+    .dwdt(0.0);
   }
 
   s_out << "OK";
@@ -115,7 +117,8 @@ std::string process_comm(std::string& msg, Unicycle2D& uni, NN& /*nn*/) {
   return s_out.str();
 }
 
-std::string process_data(std::string& msg, Unicycle2D& uni, NN& nn) {
+std::string process_data(std::string& msg, Unicycle2D& uni, NN& nn)
+{
   std::istringstream s_in( msg );
   std::ostringstream s_out;
 

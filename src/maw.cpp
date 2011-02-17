@@ -1,7 +1,8 @@
 #include "vendor/BulletGL/GlutStuff.h"
 #include "maw_world.h"
 
-int main (int argc, char** argv) {
+int main (int argc, char** argv)
+{
   MawWorld mawWorld;
   mawWorld.initPhysics();
 

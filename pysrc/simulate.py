@@ -36,10 +36,10 @@ def on_key_press(symbol, modifiers):
         comm.send("fp 20.0")
         assert comm.recv() == "OK"
     elif symbol == key.RIGHT:
-        comm.send("tgt 0.157")
+        comm.send("tgt 2.0")
         assert comm.recv() == "OK"
     elif symbol == key.LEFT:
-        comm.send("tgt -0.157")
+        comm.send("tgt -2.0")
         assert comm.recv() == "OK"
     elif symbol == key.ESCAPE:
         window.has_exit = True

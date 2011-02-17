@@ -3,22 +3,23 @@
 #include "maw_world.h"
 
 MawWorld::MawWorld ()
-: GlutDemoApplication()
-, m_debugDrawer(new GLDebugDrawer())
-, m_collisionConfiguration(0)
-, m_dispatcher(0)
-, m_broadphase(0)
-, m_solver(0)
-, m_collisionShapes()
+  : GlutDemoApplication()
+  , m_debugDrawer(new GLDebugDrawer())
+  , m_collisionConfiguration(0)
+  , m_dispatcher(0)
+  , m_broadphase(0)
+  , m_solver(0)
+  , m_collisionShapes()
 {
   // setTexturing(true);
   // setShadows(true);
 }
 
-void MawWorld::initPhysics() {
+void MawWorld::initPhysics()
+{
   // Set up camera
-  m_sundirection = btVector3(1,1,-2) * 1000;
-  m_cameraUp = btVector3(0,0,1);
+  m_sundirection = btVector3(1, 1, -2) * 1000;
+  m_cameraUp = btVector3(0, 0, 1);
   m_ele = 150;
   m_azi = 200;
   m_forwardAxis = 1;
@@ -36,23 +37,25 @@ void MawWorld::initPhysics() {
   m_dynamicsWorld->setGravity(btVector3(0, 0, -10));
 
   // Create ground
-  btCollisionShape* groundShape = new btBoxShape(btVector3(10,10,1));
+  btCollisionShape* groundShape = new btBoxShape(btVector3(10, 10, 1));
   m_collisionShapes.push_back(groundShape);
 
   btTransform groundTransform;
   groundTransform.setIdentity();
-  groundTransform.setOrigin(btVector3(0,0,-1));
+  groundTransform.setOrigin(btVector3(0, 0, -1));
 
   localCreateRigidBody(0.0, groundTransform, groundShape);
 
   addUnicycle(btVector3(0, 0, 0.8));
 }
 
-void MawWorld::stepSimulation(float dt) {
+void MawWorld::stepSimulation(float dt)
+{
   m_dynamicsWorld->stepSimulation(dt);
 }
 
-void MawWorld::endPhysics() {
+void MawWorld::endPhysics()
+{
   // remove the rigid bodies from the dynamics world and delete them
   for (int i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i -= 1) {
     btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
@@ -74,7 +77,7 @@ void MawWorld::endPhysics() {
   }
 
   // delete collision shapes
-  for (int j = 0; j < m_collisionShapes.size();j++) {
+  for (int j = 0; j < m_collisionShapes.size(); j++) {
     btCollisionShape* shape = m_collisionShapes[j];
     m_collisionShapes[j] = 0;
     delete shape;
@@ -91,7 +94,8 @@ void MawWorld::endPhysics() {
 }
 
 
-void MawWorld::clientMoveAndDisplay() {
+void MawWorld::clientMoveAndDisplay()
+{
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   float dt = getDeltaTimeMicroseconds() * 0.000001f;
@@ -108,7 +112,8 @@ void MawWorld::clientMoveAndDisplay() {
   glutSwapBuffers();
 }
 
-void MawWorld::displayCallback(void) {
+void MawWorld::displayCallback(void)
+{
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (m_dynamicsWorld) {

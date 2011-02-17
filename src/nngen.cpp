@@ -4,7 +4,8 @@
 #include "nn.h"
 #include "util.h"
 
-int main (unsigned int argc, char* const argv[]) {
+int main (unsigned int argc, char* const argv[])
+{
 
   if (!(argc >= 2)) {
     std::cerr << "Usage: nngen <NUM_LAYERS> [<LAYER_1_SIZE>, <LAYER_2_SIZE>, ...]\n";

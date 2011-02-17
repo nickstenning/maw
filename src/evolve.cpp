@@ -11,11 +11,13 @@
 
 bool abortGA = false;
 
-void abortEarly(int) {
+void abortEarly(int)
+{
   abortGA = true;
 }
 
-int main (int argc, char* const argv[]) {
+int main (int argc, char* const argv[])
+{
   std::cout << std::setprecision(6) << std::fixed;
   std::cerr << std::setprecision(6) << std::fixed;
 

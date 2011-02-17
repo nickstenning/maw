@@ -8,7 +8,8 @@
 
 static MTRand rng;
 
-unsigned long util::initRNG () {
+unsigned long util::initRNG ()
+{
   unsigned long seed;
   char const* envSeed;
 
@@ -24,14 +25,17 @@ unsigned long util::initRNG () {
   return seed;
 }
 
-double util::rand (double a, double b) {
+double util::rand (double a, double b)
+{
   return (b - a) * rng() + a;
 }
 
-bool util::choose (double prob) {
-  return (util::rand(0,1) < prob);
+bool util::choose (double prob)
+{
+  return (util::rand(0, 1) < prob);
 }
 
-double util::diracDelta(double x, double a) {
-  return (a) * exp(-(x*x*a*a));
+double util::diracDelta(double x, double a)
+{
+  return exp(-(x * x * a * a));
 }
