@@ -36,5 +36,5 @@ bool util::choose (double prob)
 
 double util::diracDelta(double x, double a)
 {
-  return (a) * exp(-(x * x * a * a));
+  return exp(-(x * x * a * a));
 }

@@ -73,7 +73,6 @@ double getControlForce(Unicycle2D& uni, NN& nn)
 
   input.push_back(uni.p());
   input.push_back(uni.dpdt());
-  input.push_back(uni.w());
   input.push_back(uni.dwdt());
   input.push_back(tgt);
 
