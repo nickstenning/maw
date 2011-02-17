@@ -8,15 +8,16 @@
 #include "unicycle_2d_fitness_function.h"
 
 Unicycle2DFitnessFunction::Unicycle2DFitnessFunction()
-: m_uni()
-, m_target(0.0)
+  : m_uni()
+  , m_target(0.0)
 {}
 
 /**
  * Feed the state variables into the brain, feed forward, and advance the
  * physics using the output of the brain as a controlling torque.
 **/
-double Unicycle2DFitnessFunction::operator() (Evolvable* obj) {
+double Unicycle2DFitnessFunction::operator() (Evolvable* obj)
+{
   Brain* brain = dynamic_cast<Brain*>(obj);
 
   if (brain == NULL) {
@@ -26,18 +27,18 @@ double Unicycle2DFitnessFunction::operator() (Evolvable* obj) {
   double fitness = 0.0;
 
   m_uni.p(util::rand(-SCORE_ANG, SCORE_ANG))
-       .dpdt(0)
-       .w(0)
-       .dwdt(0)
-       .t(0);
+  .dpdt(0)
+  .w(0)
+  .dwdt(0)
+  .t(0);
 
   while (m_uni.t() < MAX_EVAL_TIME) {
     double targetAngle = 0.0;
 
-    if (m_uni.t() > MAX_EVAL_TIME/3.0) {
-      targetAngle = PI/20.0;
-    } else if (m_uni.t() > (2.0 * MAX_EVAL_TIME)/3.0) {
-      targetAngle = -PI/20.0;
+    if (m_uni.t() > MAX_EVAL_TIME / 3.0) {
+      targetAngle = PI / 20.0;
+    } else if (m_uni.t() > (2.0 * MAX_EVAL_TIME) / 3.0) {
+      targetAngle = -PI / 20.0;
     }
 
     m_target = targetAngle;
@@ -56,7 +57,8 @@ double Unicycle2DFitnessFunction::operator() (Evolvable* obj) {
   return fitness;
 }
 
-void Unicycle2DFitnessFunction::step (Brain* brain) {
+void Unicycle2DFitnessFunction::step (Brain* brain)
+{
   std::vector<double> input;
   std::vector<int> output;
 

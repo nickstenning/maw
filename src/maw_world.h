@@ -6,15 +6,18 @@
 #include "GLDebugDrawer.h"
 #include "GlutDemoApplication.h"
 
-class MawWorld : public GlutDemoApplication {
+class MawWorld : public GlutDemoApplication
+{
 public:
   void initPhysics();
-	void endPhysics();
+  void endPhysics();
 
   void stepSimulation(float dt);
 
   MawWorld();
-  ~MawWorld() { endPhysics(); }
+  ~MawWorld() {
+    endPhysics();
+  }
 
   virtual void clientMoveAndDisplay();
   virtual void displayCallback();

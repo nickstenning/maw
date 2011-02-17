@@ -9,7 +9,8 @@
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
-class Unicycle {
+class Unicycle
+{
 public:
   Unicycle () {}
   ~Unicycle () {}

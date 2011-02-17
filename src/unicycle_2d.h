@@ -3,7 +3,8 @@
 
 #include "vector.h"
 
-class Unicycle2D {
+class Unicycle2D
+{
 public:
   typedef Vector<4> state;
   typedef state (*rkFunc)(double const& t, state const& s, double const& F_w, double const& F_p);

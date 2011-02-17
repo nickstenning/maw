@@ -7,7 +7,8 @@
 class Evolvable;
 class FitnessFunction;
 
-namespace GA {
+namespace GA
+{
 
   /**
    * A wrapper around a population of instances of Evolvable.

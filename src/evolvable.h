@@ -8,7 +8,7 @@ class Evolvable
 {
 public:
   Evolvable()
-  : m_fitness(0)
+    : m_fitness(0)
   {};
 
   virtual ~Evolvable() {};

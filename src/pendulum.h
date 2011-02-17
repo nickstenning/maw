@@ -5,7 +5,8 @@
 
 typedef std::vector<double> (*rkFunc)(double, double, double);
 
-class Pendulum {
+class Pendulum
+{
 public:
   Pendulum();
   ~Pendulum();

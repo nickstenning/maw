@@ -8,41 +8,46 @@
 #include "nn_dot_printer.h"
 
 NNDotPrinter::NNDotPrinter(std::ostream& os)
-: m_os(&os)
-, m_colours()
-, m_prefix("")
+  : m_os(&os)
+  , m_colours()
+  , m_prefix("")
 {
   initColours();
 }
 
 NNDotPrinter::NNDotPrinter(NNDotPrinter const& p)
-: m_os(p.m_os) // We don't own this pointer, so this is fine.
-, m_colours(p.m_colours)
-, m_prefix(p.m_prefix)
+  : m_os(p.m_os) // We don't own this pointer, so this is fine.
+  , m_colours(p.m_colours)
+  , m_prefix(p.m_prefix)
 {}
 
-NNDotPrinter::~NNDotPrinter() {
+NNDotPrinter::~NNDotPrinter()
+{
   m_os = NULL;
   delete m_os;
 }
 
-std::string const& NNDotPrinter::prefix() const {
+std::string const& NNDotPrinter::prefix() const
+{
   return m_prefix;
 }
 
-NNDotPrinter& NNDotPrinter::prefix(const char p[]) {
+NNDotPrinter& NNDotPrinter::prefix(const char p[])
+{
   m_prefix = p;
   return *this;
 }
 
-NNDotPrinter& NNDotPrinter::operator= (NNDotPrinter const& p) {
+NNDotPrinter& NNDotPrinter::operator= (NNDotPrinter const& p)
+{
   m_os = p.m_os;
   m_colours = p.m_colours;
   m_prefix = p.m_prefix;
   return *this;
 }
 
-NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
+NNDotPrinter& NNDotPrinter::operator<< (NN const& nn)
+{
   size_t k, i, j;
 
   std::ostream& os = *m_os;
@@ -54,7 +59,7 @@ NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
   for (k = 0; k < nn.m_weights.size(); k += 1) {
     NN::weight_matrix_t const& mx = nn.m_weights[k];
     NN::layer_t const& send = nn.m_layers[k];
-    NN::layer_t const& recv = nn.m_layers[k+1];
+    NN::layer_t const& recv = nn.m_layers[k + 1];
 
     std::ostringstream rankStr;
     rankStr << "  { rank=same;";
@@ -64,7 +69,7 @@ NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
 
       for (j = 0; j < recv.size(); j += 1) {
         os << m_prefix;
-        printWeight(os, k, i, k+1, j, mx[i][j]);
+        printWeight(os, k, i, k + 1, j, mx[i][j]);
       }
     }
 
@@ -85,7 +90,8 @@ NNDotPrinter& NNDotPrinter::operator<< (NN const& nn) {
   return *this;
 }
 
-void NNDotPrinter::printWeight(std::ostream& os, size_t layer_i, size_t i, size_t layer_j, size_t j, double val) {
+void NNDotPrinter::printWeight(std::ostream& os, size_t layer_i, size_t i, size_t layer_j, size_t j, double val)
+{
   std::string& col = m_colours[i % m_colours.size()];
 
   os << "  L" << layer_i << "_" << i << " -> L" << layer_j << "_" << j;
@@ -94,7 +100,8 @@ void NNDotPrinter::printWeight(std::ostream& os, size_t layer_i, size_t i, size_
   os << "fontsize=10,labeldistance=3];\n";
 }
 
-void NNDotPrinter::initColours() {
+void NNDotPrinter::initColours()
+{
   m_colours.push_back("#1f77b4");
   m_colours.push_back("#ff7f0e");
   m_colours.push_back("#2ca02c");

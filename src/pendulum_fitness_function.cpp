@@ -9,14 +9,15 @@
 #include "pendulum_fitness_function.h"
 
 PendulumFitnessFunction::PendulumFitnessFunction()
-: m_pdl()
+  : m_pdl()
 {}
 
 /**
  * Feed the state variables into the brain, feed forward, and advance the
  * physics using the output of the brain as a controlling torque.
 **/
-double PendulumFitnessFunction::operator() (Evolvable* obj) {
+double PendulumFitnessFunction::operator() (Evolvable* obj)
+{
   Brain* brain = dynamic_cast<Brain*>(obj);
 
   if (brain == NULL) {
@@ -26,8 +27,8 @@ double PendulumFitnessFunction::operator() (Evolvable* obj) {
   double fitness = 0.0;
 
   m_pdl.ang(util::rand(-SCORE_ANG, SCORE_ANG))
-       .vel(0)
-       .time(0);
+  .vel(0)
+  .time(0);
 
   while (m_pdl.time() < MAX_EVAL_TIME) {
     step(brain);
@@ -43,7 +44,8 @@ double PendulumFitnessFunction::operator() (Evolvable* obj) {
   return fitness;
 }
 
-void PendulumFitnessFunction::step (Brain* brain) {
+void PendulumFitnessFunction::step (Brain* brain)
+{
   std::vector<double> input;
   std::vector<int> output;
 

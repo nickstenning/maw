@@ -4,12 +4,12 @@
 #include <vector>
 #include <ostream>
 
-template<size_t D=3, typename T=double>
+template<size_t D = 3, typename T = double>
 class Vector
 {
 public:
   Vector<D, T> ()
-  : m_vec(D)
+    : m_vec(D)
   {}
 
   Vector<D, T>& operator=(Vector<D, T> const& rhs) {
@@ -75,7 +75,8 @@ private:
 };
 
 template<size_t D, typename T>
-Vector<D, T> operator*(T factor, Vector<D, T> const& rhs) {
+Vector<D, T> operator*(T factor, Vector<D, T> const& rhs)
+{
   return Vector<D, T>(rhs) *= factor;
 }
 

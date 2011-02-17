@@ -9,46 +9,50 @@
 #include "brain.h"
 
 Brain::Brain()
-: NN()
-, m_mutationRate(0)
-, m_mutationSize(MUTATION_SIZE)
+  : NN()
+  , m_mutationRate(0)
+  , m_mutationSize(MUTATION_SIZE)
 {}
 
 Brain::Brain(std::vector<size_t> layerSizes)
-: NN(layerSizes)
-, m_mutationRate(0)
-, m_mutationSize(MUTATION_SIZE)
+  : NN(layerSizes)
+  , m_mutationRate(0)
+  , m_mutationSize(MUTATION_SIZE)
 {
   updateMutationRate();
 }
 
 Brain::Brain(std::istream& is)
-: NN(is)
-, m_mutationRate(0)
-, m_mutationSize(MUTATION_SIZE)
+  : NN(is)
+  , m_mutationRate(0)
+  , m_mutationSize(MUTATION_SIZE)
 {
   updateMutationRate();
 }
 
-void Brain::gaInit() {
+void Brain::gaInit()
+{
   setRandomWeights();
 }
 
-void Brain::updateMutationRate() {
+void Brain::updateMutationRate()
+{
   size_t numNonInputNeurons = 0;
 
   for (size_t i = 0; i < m_weights.size(); i += 1) {
-    numNonInputNeurons += m_layers[i].size() * m_layers[i+1].size();
+    numNonInputNeurons += m_layers[i].size() * m_layers[i + 1].size();
   }
 
-  m_mutationRate = 10 * 1.0/numNonInputNeurons;
+  m_mutationRate = 10 * 1.0 / numNonInputNeurons;
 }
 
-Evolvable* Brain::clone() {
+Evolvable* Brain::clone()
+{
   return new Brain(*this);
 }
 
-Evolvable* Brain::clone(Evolvable* toCopy) {
+Evolvable* Brain::clone(Evolvable* toCopy)
+{
   Brain* toCopyAsBrain = dynamic_cast<Brain*>(toCopy);
   if (toCopyAsBrain == NULL) {
     throw std::runtime_error("Brain::clone(Evolvable*) received an Evolvable instance that wasn't a Brain!");
@@ -67,7 +71,7 @@ Evolvable* Brain::mutate ()
   for (k = 0; k < m_weights.size(); k += 1) {
     NN::weight_matrix_t& mx = m_weights[k];
     NN::layer_t& send = m_layers[k];
-    NN::layer_t& recv = m_layers[k+1];
+    NN::layer_t& recv = m_layers[k + 1];
 
     for (i = 0; i < send.size(); i += 1) {
       for (j = 0; j < recv.size(); j += 1) {
@@ -81,7 +85,8 @@ Evolvable* Brain::mutate ()
   return this;
 }
 
-Evolvable* Brain::crossover (Evolvable const* other) {
+Evolvable* Brain::crossover (Evolvable const* other)
+{
   Brain const* otherBrain = dynamic_cast<Brain const*>(other);
 
   if (otherBrain == NULL) {
@@ -101,7 +106,7 @@ Evolvable* Brain::crossover (Evolvable const* other) {
   for (k = 0; k < m_weights.size(); k += 1) {
     NN::weight_matrix_t& mx = m_weights[k];
     NN::layer_t& send = m_layers[k];
-    NN::layer_t& recv = m_layers[k+1];
+    NN::layer_t& recv = m_layers[k + 1];
 
     for (j = 0; j < recv.size(); j += 1) {
       if (util::choose(0.5)) {

@@ -28,8 +28,12 @@ public:
 
   std::vector<int> feedForward(std::vector<double> const& input);
 
-  layers_t const& layers() const { return m_layers; }
-  weights_t const& weights() const { return m_weights; }
+  layers_t const& layers() const {
+    return m_layers;
+  }
+  weights_t const& weights() const {
+    return m_weights;
+  }
 
   // TODO: remove this friendship and provide accessors for the things Brain
   // wants to modify.
