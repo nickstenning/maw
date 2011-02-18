@@ -1,7 +1,14 @@
 #ifndef WORLD_MANAGER_H
 #define WORLD_MANAGER_H
 
-#include "vendor/bullet.h"
+#include <LinearMath/btAlignedObjectArray.h>
+
+class btDefaultCollisionConfiguration;
+class btCollisionDispatcher;
+class btBroadphaseInterface;
+class btSequentialImpulseConstraintSolver;
+class btDynamicsWorld;
+class btCollisionShape;
 
 class WorldManager
 {
@@ -11,7 +18,10 @@ public:
 
   btDynamicsWorld* dynamicsWorld() const;
 
-  btRigidBody* addRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
+  btRigidBody* addRigidBody(btScalar mass, const btTransform& startTransform, int collisionShapeIndex);
+
+  int addCollisionShape(btCollisionShape* shape);
+  btCollisionShape* getCollisionShape(int index) const;
 
   int stepSimulation(btScalar timeStep);
 

@@ -26,8 +26,8 @@ targets  = {
         'libs': ['bullet', 'gl', 'glu', 'glut'],
         'sources': [
             'maw',
-            'maw_world_manager',
             'world_manager',
+            'unicycle',
             'vendor/BulletGL/GlutRunner',
             'vendor/BulletGL/DemoApplication',
             'vendor/BulletGL/GlutDemoApplication',

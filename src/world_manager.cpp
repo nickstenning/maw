@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
 #include "world_manager.h"
@@ -14,12 +16,11 @@ WorldManager::WorldManager ()
 
   // Create ground
   {
-    btCollisionShape* groundShape = new btBoxShape(btVector3(50, 1, 50));
-    m_collisionShapes.push_back(groundShape);
+    int groundIdx = addCollisionShape(new btBoxShape(btVector3(50, 1, 50)));
 
     btTransform groundTransform(btQuaternion::getIdentity(), btVector3(0, -1, 0));
 
-    addRigidBody(btScalar(0.0), groundTransform, groundShape);
+    addRigidBody(btScalar(0.0), groundTransform, groundIdx);
   }
 }
 
@@ -66,8 +67,9 @@ btDynamicsWorld* WorldManager::dynamicsWorld() const
   return m_dynamicsWorld;
 }
 
-btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape)
+btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startTransform, int shapeIndex)
 {
+  btCollisionShape* shape = getCollisionShape(shapeIndex);
   btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
   // rigidbody is dynamic iff mass is nonzero, otherwise static
@@ -86,6 +88,21 @@ btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startT
   m_dynamicsWorld->addRigidBody(body);
 
   return body;
+}
+
+int WorldManager::addCollisionShape(btCollisionShape* shape)
+{
+  m_collisionShapes.push_back(shape);
+  return m_collisionShapes.size() - 1;
+}
+
+btCollisionShape* WorldManager::getCollisionShape(int index) const
+{
+  if (index > m_collisionShapes.size() - 1) {
+    throw std::runtime_error("Attempted to read collision shape at index out of range.");
+  }
+
+  return m_collisionShapes[index];
 }
 
 int WorldManager::stepSimulation(btScalar timeStep)
