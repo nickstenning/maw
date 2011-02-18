@@ -13,10 +13,6 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "GLDebugFont.h"
-#include "GlutStuff.h"
-#include "GL_ShapeDrawer.h"
-
 #include <BulletCollision/CollisionShapes/btPolyhedralConvexShape.h>
 #include <BulletCollision/CollisionShapes/btTriangleMeshShape.h>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
@@ -33,12 +29,15 @@ subject to the following restrictions:
 
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
 
-#include "LinearMath/btTransformUtil.h"
-#include "LinearMath/btIDebugDraw.h"
+#include <LinearMath/btTransformUtil.h>
+#include <LinearMath/btIDebugDraw.h>
 
-#include <stdio.h> //printf debugging
+#include <cstdio> //printf debugging
 
-//#define USE_DISPLAY_LISTS 1
+#include "OpenGL.h"
+#include "GLShapeDrawer.h"
+
+// #define USE_DISPLAY_LISTS 1
 #ifdef USE_DISPLAY_LISTS
 
 #include <map>
@@ -84,7 +83,7 @@ public:
   }
 };
 
-GLuint  OGL_get_displaylist_for_shape(btCollisionShape* shape)
+GLuint OGL_get_displaylist_for_shape(btCollisionShape* shape)
 {
   TRIMESH_KEY_MAP::iterator map_iter;
 
@@ -140,7 +139,7 @@ void OGL_displaylist_register_shape(btCollisionShape* shape)
 }
 #endif //USE_DISPLAY_LISTS
 
-void GL_ShapeDrawer::drawCoordSystem()
+void GLShapeDrawer::drawCoordSystem()
 {
   glBegin(GL_LINES);
   glColor3f(1, 0, 0);
@@ -156,15 +155,14 @@ void GL_ShapeDrawer::drawCoordSystem()
 
 }
 
-
-class GlDrawcallback : public btTriangleCallback
+class GLDrawCallbackcallback : public btTriangleCallback
 {
 
 public:
 
   bool  m_wireframe;
 
-  GlDrawcallback()
+  GLDrawCallbackcallback()
     : m_wireframe(false) {
   }
 
@@ -203,7 +201,7 @@ public:
   }
 };
 
-class TriangleGlDrawcallback : public btInternalTriangleIndexCallback
+class TriangleGLDrawCallbackcallback : public btInternalTriangleIndexCallback
 {
 public:
   virtual void internalProcessTriangleIndex(btVector3* triangle, int partId, int  triangleIndex) {
@@ -226,7 +224,7 @@ public:
 };
 
 
-void GL_ShapeDrawer::drawSphere(btScalar radius, int lats, int longs)
+void GLShapeDrawer::drawSphere(btScalar radius, int lats, int longs)
 {
   int i, j;
   for(i = 0; i <= lats; i++) {
@@ -252,7 +250,7 @@ void GL_ShapeDrawer::drawSphere(btScalar radius, int lats, int longs)
   }
 }
 
-void GL_ShapeDrawer::drawCylinder(float radius, float halfHeight, int upAxis)
+void GLShapeDrawer::drawCylinder(float radius, float halfHeight, int upAxis)
 {
 
 
@@ -295,7 +293,7 @@ void GL_ShapeDrawer::drawCylinder(float radius, float halfHeight, int upAxis)
   gluDeleteQuadric(quadObj);
 }
 
-GL_ShapeDrawer::ShapeCache*   GL_ShapeDrawer::cache(btConvexShape* shape)
+GLShapeDrawer::ShapeCache*   GLShapeDrawer::cache(btConvexShape* shape)
 {
   ShapeCache*   sc = (ShapeCache*) shape->getUserPointer();
   if(!sc) {
@@ -347,8 +345,7 @@ inline void glDrawVector(const btVector3& v)
   glVertex3d(v[0], v[1], v[2]);
 }
 
-
-void GL_ShapeDrawer::drawOpenGL(btScalar* m, btCollisionShape* shape, const btVector3& color, int  debugMode, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax)
+void GLShapeDrawer::drawOpenGL(btScalar* m, btCollisionShape* shape, const btVector3& color, int  debugMode, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax)
 {
 
   if (shape->getShapeType() == CUSTOM_CONVEX_SHAPE_TYPE) {
@@ -704,7 +701,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar* m, btCollisionShape* shape, const btVe
     if (shape->isConcave() && !shape->isInfinite()) {
       btConcaveShape* concaveMesh = (btConcaveShape*) shape;
 
-      GlDrawcallback drawCallback;
+      GLDrawCallbackcallback drawCallback;
       drawCallback.m_wireframe = (debugMode & btIDebugDraw::DBG_DrawWireframe) != 0;
 
       concaveMesh->processAllTriangles(&drawCallback, worldBoundsMin, worldBoundsMax);
@@ -726,7 +723,7 @@ void GL_ShapeDrawer::drawOpenGL(btScalar* m, btCollisionShape* shape, const btVe
 
 }
 
-void GL_ShapeDrawer::drawShadow(btScalar* m, const btVector3& extrusion, btCollisionShape* shape, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax)
+void GLShapeDrawer::drawShadow(btScalar* m, const btVector3& extrusion, btCollisionShape* shape, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax)
 {
   glPushMatrix();
   btglMultMatrix(m);
@@ -782,7 +779,7 @@ void GL_ShapeDrawer::drawShadow(btScalar* m, const btVector3& extrusion, btColli
   {
     btConcaveShape* concaveMesh = (btConcaveShape*) shape;
 
-    GlDrawcallback drawCallback;
+    GLDrawCallbackcallback drawCallback;
     drawCallback.m_wireframe = false;
 
     concaveMesh->processAllTriangles(&drawCallback, worldBoundsMin, worldBoundsMax);
@@ -793,14 +790,14 @@ void GL_ShapeDrawer::drawShadow(btScalar* m, const btVector3& extrusion, btColli
 }
 
 //
-GL_ShapeDrawer::GL_ShapeDrawer()
+GLShapeDrawer::GLShapeDrawer()
   : m_shapecaches()
   , m_texturehandle(0)
   , m_textureenabled(false)
   , m_textureinitialized(false)
 {}
 
-GL_ShapeDrawer::~GL_ShapeDrawer()
+GLShapeDrawer::~GLShapeDrawer()
 {
   int i;
   for (i = 0; i < m_shapecaches.size(); i++) {

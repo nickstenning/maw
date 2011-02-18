@@ -16,103 +16,35 @@ subject to the following restrictions:
 #ifndef DEMO_APPLICATION_H
 #define DEMO_APPLICATION_H
 
-#include "GlutStuff.h"
-#include "GL_ShapeDrawer.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-
+#include <LinearMath/btScalar.h>
 #include <LinearMath/btVector3.h>
-#include <LinearMath/btMatrix3x3.h>
-#include <LinearMath/btTransform.h>
-#include <LinearMath/btAlignedObjectArray.h>
 
 class btCollisionShape;
 class btDynamicsWorld;
 class btRigidBody;
 class btTypedConstraint;
 
+class GLShapeDrawer;
+class GLDebugDrawer;
+
 class DemoApplication
 {
-
-private:
-  // uncopyable
-  DemoApplication(DemoApplication const&);
-  DemoApplication& operator=(DemoApplication const&);
-
-protected:
-  btDynamicsWorld* m_dynamicsWorld;
-
-  // constraint for mouse picking
-  btTypedConstraint* m_pickConstraint;
-
-  float m_cameraDistance;
-  int m_debugMode;
-
-  float m_ele;
-  float m_azi;
-  btVector3 m_cameraPosition;
-  btVector3 m_cameraTargetPosition;
-
-  int m_mouseOldX;
-  int m_mouseOldY;
-  int m_mouseButtons;
-  int m_modifierKeys;
-
-  float m_scaleBottom;
-  float m_scaleFactor;
-  btVector3 m_cameraUp;
-  int m_forwardAxis;
-
-  int m_glutScreenWidth;
-  int m_glutScreenHeight;
-
-  bool m_ortho;
-  bool m_stepping;
-  bool m_singleStep;
-  bool m_idle;
-
-  void renderscene(int pass);
-  void toggleDebugFlag(int flag);
-  void addPickConstraint(btRigidBody* body, btVector3 pickPos);
-
-  GL_ShapeDrawer* m_shapeDrawer;
-  bool      m_enableshadows;
-  btVector3 m_sundirection;
-  btScalar  m_defaultContactProcessingThreshold;
-
 public:
-
   DemoApplication();
   virtual ~DemoApplication();
 
-  btDynamicsWorld* getDynamicsWorld() {
-    return m_dynamicsWorld;
-  }
+  btDynamicsWorld* dynamicsWorld() const { return m_dynamicsWorld; }
+  DemoApplication& dynamicsWorld(btDynamicsWorld* w);
 
-  virtual void initPhysics() = 0;
-
-  void setOrthographicProjection();
-  void resetPerspectiveProjection();
-
-  virtual void myinit();
+  virtual void init();
   virtual void updateCamera();
 
-  btScalar getDeltaTimeMicroseconds() {
-    return btScalar(16666.);
-  }
+  btScalar getDeltaTimeMicroseconds() { return btScalar(16666.); }
 
   void moveAndDisplay();
-
   virtual void clientMoveAndDisplay() = 0;
-  virtual void clientResetScene();
 
   btVector3 getRayTo(int x, int y);
-
-  btRigidBody* localCreateRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape);
-
-  // callback methods from glut
 
   virtual void updateModifierKeys() = 0;
 
@@ -128,9 +60,7 @@ public:
   virtual void mouseMotionFunc(int x, int y);
 
   virtual void displayCallback() {};
-  virtual void renderme();
-
-  virtual void swapBuffers() = 0;
+  virtual void render();
 
   void moveCamera(float deltaAzi = 0, float deltaEle = 0);
   void stepLeft();
@@ -140,12 +70,45 @@ public:
   void zoomIn();
   void zoomOut();
 
-  bool isIdle() const {
-    return m_idle;
-  }
-  void setIdle(bool idle) {
-    m_idle = idle;
-  }
+protected:
+  btDynamicsWorld* m_dynamicsWorld;
+  btTypedConstraint* m_pickConstraint; //< constraint for mouse picking
+
+  int m_debugMode;
+  bool m_idle;
+
+  float m_ele;
+  float m_azi;
+  float m_cameraDistance;
+  btVector3 m_cameraPosition;
+  btVector3 m_cameraTargetPosition;
+  btVector3 m_cameraUp;
+  int m_forwardAxis;
+
+  btVector3 m_sundirection;
+  bool      m_enableshadows;
+
+  int m_mouseOldX;
+  int m_mouseOldY;
+  int m_mouseButtons;
+  int m_modifierKeys;
+
+  float m_scaleBottom;
+  float m_scaleFactor;
+
+  int m_screenWidth;
+  int m_screenHeight;
+
+  void renderscene(int pass);
+  void toggleDebugFlag(int flag);
+  void addPickConstraint(btRigidBody* body, btVector3 pickPos);
+
+  GLShapeDrawer* m_shapeDrawer;
+  GLDebugDrawer* m_debugDrawer;
+private:
+  // uncopyable
+  DemoApplication(DemoApplication const&);
+  DemoApplication& operator=(DemoApplication const&);
 };
 
 #endif //DEMO_APPLICATION_H

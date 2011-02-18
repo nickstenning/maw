@@ -1,8 +1,8 @@
 #include <cstdio>
 
+#include "OpenGL.h"
+
 #include "GLDebugDrawer.h"
-#include "GLDebugFont.h"
-#include "GlutStuff.h"
 
 GLDebugDrawer::GLDebugDrawer()
   : m_debugMode(0)
@@ -82,19 +82,15 @@ void GLDebugDrawer::drawTriangle (const btVector3& a, const btVector3& b, const 
   glEnd();
 }
 
-void GLDebugDrawer::setDebugMode (int debugMode)
-{
-  m_debugMode = debugMode;
-}
-
-void GLDebugDrawer::draw3dText (const btVector3& location, const char*)
+void GLDebugDrawer::draw3dText (const btVector3& location, const char* string)
 {
   glRasterPos3f(location.x(), location.y(), location.z());
+  printf("draw3dText: %s\n", string);
 }
 
-void GLDebugDrawer::reportErrorWarning (const char* warningString)
+void GLDebugDrawer::reportErrorWarning (const char* string)
 {
-  printf("%s\n", warningString);
+  printf("reportErrorWarning: %s\n", string);
 }
 
 void GLDebugDrawer::drawContactPoint(const btVector3& pointOnB, const btVector3& normalOnB, btScalar distance, int /*lifeTime*/, const btVector3& color)

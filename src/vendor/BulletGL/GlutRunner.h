@@ -12,14 +12,11 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
-#ifndef GLUT_STUFF_H
-#define GLUT_STUFF_H
 
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
+#ifndef GLUT_RUNNER_H
+#define GLUT_RUNNER_H
+
 #include <GLUT/glut.h>
-
-#define BT_KEY_K 'k'
 
 #define BT_KEY_LEFT     GLUT_KEY_LEFT
 #define BT_KEY_RIGHT    GLUT_KEY_RIGHT
@@ -40,18 +37,6 @@ subject to the following restrictions:
 
 class DemoApplication;
 
-int glutmain(int argc, char** argv, int width, int height, const char* title, DemoApplication* demoApp);
+int glutMain(int argc, char** argv, int width, int height, const char* title, DemoApplication* demoApp);
 
-#if defined(BT_USE_DOUBLE_PRECISION)
-#define btglLoadMatrix glLoadMatrixd
-#define btglMultMatrix glMultMatrixd
-#define btglColor3 glColor3d
-#define btglVertex3 glVertex3d
-#else
-#define btglLoadMatrix glLoadMatrixf
-#define btglMultMatrix glMultMatrixf
-#define btglColor3 glColor3f
-#define btglVertex3 glVertex3d
-#endif
-
-#endif //GLUT_STUFF_H
+#endif //GLUT_RUNNER_H

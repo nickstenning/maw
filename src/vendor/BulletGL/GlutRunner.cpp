@@ -15,17 +15,17 @@ subject to the following restrictions:
 
 #include "DemoApplication.h"
 
-//glut is C code, this global gDemoApplication links glut to the C++ demo
+// glut is C code, this global gDemoApplication links glut to the C++ demo
 static DemoApplication* gDemoApplication = 0;
 
-#include "GlutStuff.h"
+#include "GlutRunner.h"
 
-static  void glutKeyboardCallback(unsigned char key, int x, int y)
+static void glutKeyboardCallback(unsigned char key, int x, int y)
 {
   gDemoApplication->keyboardCallback(key, x, y);
 }
 
-static  void glutKeyboardUpCallback(unsigned char key, int x, int y)
+static void glutKeyboardUpCallback(unsigned char key, int x, int y)
 {
   gDemoApplication->keyboardUpCallback(key, x, y);
 }
@@ -69,9 +69,8 @@ static void glutDisplayCallback(void)
 }
 
 
-int glutmain(int argc, char** argv, int width, int height, const char* title, DemoApplication* demoApp)
+int glutMain(int argc, char** argv, int width, int height, const char* title, DemoApplication* demoApp)
 {
-
   gDemoApplication = demoApp;
 
   glutInit(&argc, argv);
@@ -80,7 +79,7 @@ int glutmain(int argc, char** argv, int width, int height, const char* title, De
   glutInitWindowSize(width, height);
   glutCreateWindow(title);
 
-  gDemoApplication->myinit();
+  gDemoApplication->init();
 
   glutKeyboardFunc(glutKeyboardCallback);
   glutKeyboardUpFunc(glutKeyboardUpCallback);
@@ -93,7 +92,7 @@ int glutmain(int argc, char** argv, int width, int height, const char* title, De
   glutMouseFunc(glutMouseFuncCallback);
   glutPassiveMotionFunc(glutMotionFuncCallback);
   glutMotionFunc(glutMotionFuncCallback);
-  glutDisplayFunc( glutDisplayCallback );
+  glutDisplayFunc(glutDisplayCallback);
 
   glutMoveAndDisplayCallback();
 

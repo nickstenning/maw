@@ -26,13 +26,13 @@ targets  = {
         'libs': ['bullet', 'gl', 'glu', 'glut'],
         'sources': [
             'maw',
-            'maw_world',
-            'vendor/BulletGL/GlutStuff',
+            'maw_world_manager',
+            'world_manager',
+            'vendor/BulletGL/GlutRunner',
             'vendor/BulletGL/DemoApplication',
             'vendor/BulletGL/GlutDemoApplication',
+            'vendor/BulletGL/GLShapeDrawer',
             'vendor/BulletGL/GLDebugDrawer',
-            'vendor/BulletGL/GLDebugFont',
-            'vendor/BulletGL/GL_ShapeDrawer',
         ]
     }
 }

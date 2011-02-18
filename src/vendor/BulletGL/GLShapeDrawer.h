@@ -12,6 +12,7 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
+
 #ifndef GL_SHAPE_DRAWER_H
 #define GL_SHAPE_DRAWER_H
 
@@ -23,7 +24,7 @@ class btShapeHull;
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
 
 /// OpenGL shape drawing
-class GL_ShapeDrawer
+class GLShapeDrawer
 {
 protected:
   struct ShapeCache {
@@ -47,9 +48,9 @@ protected:
   ShapeCache* cache(btConvexShape*);
 
 public:
-  GL_ShapeDrawer();
+  GLShapeDrawer();
 
-  virtual ~GL_ShapeDrawer();
+  virtual ~GLShapeDrawer();
 
   // drawOpenGL might allocate temporary memory, stores pointer in shape userpointer
   virtual void drawOpenGL(btScalar* m, btCollisionShape* shape, const btVector3& color, int debugMode, const btVector3& worldBoundsMin, const btVector3& worldBoundsMax);

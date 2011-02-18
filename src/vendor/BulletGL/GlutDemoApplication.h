@@ -13,7 +13,6 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-
 #ifndef GLUT_DEMO_APPLICATION_H
 #define GLUT_DEMO_APPLICATION_H
 
@@ -22,13 +21,10 @@ subject to the following restrictions:
 class GlutDemoApplication : public DemoApplication
 {
 public:
-
-  void specialKeyboard(int key, int x, int y);
-
-  virtual void swapBuffers();
-
-  virtual	void	updateModifierKeys();
-
+  virtual	void updateModifierKeys();
+  virtual void specialKeyboard(int key, int x, int y);
+  virtual void clientMoveAndDisplay();
+  virtual void displayCallback();
 };
-#endif //GLUT_DEMO_APPLICATION_H
+#endif // GLUT_DEMO_APPLICATION_H
 

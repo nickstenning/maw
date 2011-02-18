@@ -1,16 +1,12 @@
-
-#ifndef _WINDOWS
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
+#include "GlutRunner.h"
 
 #include "GlutDemoApplication.h"
 
-#include "GlutStuff.h"
-
-#include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
-#include "BulletDynamics/Dynamics/btRigidBody.h"
-
-void  GlutDemoApplication::updateModifierKeys()
+void GlutDemoApplication::updateModifierKeys()
 {
   m_modifierKeys = 0;
+
   if (glutGetModifiers() & GLUT_ACTIVE_ALT) {
     m_modifierKeys |= BT_ACTIVE_ALT;
   }
@@ -24,61 +20,50 @@ void  GlutDemoApplication::updateModifierKeys()
   }
 }
 
-void GlutDemoApplication::specialKeyboard(int key, int x, int y)
+void GlutDemoApplication::specialKeyboard(int key, int /*x*/, int /*y*/)
 {
-  (void)x;
-  (void)y;
-
   switch (key) {
-    case GLUT_KEY_F1: {
+    case GLUT_KEY_LEFT:      stepLeft(); break;
+    case GLUT_KEY_RIGHT:     stepRight(); break;
+    case GLUT_KEY_UP:        stepFront(); break;
+    case GLUT_KEY_DOWN:      stepBack(); break;
+    case GLUT_KEY_PAGE_UP:   zoomIn(); break;
+    case GLUT_KEY_PAGE_DOWN: zoomOut(); break;
 
-      break;
-    }
-
-    case GLUT_KEY_F2: {
-
-      break;
-    }
-
-
-    case GLUT_KEY_END: {
-      int numObj = getDynamicsWorld()->getNumCollisionObjects();
-      if (numObj) {
-        btCollisionObject* obj = getDynamicsWorld()->getCollisionObjectArray()[numObj - 1];
-
-        getDynamicsWorld()->removeCollisionObject(obj);
-        btRigidBody* body = btRigidBody::upcast(obj);
-        if (body && body->getMotionState()) {
-          delete body->getMotionState();
-        }
-        delete obj;
-
-
-      }
-      break;
-    }
-    case GLUT_KEY_LEFT : stepLeft(); break;
-    case GLUT_KEY_RIGHT : stepRight(); break;
-    case GLUT_KEY_UP : stepFront(); break;
-    case GLUT_KEY_DOWN : stepBack(); break;
-    case GLUT_KEY_PAGE_UP : zoomIn(); break;
-    case GLUT_KEY_PAGE_DOWN : zoomOut(); break;
-
-    default:
-      //        std::cout << "unused (special) key : " << key << std::endl;
-      break;
+    default: break;
   }
 
   glutPostRedisplay();
-
 }
 
-void GlutDemoApplication::swapBuffers()
+void GlutDemoApplication::clientMoveAndDisplay()
 {
-  glutSwapBuffers();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  btScalar timeStep = getDeltaTimeMicroseconds() * 0.000001f;
+
+  if (m_dynamicsWorld) {
+    m_dynamicsWorld->stepSimulation(timeStep);
+    m_dynamicsWorld->debugDrawWorld();
+  }
+
+  render();
+
+  glFlush();
+  glutSwapBuffers();
 }
 
-#endif //_WINDOWS
+void GlutDemoApplication::displayCallback()
+{
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  if (m_dynamicsWorld) {
+    m_dynamicsWorld->debugDrawWorld();
+  }
+
+  render();
+
+  glFlush();
+  glutSwapBuffers();
+}
 
