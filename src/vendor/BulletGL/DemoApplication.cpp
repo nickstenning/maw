@@ -49,7 +49,7 @@ DemoApplication::DemoApplication()
   , m_pickConstraint(0)
   , m_debugMode(0)
   , m_idle(false)
-  , m_ele(20)
+  , m_ele(30)
   , m_azi(0)
   , m_cameraDistance(15)
   , m_cameraPosition(0, 0, 0)
@@ -68,6 +68,7 @@ DemoApplication::DemoApplication()
   , m_screenHeight(0)
   , m_shapeDrawer(new GLShapeDrawer())
   , m_debugDrawer(new GLDebugDrawer())
+  , m_keyHandlers()
 {
   m_shapeDrawer->enableTexture(true);
 }
@@ -227,7 +228,7 @@ void DemoApplication::reshape(int w, int h)
   updateCamera();
 }
 
-void DemoApplication::keyboardCallback(unsigned char key, int /*x*/, int /*y*/)
+void DemoApplication::keyboardCallback(unsigned char key, int x, int y)
 {
   switch (key) {
     case 'q': exit(0);                 break;
@@ -245,6 +246,10 @@ void DemoApplication::keyboardCallback(unsigned char key, int /*x*/, int /*y*/)
     case 'd': toggleDebugFlag(GLDebugDrawer::DBG_NoDeactivation);       break;
 
     default: break;
+  }
+
+  for (std::vector<DemoApplication::keyHandler>::iterator it = m_keyHandlers.begin(); it != m_keyHandlers.end(); ++it) {
+    (*it)(key, x, y);
   }
 }
 
@@ -568,4 +573,11 @@ void DemoApplication::render()
 
   updateCamera();
 
+}
+
+void DemoApplication::registerKeyHandler(DemoApplication::keyHandler handler)
+{
+  if (handler) {
+    m_keyHandlers.push_back(handler);
+  }
 }

@@ -18,10 +18,9 @@ public:
 
   btDynamicsWorld* dynamicsWorld() const;
 
-  btRigidBody* addRigidBody(btScalar mass, const btTransform& startTransform, int collisionShapeIndex);
+  btRigidBody* addRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
 
-  int addCollisionShape(btCollisionShape* shape);
-  btCollisionShape* getCollisionShape(int index) const;
+  btCollisionShape* addCollisionShape(btCollisionShape* shape);
 
   int stepSimulation(btScalar timeStep);
 

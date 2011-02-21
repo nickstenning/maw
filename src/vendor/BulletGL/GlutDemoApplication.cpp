@@ -1,6 +1,6 @@
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
-#include "GlutRunner.h"
 
+#include "GlutRunner.h"
 #include "GlutDemoApplication.h"
 
 void GlutDemoApplication::updateModifierKeys()

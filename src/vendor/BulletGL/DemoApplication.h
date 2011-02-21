@@ -16,6 +16,8 @@ subject to the following restrictions:
 #ifndef DEMO_APPLICATION_H
 #define DEMO_APPLICATION_H
 
+#include <vector>
+
 #include <LinearMath/btScalar.h>
 #include <LinearMath/btVector3.h>
 
@@ -30,6 +32,9 @@ class GLDebugDrawer;
 class DemoApplication
 {
 public:
+
+  typedef void (*keyHandler)(unsigned char, int, int);
+
   DemoApplication();
   virtual ~DemoApplication();
 
@@ -39,7 +44,7 @@ public:
   virtual void init();
   virtual void updateCamera();
 
-  btScalar getDeltaTimeMicroseconds() { return btScalar(16666.); }
+  btScalar getDeltaTimeMicroseconds() { return btScalar(20000.); }
 
   void moveAndDisplay();
   virtual void clientMoveAndDisplay() = 0;
@@ -69,6 +74,9 @@ public:
   void stepBack();
   void zoomIn();
   void zoomOut();
+
+  void registerKeyHandler(keyHandler handler);
+  // void unregisterKeyHandler(keyHandler* handler);
 
 protected:
   btDynamicsWorld* m_dynamicsWorld;
@@ -105,6 +113,8 @@ protected:
 
   GLShapeDrawer* m_shapeDrawer;
   GLDebugDrawer* m_debugDrawer;
+
+  std::vector<keyHandler> m_keyHandlers;
 private:
   // uncopyable
   DemoApplication(DemoApplication const&);

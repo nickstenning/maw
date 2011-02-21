@@ -16,11 +16,11 @@ WorldManager::WorldManager ()
 
   // Create ground
   {
-    int groundIdx = addCollisionShape(new btBoxShape(btVector3(50, 1, 50)));
+    btCollisionShape* groundShape = addCollisionShape(new btBoxShape(btVector3(50, 1, 50)));
 
     btTransform groundTransform(btQuaternion::getIdentity(), btVector3(0, -1, 0));
 
-    addRigidBody(btScalar(0.0), groundTransform, groundIdx);
+    addRigidBody(btScalar(0.0), groundTransform, groundShape);
   }
 }
 
@@ -67,12 +67,11 @@ btDynamicsWorld* WorldManager::dynamicsWorld() const
   return m_dynamicsWorld;
 }
 
-btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startTransform, int shapeIndex)
+btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape)
 {
-  btCollisionShape* shape = getCollisionShape(shapeIndex);
-  btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
+  btAssert(!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE);
 
-  // rigidbody is dynamic iff mass is nonzero, otherwise static
+  // dynamic iff mass is nonzero, otherwise static.
   bool isDynamic = (mass != 0.0);
 
   btVector3 localInertia(0, 0, 0);
@@ -80,29 +79,18 @@ btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startT
     shape->calculateLocalInertia(mass, localInertia);
   }
 
-  btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-  btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
-  btRigidBody* body = new btRigidBody(cInfo);
-  body->setContactProcessingThreshold(BT_LARGE_FLOAT);
+  btDefaultMotionState* motionState = new btDefaultMotionState(startTransform);
+  btRigidBody* body = new btRigidBody(mass, motionState, shape, localInertia);
 
   m_dynamicsWorld->addRigidBody(body);
 
   return body;
 }
 
-int WorldManager::addCollisionShape(btCollisionShape* shape)
+btCollisionShape* WorldManager::addCollisionShape(btCollisionShape* shape)
 {
   m_collisionShapes.push_back(shape);
-  return m_collisionShapes.size() - 1;
-}
-
-btCollisionShape* WorldManager::getCollisionShape(int index) const
-{
-  if (index > m_collisionShapes.size() - 1) {
-    throw std::runtime_error("Attempted to read collision shape at index out of range.");
-  }
-
-  return m_collisionShapes[index];
+  return shape;
 }
 
 int WorldManager::stepSimulation(btScalar timeStep)

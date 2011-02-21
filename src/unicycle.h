@@ -13,9 +13,17 @@ public:
   Unicycle();
 
   void addToManager(WorldManager& wm, btTransform const& t);
+
+  void applyWheelImpulse(double impulse);
+  void applyForkImpulse(double impulse);
+
+  void reset(btTransform const& t);
+
 protected:
   void createForkShape(WorldManager& wm);
   void createWheelShape(WorldManager& wm);
+  void createForkBody(WorldManager& wm, btTransform const& t);
+  void createWheelBody(WorldManager& wm, btTransform const& t);
 
 private:
   btScalar m_forkWidth;
@@ -23,9 +31,11 @@ private:
   btScalar m_wheelWidth;
   btScalar m_wheelRadius;
 
-  int m_forkIdx;
-  int m_wheelIdx;
+  btScalar m_forkMass;
+  btScalar m_wheelMass;
 
+  btCompoundShape* m_forkShape;
+  btCylinderShapeZ* m_wheelShape;
   btRigidBody* m_forkBody;
   btRigidBody* m_wheelBody;
 };
