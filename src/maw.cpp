@@ -17,6 +17,9 @@ void handleKeyboardEvent (unsigned char key, int, int)
     case 't': uni.applyWheelImpulse(10.0);  break;
     case 'y': uni.applyWheelImpulse(-10.0); break;
 
+    case 'g': uni.applyForkImpulse(10.0);  break;
+    case 'h': uni.applyForkImpulse(-10.0); break;
+
     case ' ': uni.reset(startTransform); break;
 
     default: break;
@@ -32,6 +35,7 @@ int main (int argc, char** argv)
   GlutDemoApplication app;
 
   app.dynamicsWorld(wm.dynamicsWorld());
+  app.idle(true);
   app.registerKeyHandler(handleKeyboardEvent);
 
   return glutMain(argc, argv, 800, 600, "Missing A Wheel", &app);

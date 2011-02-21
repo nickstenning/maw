@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
@@ -6,12 +7,12 @@
 #include "unicycle.h"
 
 Unicycle::Unicycle()
-  : m_forkWidth(0.25)
-  , m_forkLength(4.0)
-  , m_wheelWidth(0.25)
-  , m_wheelRadius(2.0)
-  , m_forkMass(10.0)
-  , m_wheelMass(2.5)
+  : m_forkWidth   ( 0.2  )
+  , m_forkLength  ( 4.0  )
+  , m_wheelWidth  ( 0.25 )
+  , m_wheelRadius ( 2.0  )
+  , m_forkMass    ( 10.0 )
+  , m_wheelMass   ( 2.5  )
   , m_forkShape(0)
   , m_wheelShape(0)
   , m_forkBody(0)
@@ -23,59 +24,52 @@ void Unicycle::createForkShape(WorldManager& wm)
   // Make the unicycle fork
   m_forkShape = new btCompoundShape();
   {
-    float totalForkWidth = 2 * (m_forkWidth + m_wheelWidth);
-    btCollisionShape* forkLeg = new btBoxShape(btVector3(m_forkWidth/2, m_forkLength/2, m_forkWidth/2));
-    btCollisionShape* forkTop = new btBoxShape(btVector3(m_forkWidth/2, m_forkWidth/2, totalForkWidth/2));
-    btCollisionShape* seat    = new btCapsuleShapeX(btScalar(totalForkWidth * 0.5), btScalar(m_forkLength * 0.2));
+    float totalForkWidth = 2.0 * (m_forkWidth + m_wheelWidth);
+    btCollisionShape* fork = new btBoxShape(btVector3(m_forkWidth / 2.0, m_forkLength / 2.0, m_forkWidth / 2.0));
+    btCollisionShape* seat = new btCapsuleShapeX(totalForkWidth / 2.0, m_forkLength / 5.0);
 
-    wm.addCollisionShape(forkLeg);
-    wm.addCollisionShape(forkTop);
+    wm.addCollisionShape(fork);
     wm.addCollisionShape(seat);
 
-    btTransform forkLegATrans, forkLegBTrans, forkTopTrans, seatTrans;
-    forkLegATrans.setIdentity();
-    forkLegBTrans.setIdentity();
-    forkTopTrans.setIdentity();
+    btTransform forkTrans, seatTrans;
+    forkTrans.setIdentity();
     seatTrans.setIdentity();
 
-    forkLegATrans.setOrigin(btVector3(0, 0, -(totalForkWidth/2 - m_forkWidth/2)));
-    forkLegBTrans.setOrigin(btVector3(0, 0, (totalForkWidth/2 - m_forkWidth/2)));
-    forkTopTrans.setOrigin(btVector3(0, m_forkLength/2, 0));
-    seatTrans.setOrigin(btVector3(0, (m_forkLength * 1.2)/2, 0));
+    forkTrans.setOrigin(btVector3(0, 0, -(totalForkWidth / 2.0 - m_forkWidth / 2.0)));
+    seatTrans.setOrigin(btVector3(0, m_forkLength / 2.0, 0));
 
-    m_forkShape->addChildShape(forkLegATrans, forkLeg);
-    m_forkShape->addChildShape(forkLegBTrans, forkLeg);
-    m_forkShape->addChildShape(forkTopTrans, forkTop);
+    m_forkShape->addChildShape(forkTrans, fork);
     m_forkShape->addChildShape(seatTrans, seat);
   }
 
   wm.addCollisionShape(m_forkShape);
 }
 
+// This create a fork/seat with center of mass exactly m_forkLength above trans.
 void Unicycle::createForkBody(WorldManager& wm, btTransform const& trans)
 {
-  btTransform localTrans = trans;
+  btTransform principalTrans; //< Transform from principle inertial axes to global coords.
+  btTransform localTrans; //< Transform from body coords to global coords.
+  btVector3 principalInertia; //< Principle moments of inertia.
+  btVector3 localInertia; //< Local moments of inertia.
+
+ 	btScalar masses[2] = {0, m_forkMass};
+
+ 	m_forkShape->calculatePrincipalAxisTransform(masses, principalTrans, principalInertia);
+
+  m_forkShape->updateChildTransform(0, principalTrans.inverse() * m_forkShape->getChildTransform(0));
+  m_forkShape->updateChildTransform(1, principalTrans.inverse() * m_forkShape->getChildTransform(1));
+
+  localTrans = trans;
   localTrans.getOrigin() += btVector3(0, m_forkLength, 0);
 
-  btTransform principal;
- 	btVector3 principalInertia;
- 	btVector3 localInertia;
+  m_forkShape->calculateLocalInertia(m_forkMass, localInertia);
 
- 	btScalar masses[4] = {0, 0, 0, m_forkMass};
-
- 	m_forkShape->calculatePrincipalAxisTransform(masses, principal, principalInertia);
-
-	btCompoundShape* newForkShape = new btCompoundShape();
-	for (int i = 0; i < m_forkShape->getNumChildShapes(); i += 1) {
-		newForkShape->addChildShape(principal.inverse() * m_forkShape->getChildTransform(i), m_forkShape->getChildShape(i));
-	}
-	wm.addCollisionShape(newForkShape);
-
-  m_forkShape = newForkShape;
+  std::cerr << "local:     " << localInertia.x() << " " << localInertia.y() << " " << localInertia.z() << "\n";
+  std::cerr << "principal: " << principalInertia.x() << " " << principalInertia.y() << " " << principalInertia.z() << "\n";
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(localTrans);
-
-  m_forkBody = new btRigidBody(m_forkMass, motionState, m_forkShape, principalInertia);
+  m_forkBody = new btRigidBody(m_forkMass, motionState, m_forkShape, localInertia);
 
   wm.dynamicsWorld()->addRigidBody(m_forkBody);
 }
@@ -83,15 +77,14 @@ void Unicycle::createForkBody(WorldManager& wm, btTransform const& trans)
 void Unicycle::createWheelShape(WorldManager& wm)
 {
   m_wheelShape = new btCylinderShapeZ(btVector3(m_wheelRadius, m_wheelRadius, m_wheelWidth/2));
-
   wm.addCollisionShape(m_wheelShape);
 }
-
 
 // Transform defines position of center of wheel.
 void Unicycle::createWheelBody(WorldManager& wm, btTransform const& trans)
 {
   m_wheelBody = wm.addRigidBody(2.5, trans, m_wheelShape);
+  m_wheelBody->setFriction(20.0);
 }
 
 void Unicycle::addToManager(WorldManager& wm, btTransform const& trans)
@@ -120,6 +113,7 @@ void Unicycle::addToManager(WorldManager& wm, btTransform const& trans)
 
   m_forkBody->setActivationState(DISABLE_DEACTIVATION);
   m_wheelBody->setActivationState(DISABLE_DEACTIVATION);
+
 }
 
 void Unicycle::applyWheelImpulse(double impulse)

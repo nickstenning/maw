@@ -41,6 +41,9 @@ public:
   btDynamicsWorld* dynamicsWorld() const { return m_dynamicsWorld; }
   DemoApplication& dynamicsWorld(btDynamicsWorld* w);
 
+  bool idle() { return m_idle; }
+  DemoApplication& idle(bool i) { m_idle = i; return *this; }
+
   virtual void init();
   virtual void updateCamera();
 
