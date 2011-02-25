@@ -49,9 +49,9 @@ void Unicycle::createForkShape(WorldManager& wm)
 void Unicycle::createForkBody(WorldManager& wm, btTransform const& trans)
 {
   btTransform principalTrans; //< Transform from principle inertial axes to global coords.
-  btTransform localTrans; //< Transform from body coords to global coords.
+  btTransform localTrans;     //< Transform from body coords to global coords.
   btVector3 principalInertia; //< Principle moments of inertia.
-  btVector3 localInertia; //< Local moments of inertia.
+  btVector3 localInertia;     //< Local moments of inertia.
 
  	btScalar masses[2] = {0, m_forkMass};
 
