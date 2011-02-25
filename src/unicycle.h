@@ -19,6 +19,12 @@ public:
 
   void reset(btTransform const& t);
 
+  void updateAngles();
+
+  btScalar yaw() const;
+  btScalar pitch() const;
+  btScalar roll() const;
+
 protected:
   void createForkShape(WorldManager& wm);
   void createWheelShape(WorldManager& wm);
@@ -33,6 +39,10 @@ private:
 
   btScalar m_forkMass;
   btScalar m_wheelMass;
+
+  btScalar m_yaw;
+  btScalar m_pitch;
+  btScalar m_roll;
 
   btCompoundShape* m_forkShape;
   btCylinderShapeZ* m_wheelShape;

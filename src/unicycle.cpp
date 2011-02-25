@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <iostream>
+#include <cmath>
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
@@ -13,6 +13,9 @@ Unicycle::Unicycle()
   , m_wheelRadius ( 2.0  )
   , m_forkMass    ( 10.0 )
   , m_wheelMass   ( 2.5  )
+  , m_yaw(0)
+  , m_pitch(0)
+  , m_roll(0)
   , m_forkShape(0)
   , m_wheelShape(0)
   , m_forkBody(0)
@@ -64,9 +67,6 @@ void Unicycle::createForkBody(WorldManager& wm, btTransform const& trans)
   localTrans.getOrigin() += btVector3(0, m_forkLength, 0);
 
   m_forkShape->calculateLocalInertia(m_forkMass, localInertia);
-
-  std::cerr << "local:     " << localInertia.x() << " " << localInertia.y() << " " << localInertia.z() << "\n";
-  std::cerr << "principal: " << principalInertia.x() << " " << principalInertia.y() << " " << principalInertia.z() << "\n";
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(localTrans);
   m_forkBody = new btRigidBody(m_forkMass, motionState, m_forkShape, localInertia);
@@ -155,5 +155,59 @@ void Unicycle::reset(btTransform const& trans)
   m_forkBody->setWorldTransform(forkTrans);
   m_forkBody->setLinearVelocity(zeros);
   m_forkBody->setAngularVelocity(zeros);
+}
+
+void Unicycle::updateAngles()
+{
+  if (!(m_wheelBody && m_forkBody)) return;
+
+  btQuaternion q = m_forkBody->getWorldTransform().getRotation();
+
+  btScalar qw = q.getW();
+  btScalar qx = q.getX();
+  btScalar qy = q.getY();
+  btScalar qz = q.getZ();
+
+  btScalar sqw = qw * qw;
+  btScalar sqx = qx * qx;
+  btScalar sqy = qy * qy;
+  btScalar sqz = qz * qz;
+
+	btScalar test = qx * qy + qz * qw;
+
+	// singularity at north pole
+	if (test > 0.499) {
+		m_yaw   = 2 * atan2(qx, qw);
+		m_pitch = M_PI / 2.0;
+		m_roll  = 0;
+		return;
+	}
+
+	// singularity at south pole
+	if (test < -0.499) {
+		m_yaw   = -2 * atan2(qx, qw);
+		m_pitch = -M_PI / 2;
+		m_roll  = 0;
+		return;
+	}
+
+  m_yaw   = atan2(2 * qy * qw - 2 * qx * qz , sqx - sqy - sqz + sqw);
+	m_pitch = asin(2 * test);
+  m_roll  = atan2(2 * qx * qw - 2 * qy * qz , -sqx + sqy - sqz + sqw);
+}
+
+btScalar Unicycle::yaw() const
+{
+  return m_yaw;
+}
+
+btScalar Unicycle::pitch() const
+{
+  return m_pitch;
+}
+
+btScalar Unicycle::roll() const
+{
+  return m_roll;
 }
 

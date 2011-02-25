@@ -69,6 +69,7 @@ DemoApplication::DemoApplication()
   , m_shapeDrawer(new GLShapeDrawer())
   , m_debugDrawer(new GLDebugDrawer())
   , m_keyHandlers()
+  , m_stepCallbacks()
 {
   m_shapeDrawer->enableTexture(true);
 }
@@ -270,6 +271,10 @@ void DemoApplication::moveAndDisplay()
 {
   if (!m_idle) {
     clientMoveAndDisplay();
+
+    for (std::vector<DemoApplication::callback>::iterator it = m_stepCallbacks.begin(); it != m_stepCallbacks.end(); ++it) {
+      (*it)();
+    }
   } else {
     displayCallback();
   }
@@ -579,5 +584,12 @@ void DemoApplication::registerKeyHandler(DemoApplication::keyHandler handler)
 {
   if (handler) {
     m_keyHandlers.push_back(handler);
+  }
+}
+
+void DemoApplication::registerStepCallback(DemoApplication::callback cb)
+{
+  if (cb) {
+    m_stepCallbacks.push_back(cb);
   }
 }

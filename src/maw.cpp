@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
 #include "vendor/BulletGL/GlutDemoApplication.h"
@@ -26,6 +28,12 @@ void handleKeyboardEvent (unsigned char key, int, int)
   }
 }
 
+void simulationCallback ()
+{
+  uni.updateAngles();
+  std::cout << "yaw: " << uni.yaw() << "\tpitch: " << uni.pitch() << "\troll: " << uni.roll() << "\n";
+}
+
 int main (int argc, char** argv)
 {
   startTransform.setIdentity();
@@ -37,6 +45,7 @@ int main (int argc, char** argv)
   app.dynamicsWorld(wm.dynamicsWorld());
   app.idle(true);
   app.registerKeyHandler(handleKeyboardEvent);
+  app.registerStepCallback(simulationCallback);
 
   return glutMain(argc, argv, 800, 600, "Missing A Wheel", &app);
 }

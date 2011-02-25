@@ -34,6 +34,7 @@ class DemoApplication
 public:
 
   typedef void (*keyHandler)(unsigned char, int, int);
+  typedef void (*callback)();
 
   DemoApplication();
   virtual ~DemoApplication();
@@ -79,7 +80,7 @@ public:
   void zoomOut();
 
   void registerKeyHandler(keyHandler handler);
-  // void unregisterKeyHandler(keyHandler* handler);
+  void registerStepCallback(callback);
 
 protected:
   btDynamicsWorld* m_dynamicsWorld;
@@ -118,6 +119,7 @@ protected:
   GLDebugDrawer* m_debugDrawer;
 
   std::vector<keyHandler> m_keyHandlers;
+  std::vector<callback> m_stepCallbacks;
 private:
   // uncopyable
   DemoApplication(DemoApplication const&);
