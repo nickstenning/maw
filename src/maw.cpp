@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
@@ -6,12 +7,13 @@
 #include "vendor/BulletGL/GlutRunner.h"
 
 #include "world_manager.h"
+#include "util.h"
 #include "unicycle.h"
 
 WorldManager wm;
 Unicycle uni;
 
-btTransform startTransform;
+#define SCORE_ANG 1
 
 void handleKeyboardEvent (unsigned char key, int, int)
 {
@@ -22,7 +24,14 @@ void handleKeyboardEvent (unsigned char key, int, int)
     case 'g': uni.applyForkImpulse(10.0);  break;
     case 'h': uni.applyForkImpulse(-10.0); break;
 
-    case ' ': uni.reset(startTransform); break;
+    case 'k': {
+      // uni.reset();
+      // uni.pitch(util::rand(-SCORE_ANG, SCORE_ANG));
+      uni.yaw(util::rand(-SCORE_ANG, SCORE_ANG));
+      break;
+    }
+
+    case ' ': uni.reset(); break;
 
     default: break;
   }
@@ -36,9 +45,12 @@ void simulationCallback ()
 
 int main (int argc, char** argv)
 {
-  startTransform.setIdentity();
-  startTransform.setOrigin(btVector3(0, 2.01, 0));
-  uni.addToManager(wm, startTransform);
+  std::cout << std::setprecision(6) << std::fixed;
+  std::cerr << std::setprecision(6) << std::fixed;
+
+  btQuaternion q = btQuaternion::getIdentity();
+
+  uni.addToManager(wm);
 
   GlutDemoApplication app;
 

@@ -28,6 +28,7 @@ targets  = {
             'maw',
             'world_manager',
             'unicycle',
+            'util',
             'vendor/BulletGL/GlutRunner',
             'vendor/BulletGL/DemoApplication',
             'vendor/BulletGL/GlutDemoApplication',

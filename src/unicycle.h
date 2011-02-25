@@ -2,34 +2,45 @@
 #define UNICYCLE_H
 
 #include <LinearMath/btScalar.h>
+#include <LinearMath/btTransform.h>
 
-class btTransform;
 class btRigidBody;
 class WorldManager;
 
 class Unicycle
 {
 public:
+
+  static const btTransform resetTransform;
+
   Unicycle();
 
-  void addToManager(WorldManager& wm, btTransform const& t);
+  void addToManager(WorldManager& wm);
 
   void applyWheelImpulse(double impulse);
   void applyForkImpulse(double impulse);
 
-  void reset(btTransform const& t);
+  void reset(btTransform const& t = Unicycle::resetTransform);
 
   void updateAngles();
 
   btScalar yaw() const;
+  Unicycle& yaw(btScalar);
+
   btScalar pitch() const;
+  Unicycle& pitch(btScalar);
+
   btScalar roll() const;
+  Unicycle& roll(btScalar);
+
 
 protected:
   void createForkShape(WorldManager& wm);
   void createWheelShape(WorldManager& wm);
   void createForkBody(WorldManager& wm, btTransform const& t);
   void createWheelBody(WorldManager& wm, btTransform const& t);
+
+  void setEuler(btScalar y, btScalar p, btScalar r);
 
 private:
   btScalar m_forkWidth;

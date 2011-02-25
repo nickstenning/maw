@@ -56,7 +56,7 @@ DemoApplication::DemoApplication()
   , m_cameraTargetPosition(0, 0, 0)
   , m_cameraUp(0, 1, 0)
   , m_forwardAxis(2)
-  , m_sundirection(btVector3(1, -2, 1) * 1000)
+  , m_sundirection(btVector3(1, -2, 1) * 1000) // direction of travel of *rays*
   , m_enableshadows(false)
   , m_mouseOldX(0)
   , m_mouseOldY(0)
@@ -132,7 +132,7 @@ void DemoApplication::updateCamera()
   btQuaternion rot(m_cameraUp, razi);
   btVector3 eyePos(0, 0, 0);
 
-  eyePos[m_forwardAxis] = -m_cameraDistance;
+  eyePos[m_forwardAxis] = - m_cameraDistance;
 
   btVector3 forward(eyePos[0], eyePos[1], eyePos[2]);
 
@@ -285,6 +285,7 @@ btVector3 gOldPickingPos;
 btVector3 gHitPos(-1, -1, -1);
 float gOldPickingDist  = 0.0;
 btRigidBody* pickedBody = 0; // for deactivation state
+int pickedBodyActivationState = 0;
 
 btVector3 DemoApplication::getRayTo(int x, int y)
 {
@@ -385,8 +386,7 @@ void DemoApplication::mouseFunc(int button, int state, int x, int y)
           delete m_pickConstraint;
           m_pickConstraint = 0;
 
-          pickedBody->forceActivationState(ACTIVE_TAG);
-          pickedBody->setDeactivationTime(0.0);
+          pickedBody->forceActivationState(pickedBodyActivationState);
           pickedBody = 0;
         }
       }
@@ -407,6 +407,7 @@ void DemoApplication::addPickConstraint(btRigidBody* body, btVector3 pickPos)
   }
 
   pickedBody = body;
+  pickedBodyActivationState = pickedBody->getActivationState();
   pickedBody->setActivationState(DISABLE_DEACTIVATION);
 
   btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
