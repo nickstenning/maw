@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 #include <cmath>
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
@@ -18,6 +19,7 @@ Unicycle::Unicycle()
   , m_yaw(0)
   , m_pitch(0)
   , m_roll(0)
+  , m_transform(Unicycle::resetTransform)
   , m_forkShape(0)
   , m_wheelShape(0)
   , m_forkBody(0)
@@ -67,8 +69,9 @@ void Unicycle::createForkBody(WorldManager& wm, btTransform const& trans)
 
   m_forkShape->calculateLocalInertia(m_forkMass, localInertia);
 
-	btDefaultMotionState* motionState = new btDefaultMotionState(trans);
-  m_forkBody = new btRigidBody(m_forkMass, motionState, m_forkShape, localInertia);
+  btRigidBody::btRigidBodyConstructionInfo forkCI(m_forkMass, 0,  m_forkShape, localInertia);
+  forkCI.m_startWorldTransform = trans;
+  m_forkBody = new btRigidBody(forkCI);
 
   wm.dynamicsWorld()->addRigidBody(m_forkBody);
 }
@@ -145,97 +148,78 @@ void Unicycle::reset(btTransform const& trans)
 {
   btVector3 zeros(0, 0, 0);
 
-  if (m_wheelBody) {
-    btTransform wheelTrans = trans;
-    wheelTrans.getOrigin() += btVector3(0, m_wheelRadius, 0);
+  transform(trans);
 
-    m_wheelBody->setWorldTransform(wheelTrans);
+  if (m_wheelBody) {
     m_wheelBody->setLinearVelocity(zeros);
     m_wheelBody->setAngularVelocity(zeros);
   }
 
   if (m_forkBody) {
-    btTransform forkTrans = trans;
-    forkTrans.getOrigin() += btVector3(0, m_wheelRadius + m_forkLength, 0);
-
-    m_forkBody->setWorldTransform(forkTrans);
     m_forkBody->setLinearVelocity(zeros);
     m_forkBody->setAngularVelocity(zeros);
   }
 }
 
-void computeEulerAngles(btQuaternion const& quat, btScalar& yaw, btScalar& pitch, btScalar& roll, btQuaternion const basis = btQuaternion::getIdentity())
+void Unicycle::translate(btScalar x, btScalar y, btScalar z)
 {
-  const btQuaternion q(quat - basis);
+  btTransform t = transform();
+  t.getOrigin() += btVector3(x, y, z);
+  transform(t);
+}
 
-  const btScalar qw = q.getW();
-  const btScalar qx = q.getX();
-  const btScalar qy = q.getY();
-  const btScalar qz = q.getZ();
-
-  const btScalar sqw = qw * qw;
-  const btScalar sqx = qx * qx;
-  const btScalar sqy = qy * qy;
-  const btScalar sqz = qz * qz;
-
-	const btScalar test = qx * qy + qz * qw;
-	const btScalar unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
-
-	// singularity at north pole
-	if (test > 0.499 * unit) {
-		yaw   = 2 * atan2(qx, qw);
-		pitch = M_PI / 2.0;
-		roll  = 0;
-
-	// singularity at south pole
-	} else if (test < -0.499 * unit) {
-		yaw   = -2 * atan2(qx, qw);
-		pitch = -M_PI / 2;
-		roll  = 0;
-
-  } else {
-    yaw   = atan2(2 * qy * qw - 2 * qx * qz , sqx - sqy - sqz + sqw);
-  	pitch = asin(2 * test / unit);
-    roll  = atan2(2 * qx * qw - 2 * qy * qz , -sqx + sqy - sqz + sqw);
+btTransform Unicycle::transform()
+{
+  if (m_wheelBody) {
+    m_transform = m_wheelBody->getWorldTransform();
   }
+  btTransform t = m_transform;
+  t.getOrigin() -= btVector3(0, m_wheelRadius, 0);
+
+  return t;
+}
+
+Unicycle& Unicycle::transform(btTransform const& t)
+{
+  m_transform = t;
+
+  if (m_wheelBody) {
+    btTransform wheelTrans = m_transform;
+    wheelTrans.getOrigin() += btVector3(0, m_wheelRadius, 0);
+    m_wheelBody->setWorldTransform(wheelTrans);
+  }
+
+  if (m_forkBody) {
+    btTransform forkTrans = m_transform;
+    forkTrans.getOrigin() += btVector3(0, m_wheelRadius + m_forkLength, 0);
+    m_forkBody->setWorldTransform(forkTrans);
+  }
+
+  return *this;
+}
+
+
+void Unicycle::resetAxis()
+{
+  // Initial wheel axis
+  btVector3 axle(0, 0, 1);
+
+  btTransform wheelTrans = m_wheelBody->getWorldTransform();
+
+  std::cout << "[" << axle.getX() << ", " << axle.getY() << ", " << axle.getZ() <<  "]" << "\n";
+
+  btTransform wheelRotation(btQuaternion(axle, 3.14));
+
+  m_wheelBody->setWorldTransform(wheelTrans * wheelRotation);
 }
 
 void Unicycle::updateAngles()
 {
-  // if (!(m_forkBody && m_wheelBody)) return;
+  btTransform wheelTrans = m_wheelBody->getWorldTransform();
+  btVector3   wheelOrigin = wheelTrans.getOrigin();
+  btMatrix3x3 wheelRot = wheelTrans.getBasis();
 
-  btQuaternion wheelQuat = m_wheelBody->getWorldTransform().getRotation();
-  // btQuaternion forkQuat = m_forkBody->getWorldTransform().getRotation();
-
-  btScalar wheelYaw, wheelPitch, wheelRoll;
-  // btScalar forkYaw, forkPitch, forkRoll;
-
-  // Create basis rotated such that x-axis in basis is aligned with wheel axis.
-  btQuaternion wheelAlignedWorldBasis(0, M_PI, 0);
-
-  computeEulerAngles(wheelQuat, wheelYaw, wheelPitch, wheelRoll, wheelAlignedWorldBasis);
-
-  // // Create basis rotated such that x-axis in basis is aligned in yaw direction
-  // // of wheel.
-  // btQuaternion wheelBasis(wheelYaw, M_PI, 0);
-  //
-  // computeEulerAngles(forkQuat, forkYaw, forkPitch, forkRoll, wheelBasis);
-
-  // The angles we are interested in are wheelYaw, forkPitch, forkRoll
-  m_yaw   = wheelYaw;
-  // m_pitch = forkPitch;
-  // m_roll  = forkRoll;
-}
-
-void Unicycle::setEuler(btScalar y, btScalar p, btScalar r)
-{
-  btQuaternion q;
-  q.setEuler(y, p, r);
-
-  btTransform t = resetTransform;
-  t.setRotation(q);
-
-  reset(t);
+  std::cout << "x=" << wheelOrigin.getX() << "\tz=" << wheelOrigin.getZ() << "\ty=" << wheelOrigin.getY() << "\n";
 }
 
 btScalar Unicycle::yaw() const
@@ -253,36 +237,18 @@ btScalar Unicycle::roll() const
   return m_roll;
 }
 
-Unicycle& Unicycle::yaw(btScalar y)
+Unicycle& Unicycle::yaw(btScalar)
 {
-  btQuaternion wheelQuat = m_wheelBody->getWorldTransform().getRotation();
-
-  btScalar y_old, p, r;
-  btQuaternion wheelAlignedWorldBasis(0, M_PI, 0);
-
-  computeEulerAngles(wheelQuat, y_old, p, r, wheelAlignedWorldBasis);
-
-  btQuaternion q;
-  q.setEuler(y, 0, 0);
-
-  m_wheelBody->getWorldTransform().setRotation(q);
-
   return *this;
 }
 
-Unicycle& Unicycle::pitch(btScalar p)
+Unicycle& Unicycle::pitch(btScalar)
 {
-  updateAngles();
-  setEuler(m_yaw, p, m_roll);
-
   return *this;
 }
 
-Unicycle& Unicycle::roll(btScalar r)
+Unicycle& Unicycle::roll(btScalar)
 {
-  updateAngles();
-  setEuler(m_yaw, m_pitch, r);
-
   return *this;
 }
 

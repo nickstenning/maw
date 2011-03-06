@@ -24,12 +24,11 @@ void handleKeyboardEvent (unsigned char key, int, int)
     case 'g': uni.applyForkImpulse(10.0);  break;
     case 'h': uni.applyForkImpulse(-10.0); break;
 
-    case 'k': {
-      // uni.reset();
-      // uni.pitch(util::rand(-SCORE_ANG, SCORE_ANG));
-      uni.yaw(util::rand(-SCORE_ANG, SCORE_ANG));
-      break;
-    }
+    case 'm': uni.translate(util::rand(-5, 5), 0, 0); break;
+    case ',': uni.translate(0, util::rand(-5, 5), 0); break;
+    case '.': uni.translate(0, 0, util::rand(-5, 5)); break;
+
+    case 'j': uni.resetAxis(); break;
 
     case ' ': uni.reset(); break;
 
@@ -40,7 +39,6 @@ void handleKeyboardEvent (unsigned char key, int, int)
 void simulationCallback ()
 {
   uni.updateAngles();
-  std::cout << "yaw: " << uni.yaw() << "\tpitch: " << uni.pitch() << "\troll: " << uni.roll() << "\n";
 }
 
 int main (int argc, char** argv)

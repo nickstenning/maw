@@ -31,15 +31,11 @@ WorldManager::~WorldManager()
     btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
     btRigidBody* body = btRigidBody::upcast(obj);
 
-    if (body && body->getMotionState()) {
-      // remove constraints
-      while (body->getNumConstraintRefs()) {
-        btTypedConstraint* constraint = body->getConstraintRef(0);
-        m_dynamicsWorld->removeConstraint(constraint);
-        delete constraint;
-      }
-
-      delete body->getMotionState();
+    // remove constraints
+    while (body && body->getNumConstraintRefs()) {
+      btTypedConstraint* constraint = body->getConstraintRef(0);
+      m_dynamicsWorld->removeConstraint(constraint);
+      delete constraint;
     }
 
     m_dynamicsWorld->removeCollisionObject(obj);
@@ -79,8 +75,9 @@ btRigidBody* WorldManager::addRigidBody(btScalar mass, const btTransform& startT
     shape->calculateLocalInertia(mass, localInertia);
   }
 
-  btDefaultMotionState* motionState = new btDefaultMotionState(startTransform);
-  btRigidBody* body = new btRigidBody(mass, motionState, shape, localInertia);
+ 	btRigidBody::btRigidBodyConstructionInfo bodyCI(mass, 0, shape, localInertia);
+  bodyCI.m_startWorldTransform = startTransform;
+  btRigidBody* body = new btRigidBody(bodyCI);
 
   m_dynamicsWorld->addRigidBody(body);
 

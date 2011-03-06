@@ -23,8 +23,6 @@ subject to the following restrictions:
 #include <BulletCollision/CollisionShapes/btUniformScalingShape.h>
 #include <BulletDynamics/ConstraintSolver/btConstraintSolver.h>
 
-#include <LinearMath/btDefaultMotionState.h>
-
 #include "OpenGL.h"
 #include "GLShapeDrawer.h"
 #include "GLDebugDrawer.h"
@@ -465,16 +463,9 @@ void DemoApplication::renderscene(int pass)
   for (int i = 0; i < numObj; i++) {
 
     btCollisionObject* colObj = m_dynamicsWorld->getCollisionObjectArray()[i];
-    btRigidBody* body = btRigidBody::upcast(colObj);
 
-    if (body && body->getMotionState()) {
-      btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
-      myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(m);
-      rot = myMotionState->m_graphicsWorldTrans.getBasis();
-    } else {
-      colObj->getWorldTransform().getOpenGLMatrix(m);
-      rot = colObj->getWorldTransform().getBasis();
-    }
+    colObj->getWorldTransform().getOpenGLMatrix(m);
+    rot = colObj->getWorldTransform().getBasis();
 
     wireColor = btVector3(1.0, 1.0, 0.5); // wants deactivation
 

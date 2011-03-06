@@ -21,6 +21,8 @@ public:
   void applyForkImpulse(double impulse);
 
   void reset(btTransform const& t = Unicycle::resetTransform);
+  void resetAxis();
+  void translate(btScalar x, btScalar y, btScalar z);
 
   void updateAngles();
 
@@ -33,6 +35,8 @@ public:
   btScalar roll() const;
   Unicycle& roll(btScalar);
 
+  btTransform transform();
+  Unicycle& transform(btTransform const&);
 
 protected:
   void createForkShape(WorldManager& wm);
@@ -54,6 +58,8 @@ private:
   btScalar m_yaw;
   btScalar m_pitch;
   btScalar m_roll;
+
+  btTransform m_transform;
 
   btCompoundShape* m_forkShape;
   btCylinderShapeZ* m_wheelShape;
