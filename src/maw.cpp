@@ -24,12 +24,6 @@ void handleKeyboardEvent (unsigned char key, int, int)
     case 'g': uni.applyForkImpulse(10.0);  break;
     case 'h': uni.applyForkImpulse(-10.0); break;
 
-    case 'm': uni.translate(util::rand(-5, 5), 0, 0); break;
-    case ',': uni.translate(0, util::rand(-5, 5), 0); break;
-    case '.': uni.translate(0, 0, util::rand(-5, 5)); break;
-
-    case 'j': uni.resetAxis(); break;
-
     case ' ': uni.reset(); break;
 
     default: break;
