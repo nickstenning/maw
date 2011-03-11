@@ -19,6 +19,8 @@ Unicycle::Unicycle()
   , m_yaw(0)
   , m_pitch(0)
   , m_roll(0)
+  , m_wheelVelocity(0)
+  , m_seatVelocity(0)
   , m_transform(Unicycle::resetTransform)
   , m_forkShape(0)
   , m_wheelShape(0)
@@ -198,7 +200,7 @@ Unicycle& Unicycle::transform(btTransform const& t)
   return *this;
 }
 
-void Unicycle::updateAngles()
+void Unicycle::computeState()
 {
   btTransform wheelTrans = m_wheelBody->getWorldTransform();
   btVector3   wheelOrigin = wheelTrans.getOrigin();
@@ -244,6 +246,13 @@ void Unicycle::updateAngles()
     btVector3 bottomSpokeInFork = bottomSpoke * forkTrans.getBasis();
     m_pitch = std::atan2(bottomSpokeInFork.getX(), bottomSpokeInFork.getY());
   }
+
+  // Wheel angular velocity about wheel axis
+  {
+    btVector3 wheelVel = m_wheelBody->getAngularVelocity();
+    btVector3 wheelVelInWheel = wheelVel * wheelTrans.getBasis();
+    m_wheelVelocity = wheelVelInWheel.getZ();
+  }
 }
 
 btScalar Unicycle::yaw() const
@@ -259,5 +268,15 @@ btScalar Unicycle::pitch() const
 btScalar Unicycle::roll() const
 {
   return m_roll;
+}
+
+btScalar Unicycle::wheelVelocity() const
+{
+  return m_wheelVelocity;
+}
+
+btScalar Unicycle::seatVelocity() const
+{
+  return m_seatVelocity;
 }
 

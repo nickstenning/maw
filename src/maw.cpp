@@ -6,14 +6,15 @@
 #include "vendor/BulletGL/GlutDemoApplication.h"
 #include "vendor/BulletGL/GlutRunner.h"
 
+#include "nn.h"
 #include "world_manager.h"
 #include "util.h"
 #include "unicycle.h"
+#include "unicycle_fitness_function.h"
 
 WorldManager wm;
 Unicycle uni;
-
-#define SCORE_ANG 1
+NN nn;
 
 void handleKeyboardEvent (unsigned char key, int, int)
 {
@@ -32,22 +33,38 @@ void handleKeyboardEvent (unsigned char key, int, int)
 
 void simulationCallback ()
 {
-  uni.updateAngles();
+  uni.computeState();
+
+  std::vector<double> input;
+  std::vector<int> output;
+
+  input.push_back(uni.yaw());
+  input.push_back(uni.pitch());
+  input.push_back(uni.roll());
+  input.push_back(uni.wheelVelocity());
+
+  output = nn.feedForward(input);
+
+  double yawImpulse = YAW_BANG_SIZE * output[0];
+  double pitchImpulse = PITCH_BANG_SIZE * output[1];
+
+  uni.applyForkImpulse(yawImpulse);
+  uni.applyWheelImpulse(pitchImpulse);
+
 }
 
 int main (int argc, char** argv)
 {
+  std::cin >> nn;
+
   std::cout << std::setprecision(6) << std::fixed;
   std::cerr << std::setprecision(6) << std::fixed;
-
-  btQuaternion q = btQuaternion::getIdentity();
 
   uni.addToManager(wm);
 
   GlutDemoApplication app;
 
   app.dynamicsWorld(wm.dynamicsWorld());
-  app.idle(true);
   app.registerKeyHandler(handleKeyboardEvent);
   app.registerStepCallback(simulationCallback);
 

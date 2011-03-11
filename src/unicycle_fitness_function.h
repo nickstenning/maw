@@ -6,11 +6,13 @@
 #include "world_manager.h"
 
 // Unicycle config
-#define BANG_SIZE     20.0
-#define NOISE_SIZE    0.0
-#define MAX_EVAL_TIME 100.0
-#define PI            3.141592653589793238462643
-#define SCORE_ANG     (PI / 12.0)
+#define YAW_BANG_SIZE     2.0
+#define PITCH_BANG_SIZE   2.0
+#define MAX_EVAL_TIME     100.0
+#define PI                3.141592653589793238462643
+#define YAW_SCORE_ANG     (9.0 * PI / 10.0)
+#define PITCH_SCORE_ANG   (PI / 12.0)
+#define ROLL_SCORE_ANG    (PI / 12.0)
 
 class Evolvable;
 class Brain;
@@ -23,9 +25,11 @@ public:
 protected:
   void step (Brain* brain);
 private:
-  WorldManager m_world;
   Unicycle m_uni;
-  double m_target;
+  WorldManager m_world;
+
+  double m_time;
+  double m_dt;
 };
 
 #endif // UNICYCLE_FITNESS_FUNCTION_H

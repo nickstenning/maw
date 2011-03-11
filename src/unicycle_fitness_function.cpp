@@ -11,8 +11,11 @@
 UnicycleFitnessFunction::UnicycleFitnessFunction()
   : m_uni()
   , m_world()
-  , m_target(0.0)
-{}
+  , m_time(0.0)
+  , m_dt(0.02)
+{
+  m_uni.addToManager(m_world);
+}
 
 /**
  * Feed the state variables into the brain, feed forward, and advance the
@@ -28,28 +31,20 @@ double UnicycleFitnessFunction::operator() (Evolvable* obj)
 
   double fitness = 0.0;
 
+  m_time = 0.0;
   m_uni.reset();
+  m_uni.computeState();
 
-  m_uni.pitch(util::rand(-SCORE_ANG, SCORE_ANG))
-  m_uni.roll(util::rand(-SCORE_ANG, SCORE_ANG))
-
-  while (m_uni.t() < MAX_EVAL_TIME) {
-    m_target = 0.0;
-
-    if (m_uni.t() > MAX_EVAL_TIME / 3.0) {
-      m_target = 2.0;
-    } else if (m_uni.t() > (2.0 * MAX_EVAL_TIME) / 3.0) {
-      m_target = -2.0;
-    }
-
+  while (m_time < MAX_EVAL_TIME) {
     step(brain);
 
-    bool inScoringZone = std::abs(m_uni.p()) < SCORE_ANG;
+    bool inScoringZone = std::abs(m_uni.yaw()) < YAW_SCORE_ANG &&
+                         std::abs(m_uni.pitch()) < PITCH_SCORE_ANG &&
+                         std::abs(m_uni.roll()) < ROLL_SCORE_ANG;
 
     if (inScoringZone) {
-      double posScore = util::diracDelta(m_uni.p(), 5);
-      double movScore = util::diracDelta(m_uni.dwdt() - m_target, 5);
-      fitness += m_uni.dt * (0.5 * posScore + 0.5 * movScore);
+      double score = util::diracDelta(m_uni.pitch(), 5) + util::diracDelta(m_uni.roll(), 5);
+      fitness += m_dt * score;
     } else {
       break; // Failure. No need to evaluate further.
     }
@@ -58,20 +53,26 @@ double UnicycleFitnessFunction::operator() (Evolvable* obj)
   return fitness;
 }
 
-void Unicycle2DFitnessFunction::step (Brain* brain)
+void UnicycleFitnessFunction::step (Brain* brain)
 {
   std::vector<double> input;
   std::vector<int> output;
 
-  // We don't provide w as symmetry implies it can't be useful!
-  input.push_back(m_uni.p());
-  input.push_back(m_uni.dpdt());
-  input.push_back(m_uni.dwdt());
-  input.push_back(m_target);
+  input.push_back(m_uni.yaw());
+  input.push_back(m_uni.pitch());
+  input.push_back(m_uni.roll());
+  input.push_back(m_uni.wheelVelocity());
 
   output = brain->feedForward(input);
 
-  double controlForce = BANG_SIZE * output[0];
+  double yawImpulse = YAW_BANG_SIZE * output[0];
+  double pitchImpulse = PITCH_BANG_SIZE * output[1];
 
-  m_uni.step(m_uni.dt, controlForce + util::rand(-NOISE_SIZE, NOISE_SIZE));
+  m_uni.applyForkImpulse(yawImpulse);
+  m_uni.applyWheelImpulse(pitchImpulse);
+
+  m_world.stepSimulation(m_dt);
+  m_uni.computeState();
+
+  m_time += m_dt;
 }

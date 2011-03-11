@@ -4,7 +4,7 @@
 
 #include "ga.h"
 #include "brain.h"
-#include "unicycle_2d_fitness_function.h"
+#include "unicycle_fitness_function.h"
 #include "util.h"
 
 #define COL std::setw( 14 )
@@ -41,7 +41,7 @@ int main (int argc, char* const argv[])
   // Initialise GA population
   GA::Runner runner(
     new Brain(std::cin),
-    new Unicycle2DFitnessFunction(),
+    new UnicycleFitnessFunction(),
     numGenerations,
     populationSize
   );

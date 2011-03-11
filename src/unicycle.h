@@ -6,6 +6,8 @@
 
 class btRigidBody;
 class WorldManager;
+class btCompoundShape;
+class btCylinderShapeZ;
 
 class Unicycle
 {
@@ -23,11 +25,13 @@ public:
   void reset(btTransform const& t = Unicycle::resetTransform);
   void translate(btScalar x, btScalar y, btScalar z);
 
-  void updateAngles();
+  void computeState();
 
   btScalar yaw() const;
   btScalar pitch() const;
   btScalar roll() const;
+  btScalar wheelVelocity() const;
+  btScalar seatVelocity() const;
 
   btTransform transform();
   Unicycle& transform(btTransform const&);
@@ -52,6 +56,9 @@ private:
   btScalar m_yaw;
   btScalar m_pitch;
   btScalar m_roll;
+
+  btScalar m_wheelVelocity;
+  btScalar m_seatVelocity;
 
   btTransform m_transform;
 

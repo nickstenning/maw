@@ -7,7 +7,7 @@
 #include "nn.h"
 #include "evolvable.h"
 
-#define MUTATION_SIZE 2.0
+#define MUTATION_SIZE 10.0
 
 /**
  * Brain serves as an "evolvable" wrapper around a NN.
