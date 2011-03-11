@@ -95,20 +95,20 @@ void Unicycle::addToManager(WorldManager& wm)
     throw std::runtime_error("Can't add a Unicycle to a WorldManager more than once.");
   }
 
-  // createForkShape(wm);
+  createForkShape(wm);
   createWheelShape(wm);
 
   btTransform wheelTrans = resetTransform;
   wheelTrans.getOrigin() += btVector3(0, m_wheelRadius, 0);
 
-  // btTransform forkTrans = wheelTrans;
-  // forkTrans.getOrigin() += btVector3(0, m_forkLength, 0);
+  btTransform forkTrans = wheelTrans;
+  forkTrans.getOrigin() += btVector3(0, m_forkLength, 0);
 
-  // createForkBody(wm, forkTrans);
+  createForkBody(wm, forkTrans);
   createWheelBody(wm, wheelTrans);
 
   // Add axle constraint
-  if (0) {
+  {
     btVector3 pivotInWheel(0, 0, m_wheelWidth);
     btVector3 pivotInFork(0, -m_forkLength, m_wheelWidth);
     btVector3 axisInWheel(0, 0, 1);
@@ -119,7 +119,7 @@ void Unicycle::addToManager(WorldManager& wm)
     wm.dynamicsWorld()->addConstraint(axle);
   }
 
-  // m_forkBody->setActivationState(DISABLE_DEACTIVATION);
+  m_forkBody->setActivationState(DISABLE_DEACTIVATION);
   m_wheelBody->setActivationState(DISABLE_DEACTIVATION);
 
 }
@@ -198,28 +198,52 @@ Unicycle& Unicycle::transform(btTransform const& t)
   return *this;
 }
 
-
-void Unicycle::resetAxis()
-{
-  // Initial wheel axis
-  btVector3 axle(0, 0, 1);
-
-  btTransform wheelTrans = m_wheelBody->getWorldTransform();
-
-  std::cout << "[" << axle.getX() << ", " << axle.getY() << ", " << axle.getZ() <<  "]" << "\n";
-
-  btTransform wheelRotation(btQuaternion(axle, 3.14));
-
-  m_wheelBody->setWorldTransform(wheelTrans * wheelRotation);
-}
-
 void Unicycle::updateAngles()
 {
   btTransform wheelTrans = m_wheelBody->getWorldTransform();
   btVector3   wheelOrigin = wheelTrans.getOrigin();
-  btMatrix3x3 wheelRot = wheelTrans.getBasis();
+  btTransform forkTrans = m_forkBody->getWorldTransform();
+  btVector3   forkOrigin = forkTrans.getOrigin();
 
-  std::cout << "x=" << wheelOrigin.getX() << "\tz=" << wheelOrigin.getZ() << "\ty=" << wheelOrigin.getY() << "\n";
+  // Calculate position of lowest vertex in wheel
+  btVector3 contactPoint;
+  btVector3 contactPointInWheel;
+  {
+    btVector3 worldDown(0, -1, 0);
+    btVector3 supportAxisInWheel = worldDown * wheelTrans.getBasis();
+    contactPointInWheel = m_wheelShape->localGetSupportVertexWithoutMarginNonVirtual(supportAxisInWheel);
+    contactPoint = wheelTrans * contactPointInWheel;
+  }
+
+  // Roll: angle between <world y-vector>, and <vector from contact point to center of wheel>.
+  btVector3 bottomSpoke;
+  {
+    btVector3 worldUp(0, 1, 0);
+    bottomSpoke = wheelOrigin - contactPoint;
+
+    m_roll = worldUp.angle(bottomSpoke);
+  }
+
+  // Yaw: angle between <world x-vector>, and <vector from center of wheel to point on wheel edge at 90deg to contact point>
+  {
+    // Initial wheel axis
+    btVector3 axle(0, 0, 1);
+    btTransform rotationInWheel(btQuaternion(axle, M_PI / 2.0));
+
+    btVector3 forwardPointInWheel = rotationInWheel * contactPointInWheel;
+    btVector3 forwardPoint = wheelTrans * forwardPointInWheel;
+
+    btVector3 forwardSpoke = wheelOrigin - forwardPoint;
+
+    // This should define zero to be heading directly to the right on screen
+    m_yaw = std::atan2(forwardSpoke.getZ(), -forwardSpoke.getX());
+  }
+
+  // Pitch: angle between <vector from center of wheel to center of mass of seat post> and <vector from contact point to center of wheel>
+  {
+    btVector3 bottomSpokeInFork = bottomSpoke * forkTrans.getBasis();
+    m_pitch = std::atan2(bottomSpokeInFork.getX(), bottomSpokeInFork.getY());
+  }
 }
 
 btScalar Unicycle::yaw() const
@@ -235,20 +259,5 @@ btScalar Unicycle::pitch() const
 btScalar Unicycle::roll() const
 {
   return m_roll;
-}
-
-Unicycle& Unicycle::yaw(btScalar)
-{
-  return *this;
-}
-
-Unicycle& Unicycle::pitch(btScalar)
-{
-  return *this;
-}
-
-Unicycle& Unicycle::roll(btScalar)
-{
-  return *this;
 }
 

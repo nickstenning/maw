@@ -21,19 +21,13 @@ public:
   void applyForkImpulse(double impulse);
 
   void reset(btTransform const& t = Unicycle::resetTransform);
-  void resetAxis();
   void translate(btScalar x, btScalar y, btScalar z);
 
   void updateAngles();
 
   btScalar yaw() const;
-  Unicycle& yaw(btScalar);
-
   btScalar pitch() const;
-  Unicycle& pitch(btScalar);
-
   btScalar roll() const;
-  Unicycle& roll(btScalar);
 
   btTransform transform();
   Unicycle& transform(btTransform const&);
