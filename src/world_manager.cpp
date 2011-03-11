@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
@@ -93,4 +94,10 @@ btCollisionShape* WorldManager::addCollisionShape(btCollisionShape* shape)
 int WorldManager::stepSimulation(btScalar timeStep)
 {
   return m_dynamicsWorld->stepSimulation(timeStep);
+}
+
+std::ostream& operator<<(std::ostream& os, btVector3 const& v)
+{
+  os << "[ x = " << v.getX() << ",\ty = " << v.getY() << ",\tz = " << v.getZ() << " ]";
+  return os;
 }

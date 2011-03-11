@@ -39,4 +39,6 @@ private:
   btDynamicsWorld*                     m_dynamicsWorld;
 };
 
+std::ostream& operator<<(std::ostream& os, btVector3 const& v);
+
 #endif // WORLD_MANAGER_H
