@@ -5,3 +5,9 @@
 *.tmproj
 *.pyc
 *.pyo
+
+# SWIG stuff
+_*.so
+/src/*_wrap.cpp
+/maw/bindings/*.py
+!/maw/bindings/__init__.py
