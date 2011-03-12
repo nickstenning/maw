@@ -8,11 +8,25 @@ compiler = commands.getoutput('which llvm-g++ || echo -n "g++"')
 targets  = {
     'maw/bindings/_nn.so': {
         'swig': 'nn',
-        'swigout': 'maw/bindings',
         'sources': [
             'util',
             'nn'
         ]
+    },
+
+    'maw/bindings/_unicycle.so': {
+        'swig': 'unicycle',
+        'libs': ['bullet'],
+        'sources': [
+            'unicycle',
+            'world_manager'
+        ]
+    },
+
+    'maw/bindings/_world_manager.so': {
+        'swig': 'world_manager',
+        'libs': ['bullet'],
+        'sources': ['world_manager']
     },
     'evolve': {
         'libs': ['bullet'],
@@ -84,7 +98,7 @@ def build():
         tgt = targets[target_name]
 
         if 'swig' in tgt:
-            gen_swig(tgt)
+            gen_swig(target_name)
             compile_swig(tgt)
             compile(tgt)
             link_swig(target_name)
@@ -105,8 +119,9 @@ def link(target_name):
     objects = [oname(s+'.o') for s in tgt['sources']]
     run(compiler, objects, '-o', oname(target_name), libs_for_target(tgt))
 
-def gen_swig(tgt):
-    run('swig', '-c++', '-python', '-o', 'src/' + tgt['swig'] + '_wrap.cpp', '-outdir', tgt['swigout'], 'src/' + tgt['swig'] + '.i')
+def gen_swig(target_name):
+    tgt = targets[target_name]
+    run('swig', '-c++', '-python', '-o', 'src/' + tgt['swig'] + '_wrap.cpp', '-outdir', os.path.dirname(target_name), 'src/' + tgt['swig'] + '.i')
 
 def compile_swig(tgt):
     wrap_file = 'src/' + tgt['swig'] + '_wrap.cpp'
