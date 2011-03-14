@@ -1,5 +1,6 @@
 %module nn
 
+%include "typemaps.i"
 %include "std_vector.i"
 
 %{
@@ -9,9 +10,13 @@
 %}
 
 namespace std {
-  %template(layer_spec) vector<size_t>;
+  %template(layersizes_t) vector<size_t>;
+   
   %template(vector_double) vector<double>;
   %template(vector_int) vector<int>;
+          
+  %template(matrix_t) vector<vector<double> >;
+  %template(weights_t) vector<vector<vector<double> > >;
 }
 
 %ignore operator<<;

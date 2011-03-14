@@ -1,0 +1,59 @@
+import random
+from utils import roulette_pick
+
+ELITISM = 0.2
+CROSSOVER_PROB = 0.3
+MUTATE_PROB = 0.7
+
+class GA(object):
+    generation = 0
+    population = []
+
+    def __init__(self, ctor, fitness_function=lambda x: 1.0):
+        self.ctor = ctor
+        self.fitness_function = fitness_function
+
+    def add_individual(self, obj=None, count=1):
+        """Add an individual"""
+        for _ in xrange(count):
+            if obj:
+                ind = obj
+            else:
+                ind = self.ctor()
+
+            ind.fitness = self.fitness_function(ind)
+            self.population.append(ind)
+
+    def step(self):
+        self.generation += 1
+
+        new_population = sorted(self.population, lambda x, y: cmp(x.fitness, y.fitness))
+
+        # Elitism step. Preserve some proportion of the population untouched
+        # for the next generation.
+        num_elite = int(round(ELITISM * len(self.population)))
+        for i in range(num_elite):
+            new_population[i] = self.population[i].clone()
+
+        # Replace the rest of the population with roulette-picked individuals
+        for i in range(num_elite, len(self.population)):
+
+            # Copy-construct new individual
+            individual = roulette_pick(self.population).clone()
+
+            if random.random() < CROSSOVER_PROB:
+                individual.crossover(roulette_pick(self.population))
+
+            if random.random() < MUTATE_PROB:
+                individual.mutate()
+
+            new_population[i] = individual
+
+        for individual in self.population:
+            del individual # Need to do this to trigger C++ destructors?
+
+        self.population = new_population
+
+        # Compute fitness for next generation
+        for ind in self.population:
+            ind.fitness = self.fitness_function(ind)

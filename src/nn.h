@@ -1,8 +1,9 @@
 #ifndef NN_H
 #define NN_H
 
-#include <iostream>
 #include <vector>
+
+class NNInputSizeError {};
 
 class NN
 {
@@ -19,14 +20,11 @@ public:
 
   NN();
   NN(std::vector<size_t> layerSizes);
-  NN(std::istream& is);
-
-  virtual ~NN() {};
 
   void setRandomWeights();
   bool topologyIsCompatibleWith(NN const& rhs) const;
 
-  std::vector<int> feedForward(std::vector<double> const& input);
+  std::vector<int> feedForward(std::vector<double> const& input) throw(NNInputSizeError);
 
   layers_t const& layers() const {
     return m_layers;
@@ -35,14 +33,9 @@ public:
     return m_weights;
   }
 
-  // TODO: remove this friendship and provide accessors for the things Brain
-  // wants to modify.
-  friend class Brain;
-
-  friend class NNDotPrinter;
-
-  friend std::ostream& operator<< (std::ostream&, NN const&);
-  friend std::istream& operator>> (std::istream&, NN&);
+  void setWeight(size_t layer, size_t from, size_t to, double value) {
+    m_weights[layer][from][to] = value;
+  }
 protected:
   void initLayers(std::vector<size_t> layerSizes);
   void initWeights();

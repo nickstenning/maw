@@ -28,35 +28,13 @@ targets  = {
         'libs': ['bullet'],
         'sources': ['world_manager']
     },
-    'evolve': {
-        'libs': ['bullet'],
-        'sources': [
-            'evolve',
-            'ga',
-            'evolvable',
-            'nn',
-            'brain',
-            'unicycle',
-            'world_manager',
-            'fitness_function',
-            'unicycle_fitness_function',
-            'util'
-        ]
-    },
-    'simulate': {
-        'libs': ['libzmq'],
-        'sources': ['simulate', 'zhelpers', 'nn', 'unicycle_2d', 'vector', 'util']
-    },
-    'nngen': {
-        'sources': ['nngen', 'nn', 'util']
-    },
-    'nn2dot': {
-        'sources': ['nn2dot', 'nn', 'nn_dot_printer', 'util']
-    },
-    'feedforward': {
-        'sources': ['feedforward', 'nn', 'util']
-    },
-    'maw': {
+
+    # 'bin/simulate': {
+    #     'libs': ['libzmq'],
+    #     'sources': ['simulate', 'zhelpers', 'nn', 'unicycle_2d', 'vector', 'util']
+    # },
+
+    'bin/maw': {
         'libs': ['bullet', 'gl', 'glu', 'glut'],
         'sources': [
             'maw',
@@ -117,11 +95,11 @@ def compile(tgt):
 def link(target_name):
     tgt = targets[target_name]
     objects = [oname(s+'.o') for s in tgt['sources']]
-    run(compiler, objects, '-o', oname(target_name), libs_for_target(tgt))
+    run(compiler, objects, '-o', target_name, libs_for_target(tgt))
 
 def gen_swig(target_name):
     tgt = targets[target_name]
-    run('swig', '-c++', '-python', '-o', 'src/' + tgt['swig'] + '_wrap.cpp', '-outdir', os.path.dirname(target_name), 'src/' + tgt['swig'] + '.i')
+    run('swig', '-c++', '-python', '-copyctor', '-o', 'src/' + tgt['swig'] + '_wrap.cpp', '-outdir', os.path.dirname(target_name), 'src/' + tgt['swig'] + '.i')
 
 def compile_swig(tgt):
     wrap_file = 'src/' + tgt['swig'] + '_wrap.cpp'

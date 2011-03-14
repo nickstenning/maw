@@ -1,8 +1,5 @@
-#include <iostream>
-#include <iomanip>
 #include <vector>
 #include <cmath>
-#include <stdexcept>
 
 #include "util.h"
 #include "nn.h"
@@ -19,14 +16,6 @@ NN::NN(std::vector<size_t> layerSizes)
   initLayers(layerSizes);
   initWeights();
 }
-
-NN::NN(std::istream& is)
-  : m_layers()
-  , m_weights()
-{
-  is >> *this;
-}
-
 
 void NN::setRandomWeights()
 {
@@ -46,11 +35,11 @@ void NN::setRandomWeightsForMatrix(size_t index)
   }
 }
 
-NN::output_t NN::feedForward (layer_t const& input)
+NN::output_t NN::feedForward (layer_t const& input) throw(NNInputSizeError)
 {
   // Copy input if correct length
   if (m_layers[0].size() != input.size()) {
-    throw std::runtime_error("Input to NN::feedForward of incorrect size");
+    throw NNInputSizeError();
   }
   m_layers[0] = input;
 
@@ -143,68 +132,3 @@ inline int NN::terminationFunction (double x)
     return 0;
   }
 }
-
-// Serialize a brain
-std::ostream& operator<< (std::ostream& os, NN const& nn)
-{
-  os << std::fixed;
-  // number of layers
-  os << nn.m_layers.size() << "\n";
-
-  // layers
-  for (NN::layers_t::const_iterator it = nn.m_layers.begin(); it != nn.m_layers.end(); ++it) {
-    os << it->size() << " ";
-  }
-  os << "\n";
-
-  size_t k, i, j;
-  // weights
-  for (k = 0; k < nn.m_weights.size(); k += 1) {
-    NN::weight_matrix_t const& mx = nn.m_weights[k];
-    NN::layer_t const& send = nn.m_layers[k];
-    NN::layer_t const& recv = nn.m_layers[k + 1];
-
-    for (i = 0; i < send.size(); i += 1) {
-      for (j = 0; j < recv.size(); j += 1) {
-        os << mx[i][j] << " ";
-      }
-    }
-
-    os << "\n";
-  }
-
-  return os;
-}
-
-// Deserialize a NN
-std::istream& operator>> (std::istream& is, NN& nn)
-{
-  size_t numLayers;
-  is >> numLayers;
-  std::vector<size_t> layerSizes(numLayers);
-
-  for (size_t i = 0; i < numLayers; i += 1) {
-    is >> layerSizes[i];
-  }
-
-  nn.initLayers(layerSizes);
-  nn.initWeights();
-
-  size_t k, i, j;
-
-  // weights
-  for (k = 0; k < nn.m_weights.size(); k += 1) {
-    NN::weight_matrix_t& mx = nn.m_weights[k];
-    NN::layer_t& send = nn.m_layers[k];
-    NN::layer_t& recv = nn.m_layers[k + 1];
-
-    for (i = 0; i < send.size(); i += 1) {
-      for (j = 0; j < recv.size(); j += 1) {
-        is >> mx[i][j];
-      }
-    }
-  }
-
-  return is;
-}
-
