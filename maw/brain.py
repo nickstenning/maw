@@ -2,18 +2,21 @@ import random
 from operator import add
 
 from nn import NN
-from ga.evolvable import Evolvable
+
+# This is the mutation rate scale factor. It is multiplied by 1/number of
+# non-input neurons to determine the mutation rate.
+MUTATION_SCALE_FACTOR = 1.0
 
 class BrainIncompatibleError(TypeError):
     pass
 
-class Brain(NN, Evolvable):
-    mutation_rate = 0.0
-    mutation_size = 10.0
+class Brain(NN):
+    mutation_rate = None
+    mutation_sigma = 10.0
 
-    def ga_init(self):
+    def __init__(self, *args):
+        super(Brain, self).__init__(*args)
         self._compute_mutation_rate()
-        self.setRandomWeights()
 
     # TODO: refactor this horrendous method
     def mutate(self):
@@ -24,8 +27,8 @@ class Brain(NN, Evolvable):
 
             for i in range(len(send)):
                 for j in range(len(recv)):
-                    if random.choice([True, False]):
-                        val = mx[i][j] + random.uniform(-self.mutation_size, self.mutation_size)
+                    if random.random() < self.mutation_rate:
+                        val = mx[i][j] + random.gauss(0, self.mutation_sigma)
                         self.setWeight(k, i, j, val)
 
     # TODO: refactor this horrendous method
@@ -56,4 +59,4 @@ class Brain(NN, Evolvable):
         for i in range(len(self.weights())):
             num_nonin_weights += len(self.layers()[i]) * len(self.layers()[i + 1])
 
-        self.mutation_rate = 1.0 / num_nonin_weights
+        self.mutation_rate = MUTATION_SCALE_FACTOR / num_nonin_weights

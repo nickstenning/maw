@@ -17,11 +17,11 @@ class FlexNN:
     self.nodes[0:self.num_in] = inputs
 
     num_edges = len(self.edges)
-    
+
     for i in range(num_edges):
       edge_id = numpy.random.randint(0, num_edges)
       edge = self.edges[edge_id]
-      
+
       from_id = edge[0]
       to_id = edge[1]
       weight = edge[2]
@@ -38,7 +38,7 @@ class FlexNN:
 
   def add_edge(self, from_id, to_id, weight=1.0):
     self.edges = numpy.append(self.edges, [[from_id, to_id, weight]], axis=0)
-    
+
   def remove_edge(self, edge_id):
     self.edges = numpy.delete(self.edges, edge_id, axis=0)
 
@@ -48,7 +48,7 @@ class FlexNN:
 import unittest
 
 class NNTest(unittest.TestCase):
-  
+
   def setUp(self):
     self.nn = NN(3, 4)
 
@@ -59,13 +59,13 @@ class NNTest(unittest.TestCase):
     # Should raise
     def feed_in_wrong_length():
       self.nn.feed([1, 1, 1, 1])
-      
+
     self.assertRaises(IndexError, feed_in_wrong_length)
 
   def test_feed_out(self):
     result = self.nn.feed([1, 1, 1])
 
-    self.assertEqual(len(result), 4, "Output vector not expected size.") 
+    self.assertEqual(len(result), 4, "Output vector not expected size.")
 
   def test_nodes(self):
     self.assertEqual(len(self.nn.nodes), 7)
@@ -80,7 +80,7 @@ class NNTest(unittest.TestCase):
     self.nn.remove_node(6)
 
     self.assertEqual(len(self.nn.nodes), 6)
-    
+
   def test_edges(self):
     self.assertEqual(len(self.nn.edges), 0)
 

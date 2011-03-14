@@ -1,4 +1,5 @@
 import math
+import random
 
 from maw.util import dirac_delta
 from maw.unicycle import Unicycle
@@ -8,7 +9,7 @@ DT              = 0.02
 YAW_BANG_SIZE   = 2.0
 PITCH_BANG_SIZE = 2.0
 MAX_EVAL_TIME   = 100.0
-YAW_SCORE_ANG   = 9.0 * math.pi / 10.0
+YAW_SCORE_ANG   = math.pi - 0.2
 PITCH_SCORE_ANG = math.pi / 12.0
 ROLL_SCORE_ANG  = math.pi / 12.0
 
@@ -21,6 +22,7 @@ class Evaluator(object):
         self.uni.addToManager(self.world)
 
     def evaluate(self, brain):
+        target_vel = 0.5
         fitness = 0
 
         self.time = 0
@@ -33,15 +35,24 @@ class Evaluator(object):
             in_scoring_zone = abs(self.uni.yaw()) < YAW_SCORE_ANG and abs(self.uni.pitch()) < PITCH_SCORE_ANG and abs(self.uni.roll()) < ROLL_SCORE_ANG
 
             if in_scoring_zone:
-                score = dirac_delta(self.uni.pitch(), 5) + dirac_delta(self.uni.roll(), 5)
-                fitness += DT * score;
+                score = dirac_delta(self.uni.pitch(), 5)
+                score += dirac_delta(self.uni.roll(), 5)
+                score += dirac_delta(self.uni.yaw(), 1)
+                score += dirac_delta(self.uni.wheelVelocity() - target_vel, 5)
+                fitness += DT * score / 4.0;
             else:
                 break # Failure. No need to evaluate further.
 
         return fitness
 
-    def step(self, brain):
-        input = [self.uni.yaw(), self.uni.pitch(), self.uni.roll(), self.uni.wheelVelocity()]
+    def step(self, brain, target_vel=0.0):
+        input = [
+            self.uni.yaw(),
+            self.uni.pitch(),
+            self.uni.roll(),
+            self.uni.wheelVelocity(),
+            target_vel
+        ]
 
         output = brain.feedForward(input)
 

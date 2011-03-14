@@ -253,6 +253,14 @@ void Unicycle::computeState()
     btVector3 wheelVelInWheel = wheelVel * wheelTrans.getBasis();
     m_wheelVelocity = wheelVelInWheel.getZ();
   }
+
+  // Seat angular velocity about wheel axis
+  {
+    // btVector3 seatVel = m_forkBody->getAngularVelocity();
+    // btVector3 seatVelInWheel = seatVel * forkTrans.getBasis();
+    // m_seatVelocity = seatVelInWheel.getX();
+    // std::cout << m_seatVelocity << "\n";
+  }
 }
 
 btScalar Unicycle::yaw() const

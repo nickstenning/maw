@@ -3,7 +3,6 @@ from util import roulette_pick
 
 ELITISM = 0.2
 CROSSOVER_PROB = 0.3
-MUTATE_PROB = 0.7
 
 class GA(object):
     generation = 0
@@ -36,19 +35,18 @@ class GA(object):
         num_elite = int(round(ELITISM * len(self.population)))
 
         for i in range(-num_elite, 0):
-            new_population.append(self.population[i].clone())
+            individual = self.population[i].clone()
+            new_population.append(individual)
 
         # Replace the rest of the population with roulette-picked individuals
         for i in range(len(self.population) - num_elite):
-
             # Copy-construct new individual
             individual = roulette_pick(self.population).clone()
 
             if random.random() < CROSSOVER_PROB:
                 individual.crossover(roulette_pick(self.population))
 
-            if random.random() < MUTATE_PROB:
-                individual.mutate()
+            individual.mutate()
 
             new_population.append(individual)
 

@@ -35,7 +35,7 @@ class NN(BindingNN):
 
             for i in range(len(send)):
                 for j in range(len(recv)):
-                    o.append( str(mx[i][j]) + ' ' )
+                    o.append( str(round(mx[i][j], 4)) + ' ' )
 
             o.append( '\n' )
 
@@ -44,4 +44,14 @@ class NN(BindingNN):
     def to_dot(self):
         import nn2dot
         return nn2dot.nn2dot(self)
-        
+
+
+    def set_all(self, val):
+        for k in range(len(self.weights())):
+            mx = self.weights()[k]
+            send = self.layers()[k]
+            recv = self.layers()[k + 1]
+
+            for i in range(len(send)):
+                for j in range(len(recv)):
+                    self.setWeight(k, i, j, val)

@@ -37,10 +37,13 @@ void simulationCallback ()
   std::vector<double> input;
   std::vector<int> output;
 
+  std::cout << uni.yaw() << "\n";
+
   input.push_back(uni.yaw());
   input.push_back(uni.pitch());
   input.push_back(uni.roll());
   input.push_back(uni.wheelVelocity());
+  input.push_back(0.5);
 
   output = nn.feedForward(input);
 

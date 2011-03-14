@@ -49,7 +49,9 @@ def main():
     model_brain = Brain.from_string(sys.stdin.read())
 
     def ctor():
-        return Brain([len(l) for l in model_brain.layers()])
+        b = Brain([len(l) for l in model_brain.layers()])
+        b.setRandomWeights()
+        return b
 
     ga = GA(ctor, fitness_function)
 
