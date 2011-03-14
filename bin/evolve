@@ -7,6 +7,7 @@ from optparse import OptionParser
 
 from maw.ga import GA
 from maw.brain import Brain
+import maw.ga.fitness.unicycle as ff
 
 parser = OptionParser()
 parser.add_option("-g", "--generations", dest="generations", default=50,
@@ -14,9 +15,10 @@ parser.add_option("-g", "--generations", dest="generations", default=50,
 parser.add_option("-p", "--popsize", dest="popsize", default=50,
                   type="int", help="size of population", metavar="SIZE")
 
+evaluator = ff.Evaluator()
+
 def fitness_function(brain):
-    import random
-    return random.uniform(0, 50)
+    return evaluator.evaluate(brain)
 
 def print_stats(ga):
     sorted_pop = sorted(ga.population, lambda x, y: cmp(x.fitness, y.fitness))
@@ -54,11 +56,14 @@ def main():
     ga.add_individual(model_brain)
     ga.add_individual(count=options.popsize - 1) # Random remaining brains
 
-
     print("# gen      minFit     maxFit     meanFit    sdFit", file=sys.stderr)
     while ga.generation < options.generations:
-            ga.step()
-            print_stats(ga)
+        ga.step()
+        print_stats(ga)
+
+    sorted_pop = sorted(ga.population, lambda x, y: cmp(x.fitness, y.fitness))
+    fittest = sorted_pop[-1]
+    print(fittest)
 
     return 0
 

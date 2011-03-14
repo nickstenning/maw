@@ -34,21 +34,21 @@ targets  = {
     #     'sources': ['simulate', 'zhelpers', 'nn', 'unicycle_2d', 'vector', 'util']
     # },
 
-    'bin/maw': {
-        'libs': ['bullet', 'gl', 'glu', 'glut'],
-        'sources': [
-            'maw',
-            'nn',
-            'world_manager',
-            'unicycle',
-            'util',
-            'vendor/BulletGL/GlutRunner',
-            'vendor/BulletGL/DemoApplication',
-            'vendor/BulletGL/GlutDemoApplication',
-            'vendor/BulletGL/GLShapeDrawer',
-            'vendor/BulletGL/GLDebugDrawer',
-        ]
-    }
+    # 'bin/maw': {
+    #     'libs': ['bullet', 'gl', 'glu', 'glut'],
+    #     'sources': [
+    #         'maw',
+    #         'nn',
+    #         'world_manager',
+    #         'unicycle',
+    #         'util',
+    #         'vendor/BulletGL/GlutRunner',
+    #         'vendor/BulletGL/DemoApplication',
+    #         'vendor/BulletGL/GlutDemoApplication',
+    #         'vendor/BulletGL/GLShapeDrawer',
+    #         'vendor/BulletGL/GLDebugDrawer',
+    #     ]
+    # }
 }
 
 cflags  = '''-g -O2 -fPIC -ansi -pedantic
@@ -99,7 +99,7 @@ def link(target_name):
 
 def gen_swig(target_name):
     tgt = targets[target_name]
-    run('swig', '-c++', '-python', '-copyctor', '-o', 'src/' + tgt['swig'] + '_wrap.cpp', '-outdir', os.path.dirname(target_name), 'src/' + tgt['swig'] + '.i')
+    run('swig', '-c++', '-python', '-o', 'src/' + tgt['swig'] + '_wrap.cpp', '-outdir', os.path.dirname(target_name), 'src/' + tgt['swig'] + '.i')
 
 def compile_swig(tgt):
     wrap_file = 'src/' + tgt['swig'] + '_wrap.cpp'

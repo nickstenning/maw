@@ -18,7 +18,8 @@ namespace std {
   %template(matrix_t) vector<vector<double> >;
   %template(weights_t) vector<vector<vector<double> > >;
 }
-
+                       
+%copyctor NN;
 %ignore operator<<;
 %ignore operator>>;
 %include "nn.h"

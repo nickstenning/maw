@@ -1,5 +1,5 @@
 import random
-from utils import roulette_pick
+from util import roulette_pick
 
 ELITISM = 0.2
 CROSSOVER_PROB = 0.3
@@ -32,11 +32,12 @@ class GA(object):
         # Elitism step. Preserve some proportion of the population untouched
         # for the next generation.
         num_elite = int(round(ELITISM * len(self.population)))
-        for i in range(num_elite):
+        for i in range(-num_elite):
+            print "Preserving", self.population[i].fitness
             new_population[i] = self.population[i].clone()
 
         # Replace the rest of the population with roulette-picked individuals
-        for i in range(num_elite, len(self.population)):
+        for i in range(len(self.population) - num_elite):
 
             # Copy-construct new individual
             individual = roulette_pick(self.population).clone()
