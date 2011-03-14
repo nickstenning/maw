@@ -27,14 +27,16 @@ class GA(object):
     def step(self):
         self.generation += 1
 
-        new_population = sorted(self.population, lambda x, y: cmp(x.fitness, y.fitness))
+        self.population = sorted(self.population, lambda x, y: cmp(x.fitness, y.fitness))
+
+        new_population = []
 
         # Elitism step. Preserve some proportion of the population untouched
         # for the next generation.
         num_elite = int(round(ELITISM * len(self.population)))
-        for i in range(-num_elite):
-            print "Preserving", self.population[i].fitness
-            new_population[i] = self.population[i].clone()
+
+        for i in range(-num_elite, 0):
+            new_population.append(self.population[i].clone())
 
         # Replace the rest of the population with roulette-picked individuals
         for i in range(len(self.population) - num_elite):
@@ -48,7 +50,7 @@ class GA(object):
             if random.random() < MUTATE_PROB:
                 individual.mutate()
 
-            new_population[i] = individual
+            new_population.append(individual)
 
         for individual in self.population:
             del individual # Need to do this to trigger C++ destructors?

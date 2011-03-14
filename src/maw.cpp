@@ -10,7 +10,6 @@
 #include "world_manager.h"
 #include "util.h"
 #include "unicycle.h"
-#include "unicycle_fitness_function.h"
 
 WorldManager wm;
 Unicycle uni;
@@ -45,8 +44,8 @@ void simulationCallback ()
 
   output = nn.feedForward(input);
 
-  double yawImpulse = YAW_BANG_SIZE * output[0];
-  double pitchImpulse = PITCH_BANG_SIZE * output[1];
+  double yawImpulse = 2.0 * output[0];
+  double pitchImpulse = 2.0 * output[1];
 
   uni.applyForkImpulse(yawImpulse);
   uni.applyWheelImpulse(pitchImpulse);

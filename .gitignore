@@ -5,6 +5,7 @@
 *.tmproj
 *.pyc
 *.pyo
+/bin/maw
 
 # SWIG stuff
 _*.so

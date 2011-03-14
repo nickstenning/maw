@@ -1,6 +1,7 @@
 #ifndef NN_H
 #define NN_H
 
+#include <iostream>
 #include <vector>
 
 class NNInputSizeError {};
@@ -20,6 +21,7 @@ public:
 
   NN();
   NN(std::vector<size_t> layerSizes);
+  NN(std::istream& is);
 
   void setRandomWeights();
   bool topologyIsCompatibleWith(NN const& rhs) const;
@@ -36,6 +38,9 @@ public:
   void setWeight(size_t layer, size_t from, size_t to, double value) {
     m_weights[layer][from][to] = value;
   }
+
+  friend std::istream& operator>> (std::istream&, NN&);
+
 protected:
   void initLayers(std::vector<size_t> layerSizes);
   void initWeights();

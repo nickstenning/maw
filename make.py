@@ -34,21 +34,21 @@ targets  = {
     #     'sources': ['simulate', 'zhelpers', 'nn', 'unicycle_2d', 'vector', 'util']
     # },
 
-    # 'bin/maw': {
-    #     'libs': ['bullet', 'gl', 'glu', 'glut'],
-    #     'sources': [
-    #         'maw',
-    #         'nn',
-    #         'world_manager',
-    #         'unicycle',
-    #         'util',
-    #         'vendor/BulletGL/GlutRunner',
-    #         'vendor/BulletGL/DemoApplication',
-    #         'vendor/BulletGL/GlutDemoApplication',
-    #         'vendor/BulletGL/GLShapeDrawer',
-    #         'vendor/BulletGL/GLDebugDrawer',
-    #     ]
-    # }
+    'bin/maw': {
+        'libs': ['bullet', 'gl', 'glu', 'glut'],
+        'sources': [
+            'maw',
+            'nn',
+            'world_manager',
+            'unicycle',
+            'util',
+            'vendor/BulletGL/GlutRunner',
+            'vendor/BulletGL/DemoApplication',
+            'vendor/BulletGL/GlutDemoApplication',
+            'vendor/BulletGL/GLShapeDrawer',
+            'vendor/BulletGL/GLDebugDrawer',
+        ]
+    }
 }
 
 cflags  = '''-g -O2 -fPIC -ansi -pedantic

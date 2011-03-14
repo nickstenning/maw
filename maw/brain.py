@@ -56,4 +56,4 @@ class Brain(NN, Evolvable):
         for i in range(len(self.weights())):
             num_nonin_weights += len(self.layers()[i]) * len(self.layers()[i + 1])
 
-        self.mutation_rate = 10.0 / num_nonin_weights
+        self.mutation_rate = 1.0 / num_nonin_weights
