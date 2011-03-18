@@ -192,7 +192,7 @@ Unicycle& Unicycle::transform(btTransform const& t)
 
 
   btVector3 randomVec(util::rand(-1,1), util::rand(-1,1), util::rand(-1,1));
-  btScalar randomAng(util::rand(0, M_PI / 10.0));
+  btScalar randomAng(util::rand(0, 0.1));
 
   wheelTrans.getOrigin() += btVector3(0, m_wheelRadius, 0).rotate(randomVec, randomAng);
   forkTrans.getOrigin() += btVector3(0, m_wheelRadius + m_forkLength, 0).rotate(randomVec, randomAng);

@@ -19,6 +19,7 @@ setup(
         'console_scripts': [
             'nngen = maw.command.nngen:main',
             'nn2dot = maw.command.nn2dot:main',
+            'evolve = maw.command.evolve:main',
             'simulate_unicycle = maw.command.simulate_unicycle:main',
         ],
     }
