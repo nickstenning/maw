@@ -21,7 +21,6 @@ public:
 
   NN();
   NN(std::vector<size_t> layer_sizes);
-  NN(std::istream& is);
 
   void set_weights_random();
   bool topology_is_compatible(NN const& rhs) const;
@@ -39,13 +38,11 @@ public:
     m_weights[layer][from][to] = value;
   }
 
-  friend std::istream& operator>> (std::istream&, NN&);
-
 protected:
+  void feed_layer (size_t index);
+
   void init_layers(std::vector<size_t> layer_sizes);
   void init_weights();
-
-  void feed_layer (size_t index);
 
   inline double activation_function(double x);
   inline int    termination_function(double x);

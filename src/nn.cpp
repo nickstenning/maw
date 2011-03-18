@@ -19,13 +19,6 @@ NN::NN(std::vector<size_t> layer_sizes)
   init_weights();
 }
 
-NN::NN(std::istream& is)
-  : m_layers()
-  , m_weights()
-{
-  is >> *this;
-}
-
 void NN::set_weights_random()
 {
   for (size_t k = 0; k < m_weights.size(); k += 1) {
@@ -135,35 +128,4 @@ inline int NN::termination_function (double x)
   } else {
     return 0;
   }
-}
-
-std::istream& operator>> (std::istream& is, NN& nn)
-{
-  size_t num_layers;
-  is >> num_layers;
-  std::vector<size_t> layer_sizes(num_layers);
-
-  for (size_t i = 0; i < num_layers; i += 1) {
-    is >> layer_sizes[i];
-  }
-
-  nn.init_layers(layer_sizes);
-  nn.init_weights();
-
-  size_t k, i, j;
-
-  // weights
-  for (k = 0; k < nn.m_weights.size(); k += 1) {
-    NN::weight_matrix_t& mx = nn.m_weights[k];
-    NN::layer_t& send = nn.m_layers[k];
-    NN::layer_t& recv = nn.m_layers[k + 1];
-
-    for (i = 0; i < send.size(); i += 1) {
-      for (j = 0; j < recv.size(); j += 1) {
-        is >> mx[i][j];
-      }
-    }
-  }
-
-  return is;
 }

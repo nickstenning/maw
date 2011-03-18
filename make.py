@@ -35,9 +35,7 @@ targets  = {
 
     'maw/bindings/_pendulum.so': {
         'swig': 'pendulum',
-        'sources': [
-            'pendulum'
-        ]
+        'sources': ['pendulum']
     },
 
     'maw/bindings/_world_manager.so': {
@@ -46,10 +44,11 @@ targets  = {
         'sources': ['world_manager']
     },
 
-    'bin/maw': {
+    'maw/bindings/_maw_simulator.so': {
+        'swig': 'maw_simulator',
         'libs': ['bullet', 'gl', 'glu', 'glut'],
         'sources': [
-            'maw',
+            'maw_simulator',
             'nn',
             'world_manager',
             'unicycle',

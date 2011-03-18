@@ -1,6 +1,3 @@
-#include <iostream>
-#include <iomanip>
-
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
 #include "vendor/BulletGL/GlutDemoApplication.h"
@@ -10,12 +7,13 @@
 #include "world_manager.h"
 #include "util.h"
 #include "unicycle.h"
+#include "maw_simulator.h"
 
-WorldManager wm;
-Unicycle uni;
-NN nn;
+static WorldManager wm;
+static Unicycle uni;
+static NN* nn;
 
-void handle_key_event (unsigned char key, int, int)
+static void handle_key_event (unsigned char key, int, int)
 {
   switch (key) {
     case 't': uni.apply_wheel_impulse( 10.0, true);  break;
@@ -30,7 +28,7 @@ void handle_key_event (unsigned char key, int, int)
   }
 }
 
-void simulation_callback ()
+static void simulation_callback ()
 {
   uni.compute_state();
 
@@ -43,18 +41,18 @@ void simulation_callback ()
   input.push_back(uni.wheel_velocity());
   input.push_back(uni.yaw_velocity());
 
-  output = nn.feed(input);
+  output = nn->feed(input);
 
   uni.apply_fork_impulse(output[0]);
   uni.apply_wheel_impulse(output[1]);
 }
 
-int main (int argc, char** argv)
+int simulate (NN& user_nn)
 {
-  std::cin >> nn;
+  int argc = 1;
+  char* argv[1] = {"maw_simulator"};
 
-  std::cout << std::setprecision(6) << std::fixed;
-  std::cerr << std::setprecision(6) << std::fixed;
+  nn = &user_nn;
 
   uni.add_to_manager(wm);
   uni.reset();
