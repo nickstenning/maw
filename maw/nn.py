@@ -1,8 +1,7 @@
 import itertools
-from bindings.nn import NN as BindingNN
+from bindings.nn import NN
 
-class NN(BindingNN):
-
+class NN(NN):
     @classmethod
     def from_string(cls, s):
         spec = s.split('\n')
@@ -10,28 +9,28 @@ class NN(BindingNN):
 
         nn = cls(layer_sizes)
 
-        for k in range(len(nn.weights())):
+        for k in range(len(nn.weights)):
             line = spec[2 + k].split(' ')
 
-            mx = nn.weights()[k]
-            send = nn.layers()[k]
-            recv = nn.layers()[k + 1]
+            mx = nn.weights[k]
+            send = nn.layers[k]
+            recv = nn.layers[k + 1]
 
             for i in range(len(send)):
                 for j in range(len(recv)):
-                    nn.setWeight(k, i, j, float(line.pop(0)))
+                    nn.set_weight(k, i, j, float(line.pop(0)))
 
         return nn
 
     def __repr__(self):
         o = []
-        o.append( str(len(self.layers())) + '\n' )
-        o.append( ' '.join(str(len(layer)) for layer in self.layers()) + '\n' )
+        o.append( str(len(self.layers)) + '\n' )
+        o.append( ' '.join(str(len(layer)) for layer in self.layers) + '\n' )
 
-        for k in range(len(self.weights())):
-            mx = self.weights()[k]
-            send = self.layers()[k]
-            recv = self.layers()[k + 1]
+        for k in range(len(self.weights)):
+            mx = self.weights[k]
+            send = self.layers[k]
+            recv = self.layers[k + 1]
 
             for i in range(len(send)):
                 for j in range(len(recv)):
@@ -47,11 +46,11 @@ class NN(BindingNN):
 
 
     def set_all(self, val):
-        for k in range(len(self.weights())):
-            mx = self.weights()[k]
-            send = self.layers()[k]
-            recv = self.layers()[k + 1]
+        for k in range(len(self.weights)):
+            mx = self.weights[k]
+            send = self.layers[k]
+            recv = self.layers[k + 1]
 
             for i in range(len(send)):
                 for j in range(len(recv)):
-                    self.setWeight(k, i, j, val)
+                    self.set_weight(k, i, j, val)

@@ -15,14 +15,14 @@ WorldManager wm;
 Unicycle uni;
 NN nn;
 
-void handleKeyboardEvent (unsigned char key, int, int)
+void handle_key_event (unsigned char key, int, int)
 {
   switch (key) {
-    case 't': uni.applyWheelImpulse(10.0);  break;
-    case 'y': uni.applyWheelImpulse(-10.0); break;
+    case 't': uni.apply_wheel_impulse( 10.0, true);  break;
+    case 'y': uni.apply_wheel_impulse(-10.0, true); break;
 
-    case 'g': uni.applyForkImpulse(10.0);  break;
-    case 'h': uni.applyForkImpulse(-10.0); break;
+    case 'g': uni.apply_fork_impulse( 10.0, true);  break;
+    case 'h': uni.apply_fork_impulse(-10.0, true); break;
 
     case ' ': uni.reset(); break;
 
@@ -30,29 +30,23 @@ void handleKeyboardEvent (unsigned char key, int, int)
   }
 }
 
-void simulationCallback ()
+void simulation_callback ()
 {
-  uni.computeState();
+  uni.compute_state();
 
   std::vector<double> input;
   std::vector<int> output;
 
-  std::cout << uni.yaw() << "\n";
-
   input.push_back(uni.yaw());
   input.push_back(uni.pitch());
   input.push_back(uni.roll());
-  input.push_back(uni.wheelVelocity());
-  input.push_back(0.5);
+  input.push_back(uni.wheel_velocity());
+  input.push_back(uni.yaw_velocity());
 
-  output = nn.feedForward(input);
+  output = nn.feed(input);
 
-  double yawImpulse = 2.0 * output[0];
-  double pitchImpulse = 2.0 * output[1];
-
-  uni.applyForkImpulse(yawImpulse);
-  uni.applyWheelImpulse(pitchImpulse);
-
+  uni.apply_fork_impulse(output[0]);
+  uni.apply_wheel_impulse(output[1]);
 }
 
 int main (int argc, char** argv)
@@ -62,13 +56,14 @@ int main (int argc, char** argv)
   std::cout << std::setprecision(6) << std::fixed;
   std::cerr << std::setprecision(6) << std::fixed;
 
-  uni.addToManager(wm);
+  uni.add_to_manager(wm);
+  uni.reset();
 
   GlutDemoApplication app;
 
-  app.dynamicsWorld(wm.dynamicsWorld());
-  app.registerKeyHandler(handleKeyboardEvent);
-  app.registerStepCallback(simulationCallback);
+  app.dynamics_world(wm.dynamics_world());
+  app.register_key_handler(handle_key_event);
+  app.register_step_callback(simulation_callback);
 
   return glutMain(argc, argv, 800, 600, "Missing A Wheel", &app);
 }

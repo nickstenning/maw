@@ -4,6 +4,9 @@
 #include <LinearMath/btScalar.h>
 #include <LinearMath/btTransform.h>
 
+#define YAW_BANG_SIZE 2.0
+#define PITCH_BANG_SIZE 5.0
+
 class btRigidBody;
 class WorldManager;
 class btCompoundShape;
@@ -17,21 +20,22 @@ public:
 
   Unicycle();
 
-  void addToManager(WorldManager& wm);
+  void add_to_manager(WorldManager& wm);
 
-  void applyWheelImpulse(double impulse);
-  void applyForkImpulse(double impulse);
+  void apply_wheel_impulse(double impulse, bool force=false);
+  void apply_fork_impulse(double impulse, bool force=false);
 
   void reset(btTransform const& t = Unicycle::resetTransform);
   void translate(btScalar x, btScalar y, btScalar z);
 
-  void computeState();
+  void compute_state();
 
   btScalar yaw() const;
   btScalar pitch() const;
   btScalar roll() const;
-  btScalar wheelVelocity() const;
-  btScalar seatVelocity() const;
+  btScalar wheel_velocity() const;
+  btScalar seat_velocity() const;
+  btScalar yaw_velocity() const;
 
   btTransform transform();
   Unicycle& transform(btTransform const&);
@@ -57,8 +61,11 @@ private:
   btScalar m_pitch;
   btScalar m_roll;
 
-  btScalar m_wheelVelocity;
-  btScalar m_seatVelocity;
+  btScalar m_wheel_velocity;
+  btScalar m_seat_velocity;
+  btScalar m_yaw_velocity;
+
+  int m_yawRestore;
 
   btTransform m_transform;
 

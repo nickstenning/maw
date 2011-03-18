@@ -12,7 +12,7 @@ class BrainIncompatibleError(TypeError):
 
 class Brain(NN):
     mutation_rate = None
-    mutation_sigma = 10.0
+    mutation_sigma = 5.0
 
     def __init__(self, *args):
         super(Brain, self).__init__(*args)
@@ -29,13 +29,13 @@ class Brain(NN):
                 for j in range(len(recv)):
                     if random.random() < self.mutation_rate:
                         val = mx[i][j] + random.gauss(0, self.mutation_sigma)
-                        self.setWeight(k, i, j, val)
+                        self.set_weight(k, i, j, val)
 
     # TODO: refactor this horrendous method
     def crossover(self, other):
         # We can't perform the crossover as implemented here unless the brains
         # have the same topology (i.e. same number of neurons in each layer).
-        if not self.topologyIsCompatibleWith(other):
+        if not self.topology_is_compatible(other):
             raise BrainIncompatibleError("Cannot crossover with incompatible brain")
 
         # For each non-input neuron, we randomly choose a parent, and copy all
@@ -48,10 +48,13 @@ class Brain(NN):
             for j in range(len(recv)):
                 if random.choice([True, False]):
                     for i in range(len(send)):
-                        self.setWeight(k, i, j, other.weights()[k][i][j])
+                        self.set_weight(k, i, j, other.weights()[k][i][j])
 
     def clone(self):
         return Brain(self)
+
+    def feed(self, *args):
+        return self.feed(*args)
 
     def _compute_mutation_rate(self):
         num_nonin_weights = 0

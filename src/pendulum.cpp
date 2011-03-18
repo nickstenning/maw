@@ -8,7 +8,7 @@ const double Pendulum::mass    = 1;    // kg
 const double Pendulum::length  = 1;    // m
 const double Pendulum::dt      = 0.01; // s
 
-std::vector<double> physics (double ang_0, double vel_0, double externalTorque)
+std::vector<double> physics (double ang_0, double vel_0, double external_torque)
 {
   std::vector<double> result;
 
@@ -21,7 +21,7 @@ std::vector<double> physics (double ang_0, double vel_0, double externalTorque)
 
   // NB: the angle is the angle to the *upper* vertical, measured clockwise.
   d_vel += Pendulum::gravity / Pendulum::length * sin(ang_0);
-  d_vel += externalTorque / (Pendulum::mass * Pendulum::length);
+  d_vel += external_torque / (Pendulum::mass * Pendulum::length);
   result.push_back(d_vel);
 
   return result;
@@ -68,15 +68,15 @@ Pendulum& Pendulum::vel(double const& v)
   return *this;
 }
 
-void Pendulum::step(double externalTorque, double ext_dt)
+void Pendulum::step(double external_torque, double ext_dt)
 {
   // Pendulum::dt provides a minimum physics resolution, but ext_dt can specify
   // that it wants the simulation to run for longer in a single call to step().
   while (ext_dt > dt) {
     ext_dt -= dt;
-    rk_step(dt, externalTorque, physics);
+    rk_step(dt, external_torque, physics);
   }
-  rk_step(ext_dt, externalTorque, physics);
+  rk_step(ext_dt, external_torque, physics);
 
   // Angular wrap-round
   while (m_ang > pi) {

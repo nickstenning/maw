@@ -8,7 +8,7 @@
 
 static MTRand rng;
 
-unsigned long util::initRNG ()
+unsigned long util::init_RNG ()
 {
   unsigned long seed;
   char const* envSeed;
@@ -20,6 +20,8 @@ unsigned long util::initRNG ()
   } else {
     seed = std::time(0);
   }
+
+  std::cerr << "MAW_RNG_SEED=" << seed << "\n";
 
   rng.seed(seed);
   return seed;
@@ -35,7 +37,7 @@ bool util::choose (double prob)
   return (util::rand(0, 1) < prob);
 }
 
-double util::diracDelta(double x, double a)
+double util::dirac_delta(double x, double a)
 {
   return exp(-(x * x * a * a));
 }

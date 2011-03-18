@@ -42,9 +42,9 @@ void GlutDemoApplication::clientMoveAndDisplay()
 
   btScalar timeStep = getDeltaTimeMicroseconds() * 0.000001f;
 
-  if (m_dynamicsWorld) {
-    m_dynamicsWorld->stepSimulation(timeStep);
-    m_dynamicsWorld->debugDrawWorld();
+  if (m_dynamics_world) {
+    m_dynamics_world->stepSimulation(timeStep);
+    m_dynamics_world->debugDrawWorld();
   }
 
   render();
@@ -57,8 +57,8 @@ void GlutDemoApplication::displayCallback()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  if (m_dynamicsWorld) {
-    m_dynamicsWorld->debugDrawWorld();
+  if (m_dynamics_world) {
+    m_dynamics_world->debugDrawWorld();
   }
 
   render();

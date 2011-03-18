@@ -55,7 +55,7 @@ def nn2dot(nn):
     return dot.format(ranks=ranks, weights=weights)
 
 def _weight(layer_i, i, layer_j, j, val):
-    if abs(val) < 0.01:
+    if abs(val) < 0.5:
         return ''
 
     dot = '  L{0}_{1} -> L{2}_{3} [headlabel={4},color="{5}",fontcolor="{5}",fontsize=10,labeldistance=3];\n'

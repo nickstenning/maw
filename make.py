@@ -19,7 +19,24 @@ targets  = {
         'libs': ['bullet'],
         'sources': [
             'unicycle',
-            'world_manager'
+            'world_manager',
+            'util'
+        ]
+    },
+
+    'maw/bindings/_unicycle_2d.so': {
+        'swig': 'unicycle_2d',
+        'sources': [
+            'util',
+            'vector',
+            'unicycle_2d'
+        ]
+    },
+
+    'maw/bindings/_pendulum.so': {
+        'swig': 'pendulum',
+        'sources': [
+            'pendulum'
         ]
     },
 
@@ -28,11 +45,6 @@ targets  = {
         'libs': ['bullet'],
         'sources': ['world_manager']
     },
-
-    # 'bin/simulate': {
-    #     'libs': ['libzmq'],
-    #     'sources': ['simulate', 'zhelpers', 'nn', 'unicycle_2d', 'vector', 'util']
-    # },
 
     'bin/maw': {
         'libs': ['bullet', 'gl', 'glu', 'glut'],
@@ -103,13 +115,13 @@ def gen_swig(target_name):
 
 def compile_swig(tgt):
     wrap_file = 'src/' + tgt['swig'] + '_wrap.cpp'
-    run(compiler, '-c', wrap_file, '-o', oname(tgt['swig'] + '_wrap.o'), '-O2', '-fPIC', '-ansi', '-w', cflags_for_target(tgt), '-I/usr/include/python2.6')
+    run(compiler, '-c', wrap_file, '-o', oname(tgt['swig'] + '_wrap.o'), '-O2', '-fPIC', '-ansi', '-w', cflags_for_target(tgt), '-I/usr/local/include/python2.7')
 
 def link_swig(target_name):
     tgt = targets[target_name]
     objects = [oname(s + '.o') for s in tgt['sources']]
     objects.append(oname(tgt['swig'] + '_wrap.o'))
-    run(compiler, '-shared', objects, '-o', target_name, libs_for_target(tgt), '-L/usr/lib/python2.6', '-lpython2.6')
+    run(compiler, '-shared', objects, '-o', target_name, libs_for_target(tgt), '-L/usr/local/lib/python2.7', '-lpython2.7')
 
 def clean():
     autoclean()

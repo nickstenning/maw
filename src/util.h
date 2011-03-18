@@ -12,11 +12,11 @@ namespace util
   /**
    * Simple helper to initialize RNG.
    *
-   * `initRNG' will either seed the random number generator automatically, or
+   * `init_RNG' will either seed the random number generator automatically, or
    * detect a seed in environment variable `MAW_RNG_SEED' and use that. The
    * latter can be useful for repeating runs.
   **/
-  unsigned long initRNG ();
+  unsigned long init_RNG ();
 
   /**
    * Normalised RNG.
@@ -40,7 +40,7 @@ namespace util
    * @param x center position.
    * @param a sharpness.
   **/
-  double diracDelta(double x = 0, double a = 1);
+  double dirac_delta(double x = 0, double a = 1);
 
   /**
    * pointer_compare allows us to use std::sort and friends on a std::vector<Klass*>

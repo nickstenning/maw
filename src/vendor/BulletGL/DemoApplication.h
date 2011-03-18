@@ -39,8 +39,8 @@ public:
   DemoApplication();
   virtual ~DemoApplication();
 
-  btDynamicsWorld* dynamicsWorld() const { return m_dynamicsWorld; }
-  DemoApplication& dynamicsWorld(btDynamicsWorld* w);
+  btDynamicsWorld* dynamics_world() const { return m_dynamics_world; }
+  DemoApplication& dynamics_world(btDynamicsWorld* w);
 
   bool idle() { return m_idle; }
   DemoApplication& idle(bool i) { m_idle = i; return *this; }
@@ -79,11 +79,11 @@ public:
   void zoomIn();
   void zoomOut();
 
-  void registerKeyHandler(keyHandler handler);
-  void registerStepCallback(callback);
+  void register_key_handler(keyHandler handler);
+  void register_step_callback(callback);
 
 protected:
-  btDynamicsWorld* m_dynamicsWorld;
+  btDynamicsWorld* m_dynamics_world;
   btTypedConstraint* m_pickConstraint; //< constraint for mouse picking
 
   int m_debugMode;

@@ -20,13 +20,13 @@ public:
   typedef std::vector<int> output_t;
 
   NN();
-  NN(std::vector<size_t> layerSizes);
+  NN(std::vector<size_t> layer_sizes);
   NN(std::istream& is);
 
-  void setRandomWeights();
-  bool topologyIsCompatibleWith(NN const& rhs) const;
+  void set_weights_random();
+  bool topology_is_compatible(NN const& rhs) const;
 
-  std::vector<int> feedForward(std::vector<double> const& input) throw(NNInputSizeError);
+  std::vector<int> feed(std::vector<double> const& input) throw(NNInputSizeError);
 
   layers_t const& layers() const {
     return m_layers;
@@ -35,21 +35,20 @@ public:
     return m_weights;
   }
 
-  void setWeight(size_t layer, size_t from, size_t to, double value) {
+  void set_weight(size_t layer, size_t from, size_t to, double value) {
     m_weights[layer][from][to] = value;
   }
 
   friend std::istream& operator>> (std::istream&, NN&);
 
 protected:
-  void initLayers(std::vector<size_t> layerSizes);
-  void initWeights();
+  void init_layers(std::vector<size_t> layer_sizes);
+  void init_weights();
 
-  void setRandomWeightsForMatrix (size_t index);
-  void feedForwardLayer (size_t index);
+  void feed_layer (size_t index);
 
-  inline double activationFunction(double x);
-  inline int    terminationFunction(double x);
+  inline double activation_function(double x);
+  inline int    termination_function(double x);
 private:
   layers_t m_layers;
   weights_t m_weights;

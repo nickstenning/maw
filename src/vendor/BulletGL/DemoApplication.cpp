@@ -43,7 +43,7 @@ void toggle(bool& flag)
 }
 
 DemoApplication::DemoApplication()
-  : m_dynamicsWorld(0)
+  : m_dynamics_world(0)
   , m_pickConstraint(0)
   , m_debugMode(0)
   , m_idle(false)
@@ -78,10 +78,10 @@ DemoApplication::~DemoApplication()
   if (m_debugDrawer) { delete m_debugDrawer; }
 }
 
-DemoApplication& DemoApplication::dynamicsWorld(btDynamicsWorld* w)
+DemoApplication& DemoApplication::dynamics_world(btDynamicsWorld* w)
 {
-  m_dynamicsWorld = w;
-  m_dynamicsWorld->setDebugDrawer(m_debugDrawer);
+  m_dynamics_world = w;
+  m_dynamics_world->setDebugDrawer(m_debugDrawer);
   return *this;
 }
 
@@ -260,8 +260,8 @@ void DemoApplication::toggleDebugFlag(int modeFlag)
     m_debugMode |= modeFlag;
   }
 
-  if (dynamicsWorld() && dynamicsWorld()->getDebugDrawer()) {
-    dynamicsWorld()->getDebugDrawer()->setDebugMode(m_debugMode);
+  if (dynamics_world() && dynamics_world()->getDebugDrawer()) {
+    dynamics_world()->getDebugDrawer()->setDebugMode(m_debugMode);
   }
 }
 
@@ -337,7 +337,7 @@ btVector3 DemoApplication::getRayTo(int x, int y)
 
 void DemoApplication::mouseFunc(int button, int state, int x, int y)
 {
-  if (!m_dynamicsWorld) { return; }
+  if (!m_dynamics_world) { return; }
 
   if (state == 0) {
     m_mouseButtons |= 1 << button;
@@ -365,7 +365,7 @@ void DemoApplication::mouseFunc(int button, int state, int x, int y)
         rayFrom = m_cameraPosition;
 
         btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
-        m_dynamicsWorld->rayTest(rayFrom, rayTo, rayCallback);
+        m_dynamics_world->rayTest(rayFrom, rayTo, rayCallback);
 
         if (rayCallback.hasHit()) {
           btRigidBody* body = btRigidBody::upcast(rayCallback.m_collisionObject);
@@ -380,7 +380,7 @@ void DemoApplication::mouseFunc(int button, int state, int x, int y)
         }
       } else { // On click release, release pick constraint
         if (m_pickConstraint) {
-          m_dynamicsWorld->removeConstraint(m_pickConstraint);
+          m_dynamics_world->removeConstraint(m_pickConstraint);
           delete m_pickConstraint;
           m_pickConstraint = 0;
 
@@ -400,7 +400,7 @@ void DemoApplication::mouseFunc(int button, int state, int x, int y)
 
 void DemoApplication::addPickConstraint(btRigidBody* body, btVector3 pickPos)
 {
-  if (!m_dynamicsWorld || !body || body->isStaticObject()) {
+  if (!m_dynamics_world || !body || body->isStaticObject()) {
     return;
   }
 
@@ -411,7 +411,7 @@ void DemoApplication::addPickConstraint(btRigidBody* body, btVector3 pickPos)
   btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
 
   btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
-  m_dynamicsWorld->addConstraint(p2p);
+  m_dynamics_world->addConstraint(p2p);
   m_pickConstraint = p2p;
   p2p->m_setting.m_impulseClamp = 30.0;
   p2p->m_setting.m_tau = 0.1; // very weak constraint for picking
@@ -457,12 +457,12 @@ void DemoApplication::renderscene(int pass)
   btMatrix3x3 rot;
   rot.setIdentity();
 
-  const int numObj = m_dynamicsWorld->getNumCollisionObjects();
+  const int numObj = m_dynamics_world->getNumCollisionObjects();
   btVector3 wireColor(1, 0, 0);
 
   for (int i = 0; i < numObj; i++) {
 
-    btCollisionObject* colObj = m_dynamicsWorld->getCollisionObjectArray()[i];
+    btCollisionObject* colObj = m_dynamics_world->getCollisionObjectArray()[i];
 
     colObj->getWorldTransform().getOpenGLMatrix(m);
     rot = colObj->getWorldTransform().getBasis();
@@ -491,7 +491,7 @@ void DemoApplication::renderscene(int pass)
     }
 
     btVector3 aabbMin, aabbMax;
-    m_dynamicsWorld->getBroadphase()->getBroadphaseAabb(aabbMin, aabbMax);
+    m_dynamics_world->getBroadphase()->getBroadphaseAabb(aabbMin, aabbMax);
 
     aabbMin -= btVector3(BT_LARGE_FLOAT, BT_LARGE_FLOAT, BT_LARGE_FLOAT);
     aabbMax += btVector3(BT_LARGE_FLOAT, BT_LARGE_FLOAT, BT_LARGE_FLOAT);
@@ -517,7 +517,7 @@ void DemoApplication::render()
   init();
   updateCamera();
 
-  if (m_dynamicsWorld) {
+  if (m_dynamics_world) {
     if (m_enableshadows) {
       glClear(GL_STENCIL_BUFFER_BIT);
       glEnable(GL_CULL_FACE);
@@ -572,14 +572,14 @@ void DemoApplication::render()
 
 }
 
-void DemoApplication::registerKeyHandler(DemoApplication::keyHandler handler)
+void DemoApplication::register_key_handler(DemoApplication::keyHandler handler)
 {
   if (handler) {
     m_keyHandlers.push_back(handler);
   }
 }
 
-void DemoApplication::registerStepCallback(DemoApplication::callback cb)
+void DemoApplication::register_step_callback(DemoApplication::callback cb)
 {
   if (cb) {
     m_stepCallbacks.push_back(cb);

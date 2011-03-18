@@ -1,11 +1,12 @@
-/build/
-/doc/html/
+/build
+/maw.egg-info
+/bin/maw
+/pyenv
+/tags
 .DS_Store
 .deps
-*.tmproj
 *.pyc
 *.pyo
-/bin/maw
 
 # SWIG stuff
 _*.so
