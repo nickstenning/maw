@@ -40,11 +40,6 @@ class NN(NN):
 
         return ''.join(o)
 
-    def to_dot(self):
-        import nn2dot
-        return nn2dot.nn2dot(self)
-
-
     def set_all(self, val):
         for k in range(len(self.weights)):
             mx = self.weights[k]
