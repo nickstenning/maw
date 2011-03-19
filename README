@@ -1,0 +1,13 @@
+# Missing A Wheel
+
+This is an ongoing experiment into a neurologically-inspired controller for a unicycle.
+
+## Running the code
+
+Check out the code, and run the following in the repository root:
+
+    virtualenv --no-site-packages --distribute pyenv
+    source pyenv/bin/activate
+    python setup.py develop
+
+    nngen 5 10 2 | evolve | simulate_unicycle

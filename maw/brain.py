@@ -3,9 +3,9 @@ from operator import add
 
 from nn import NN
 
-# This is the mutation rate scale factor. It is multiplied by 1/number of
-# non-input neurons to determine the mutation rate.
-MUTATION_SCALE_FACTOR = 10.0
+# The mutation proportion dictates the most likely proportion of
+# the non-input neurons to be mutated.
+MUTATION_PROPORTION = 0.1
 
 class BrainIncompatibleError(TypeError):
     pass
@@ -59,4 +59,5 @@ class Brain(NN):
         for i in range(len(self.weights)):
             num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
 
-        self.mutation_rate = MUTATION_SCALE_FACTOR / num_nonin_weights
+        # mutate 1..(MUTATION_PROPORTION * num_nonin_weights) weights
+        self.mutation_rate = max(MUTATION_PROPORTION, 1/num_nonin_weights)
