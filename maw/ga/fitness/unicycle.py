@@ -22,8 +22,6 @@ class Evaluator(object):
     def evaluate(self, brain):
         fitness = 0
 
-        self.yaw_restore = 0
-
         for _ in xrange(3):
             fitness += self.evaluate_once(brain)
 
@@ -43,10 +41,9 @@ class Evaluator(object):
 
             if in_scoring_zone:
                 score = 0
-                score += abs(self.uni.pitch())
                 score += abs(self.uni.roll())
+                score += abs(self.uni.yaw())
                 score += abs(self.uni.yaw_velocity())
-                score += abs(self.uni.wheel_velocity() - 0.5)
 
                 fitness += DT * dirac_delta(score)
             else:
@@ -55,7 +52,6 @@ class Evaluator(object):
         return fitness
 
     def step(self, brain, target_vel=0.0):
-        self.yaw_restore = max(0, self.yaw_restore - DT)
 
         input = [
             self.uni.yaw(),

@@ -3,9 +3,8 @@ from operator import add
 
 from nn import NN
 
-# The mutation proportion dictates the most likely proportion of
-# the non-input neurons to be mutated.
-MUTATION_PROPORTION = 0.1
+# Most probably number of neurons to mutate for each call to #mutate()
+NUM_TO_MUTATE = 3.0
 
 class BrainIncompatibleError(TypeError):
     pass
@@ -14,19 +13,23 @@ class Brain(NN):
     mutation_rate = None
     mutation_sigma = 5.0
 
-    def __init__(self, *args):
-        super(Brain, self).__init__(*args)
-        self._compute_mutation_rate()
+    def __init__(self, layer_spec, mutation_rate=None, *args):
+        super(Brain, self).__init__(layer_spec, *args)
+
+        if mutation_rate is None:
+            self._compute_mutation_rate()
+        else:
+            self.mutation_rate = mutation_rate
 
     # TODO: refactor this horrendous method
     def mutate(self):
-        for k in range(len(self.weights)):
+        for k in xrange(len(self.weights)):
             mx = self.weights[k]
             send = self.layers[k]
             recv = self.layers[k + 1]
 
-            for i in range(len(send)):
-                for j in range(len(recv)):
+            for i in xrange(len(send)):
+                for j in xrange(len(recv)):
                     if random.random() < self.mutation_rate:
                         val = mx[i][j] + random.gauss(0, self.mutation_sigma)
                         self.set_weight(k, i, j, val)
@@ -40,24 +43,23 @@ class Brain(NN):
 
         # For each non-input neuron, we randomly choose a parent, and copy all
         # input weights from that parent.
-        for k in range(len(self.weights)):
+        for k in xrange(len(self.weights)):
             mx = self.weights[k]
             send = self.layers[k]
             recv = self.layers[k + 1]
 
-            for j in range(len(recv)):
+            for j in xrange(len(recv)):
                 if random.choice([True, False]):
-                    for i in range(len(send)):
+                    for i in xrange(len(send)):
                         self.set_weight(k, i, j, other.weights[k][i][j])
 
     def clone(self):
-        return Brain(self)
+        return Brain(self, mutation_rate=self.mutation_rate)
 
     def _compute_mutation_rate(self):
         num_nonin_weights = 0
 
-        for i in range(len(self.weights)):
+        for i in xrange(len(self.weights)):
             num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
 
-        # mutate 1..(MUTATION_PROPORTION * num_nonin_weights) weights
-        self.mutation_rate = max(MUTATION_PROPORTION, 1/num_nonin_weights)
+        self.mutation_rate = float(NUM_TO_MUTATE) / num_nonin_weights

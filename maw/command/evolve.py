@@ -15,9 +15,6 @@ parser.add_argument('-p', '--popsize', dest='popsize', default=50,
 
 evaluator = ff.Evaluator()
 
-def fitness_function(brain):
-    return evaluator.evaluate(brain)
-
 def print_stats(ga):
     sorted_pop = sorted(ga.population, lambda x, y: cmp(x.fitness, y.fitness))
 
@@ -52,7 +49,7 @@ def main():
         b.set_weights_random()
         return b
 
-    ga = GA(ctor, fitness_function)
+    ga = GA(ctor, evaluator.evaluate)
 
     ga.add_individual(model_brain)
     ga.add_individual(count=args.popsize - 1) # Random remaining brains
