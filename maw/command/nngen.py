@@ -1,26 +1,27 @@
 from __future__ import print_function
 
 import sys
+import argparse
 
 from maw.nn import NN
 
+import argparse
+
+parser = argparse.ArgumentParser(description='Generate a feedforward NN specification.')
+parser.add_argument('sizes', metavar='SIZE', type=int, nargs='+',
+                    help='number of neurons in each layer')
+parser.add_argument('-r', '--random', dest='random', action='store_true', default=False,
+                    help='randomize connection weights')
+
 def main():
-    random = False
+    args = parser.parse_args()
 
-    if sys.argv[1] == '-r':
-        sys.argv.pop(1)
-        random = True
+    nn = NN(args.sizes)
 
-    if len(sys.argv) < 2:
-        print("Usage: nngen <LAYER_1_SIZE>, <LAYER_2_SIZE>, ...", file=sys.stderr)
-    else:
-        layer_sizes = [int(i) for i in sys.argv[1:]]
-        nn = NN(layer_sizes)
+    if args.random:
+        nn.set_weights_random()
 
-        if random:
-            nn.set_weights_random()
-
-        print(nn)
+    print(nn, end='')
 
 if __name__ == '__main__':
     sys.exit(main())

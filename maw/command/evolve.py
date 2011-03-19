@@ -1,17 +1,17 @@
 from __future__ import print_function
 
 import sys
-from optparse import OptionParser
+import argparse
 
 from maw.ga import GA
 from maw.brain import Brain
 import maw.ga.fitness.unicycle as ff
 
-parser = OptionParser()
-parser.add_option("-g", "--generations", dest="generations", default=50,
-                  type="int", help="number of generations", metavar="NUM")
-parser.add_option("-p", "--popsize", dest="popsize", default=50,
-                  type="int", help="size of population", metavar="SIZE")
+parser = argparse.ArgumentParser(description='Evolve a population of NNs.')
+parser.add_argument('-g', '--generations', dest='generations', default=50,
+                    type=int, help='number of generations', metavar='NUM')
+parser.add_argument('-p', '--popsize', dest='popsize', default=50,
+                    type=int, help='size of population', metavar='SIZE')
 
 evaluator = ff.Evaluator()
 
@@ -37,9 +37,9 @@ def print_stats(ga):
     print(stats, file=sys.stderr)
 
 def main():
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
 
-    if options.popsize < 1:
+    if args.popsize < 1:
         print('Must specify a popsize of at least 1.', file=sys.stderr)
         return 1
 
@@ -55,10 +55,10 @@ def main():
     ga = GA(ctor, fitness_function)
 
     ga.add_individual(model_brain)
-    ga.add_individual(count=options.popsize - 1) # Random remaining brains
+    ga.add_individual(count=args.popsize - 1) # Random remaining brains
 
     print("# gen      minFit     maxFit     meanFit    sdFit", file=sys.stderr)
-    while ga.generation < options.generations:
+    while ga.generation < args.generations:
         ga.step()
         print_stats(ga)
 
