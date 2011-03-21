@@ -21,7 +21,6 @@ Unicycle::Unicycle()
   , m_pitch(0)
   , m_roll(0)
   , m_wheel_velocity(0)
-  , m_seat_velocity(0)
   , m_yaw_velocity(0)
   , m_yawRestore(0)
   , m_transform(Unicycle::resetTransform)
@@ -139,17 +138,10 @@ void Unicycle::apply_wheel_impulse(double impulse, bool)
 
 void Unicycle::apply_fork_impulse(double impulse, bool)
 {
-  // if (!force && m_yawRestore > 0) {
-  //   m_yawRestore -= 1;
-  //   return;
-  // }
-
   btVector3 impulseLocal(0, impulse * YAW_BANG_SIZE, 0);
   btVector3 impulseWorld = m_forkBody->getWorldTransform().getBasis() * impulseLocal;
 
   m_forkBody->applyTorqueImpulse(impulseWorld);
-
-  // if (!force) { m_yawRestore = 10; }
 }
 
 void Unicycle::reset(btTransform const& trans)
@@ -260,14 +252,6 @@ void Unicycle::compute_state()
     m_wheel_velocity = wheelVelInWheel.getZ();
   }
 
-  // Seat angular velocity about wheel axis
-  {
-    // btVector3 seatVel = m_forkBody->getAngularVelocity();
-    // btVector3 seatVelInWheel = seatVel * forkTrans.getBasis();
-    // m_seat_velocity = seatVelInWheel.getX();
-    // std::cout << m_seat_velocity << "\n";
-  }
-
   // Yaw velocity about wheel axis
   {
     btVector3 forkVel = m_forkBody->getAngularVelocity();
@@ -294,11 +278,6 @@ btScalar Unicycle::roll() const
 btScalar Unicycle::wheel_velocity() const
 {
   return m_wheel_velocity;
-}
-
-btScalar Unicycle::seat_velocity() const
-{
-  return m_seat_velocity;
 }
 
 btScalar Unicycle::yaw_velocity() const

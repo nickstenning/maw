@@ -34,7 +34,6 @@ public:
   btScalar pitch() const;
   btScalar roll() const;
   btScalar wheel_velocity() const;
-  btScalar seat_velocity() const;
   btScalar yaw_velocity() const;
 
   btTransform transform();
@@ -62,7 +61,6 @@ private:
   btScalar m_roll;
 
   btScalar m_wheel_velocity;
-  btScalar m_seat_velocity;
   btScalar m_yaw_velocity;
 
   int m_yawRestore;
