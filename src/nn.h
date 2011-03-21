@@ -1,7 +1,6 @@
 #ifndef NN_H
 #define NN_H
 
-#include <iostream>
 #include <vector>
 
 class NNInputSizeError {};
@@ -22,21 +21,18 @@ public:
   NN();
   NN(std::vector<size_t> layer_sizes);
 
-  void set_weights_random();
-  bool topology_is_compatible(NN const& rhs) const;
-
   std::vector<int> feed(std::vector<double> const& input) throw(NNInputSizeError);
 
-  layers_t const& layers() const {
-    return m_layers;
-  }
-  weights_t const& weights() const {
-    return m_weights;
-  }
+  layers_t const& layers() const { return m_layers; }
+  layer_t const& layers(size_t i) const { return m_layers[i]; }
+  double const& layers(size_t i, size_t j) const { return m_layers[i][j]; }
+  NN& layers(size_t i, size_t j, double val) { m_layers[i][j] = val; return *this; }
 
-  void set_weight(size_t layer, size_t from, size_t to, double value) {
-    m_weights[layer][from][to] = value;
-  }
+  weights_t const& weights() const { return m_weights; }
+  weight_matrix_t const& weights(size_t k) const { return m_weights[k]; }
+  weight_vector_t const& weights(size_t k, size_t i) const { return m_weights[k][i]; }
+  double const& weights(size_t k, size_t i, size_t j) const { return m_weights[k][i][j]; }
+  NN& weights(size_t k, size_t i, size_t j, double val) { m_weights[k][i][j] = val; return *this; }
 
 protected:
   void feed_layer (size_t index);

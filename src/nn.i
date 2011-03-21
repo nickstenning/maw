@@ -6,7 +6,6 @@
 %{
 #define SWIG_FILE_WITH_INIT
 #include "nn.h"
-#include "util.h"
 %}
 
 namespace std {
@@ -20,16 +19,8 @@ namespace std {
 }
 
 %copyctor NN;
-%ignore operator<<;
-%ignore operator>>;
+
+%rename(_weights) NN::weights;
+%rename(_layers) NN::layers;
+
 %include "nn.h"
-
-%pythoncode %{
-
-NN.__swig_getmethods__["weights"] = NN.weights
-if _newclass: NN.weights = _swig_property(NN.weights)
-
-NN.__swig_getmethods__["layers"] = NN.layers
-if _newclass: NN.layers = _swig_property(NN.layers)
-
-%}

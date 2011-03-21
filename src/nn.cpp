@@ -1,9 +1,6 @@
-#include <iostream>
-#include <iomanip>
 #include <vector>
 #include <cmath>
 
-#include "util.h"
 #include "nn.h"
 
 NN::NN()
@@ -17,19 +14,6 @@ NN::NN(std::vector<size_t> layer_sizes)
 {
   init_layers(layer_sizes);
   init_weights();
-}
-
-void NN::set_weights_random()
-{
-  for (size_t k = 0; k < m_weights.size(); k += 1) {
-    weight_matrix_t& mx = m_weights[k];
-
-    for (size_t i = 0; i < m_layers[k].size(); i += 1) {
-      for (size_t j = 0; j < m_layers[k + 1].size(); j += 1) {
-        mx[i][j] = util::rand(-1, 1);
-      }
-    }
-  }
 }
 
 NN::output_t NN::feed (layer_t const& input) throw(NNInputSizeError)
@@ -95,21 +79,6 @@ void NN::init_weights ()
     layer_t const& recv = m_layers[i + 1];
     m_weights[i] = weight_matrix_t(send.size(), weight_vector_t(recv.size(), 0));
   }
-}
-
-bool NN::topology_is_compatible(NN const& rhs) const
-{
-  if (m_layers.size() != rhs.m_layers.size()) {
-    return false;
-  }
-
-  for (size_t i = 0; i < m_layers.size(); i += 1) {
-    if (m_layers[i].size() != rhs.m_layers[i].size()) {
-      return false;
-    }
-  }
-
-  return true;
 }
 
 inline double NN::activation_function (double x)
