@@ -1,8 +1,11 @@
 #ifndef MAW_SIMULATOR_H
 #define MAW_SIMULATOR_H
 
-class NN;
+#include <LinearMath/btScalar.h>
 
-int simulate(NN& nn);
+class NN;
+class Unicycle;
+
+int simulate(Unicycle&, NN&, btScalar yaw_bang_size, btScalar pitch_bang_size);
 
 #endif // MAW_SIMULATOR_H

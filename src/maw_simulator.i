@@ -15,4 +15,5 @@
 #include "maw_simulator.h"
 %}
 
+%apply double { btScalar };
 %include "maw_simulator.h"

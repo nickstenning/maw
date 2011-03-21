@@ -2,10 +2,8 @@
 #define UNICYCLE_H
 
 #include <LinearMath/btScalar.h>
+#include <LinearMath/btVector3.h>
 #include <LinearMath/btTransform.h>
-
-#define YAW_BANG_SIZE 2.0
-#define PITCH_BANG_SIZE 5.0
 
 class btRigidBody;
 class WorldManager;
@@ -16,16 +14,23 @@ class Unicycle
 {
 public:
 
-  static const btTransform resetTransform;
+  static const btTransform reset_transform;
 
-  Unicycle();
+  Unicycle(
+    btScalar fork_width,
+    btScalar fork_length,
+    btScalar wheel_width,
+    btScalar wheel_radius,
+    btScalar seat_mass,
+    btScalar wheel_mass
+  );
 
   void add_to_manager(WorldManager& wm);
 
-  void apply_wheel_impulse(double impulse, bool force=false);
-  void apply_fork_impulse(double impulse, bool force=false);
+  void apply_wheel_impulse(btScalar impulse);
+  void apply_fork_impulse(btScalar impulse);
 
-  void reset(btTransform const& t = Unicycle::resetTransform);
+  void reset(btTransform const& t = Unicycle::reset_transform);
   void translate(btScalar x, btScalar y, btScalar z);
 
   void compute_state();
@@ -40,21 +45,19 @@ public:
   Unicycle& transform(btTransform const&);
 
 protected:
-  void createForkShape(WorldManager& wm);
-  void createWheelShape(WorldManager& wm);
-  void createForkBody(WorldManager& wm, btTransform const& t);
-  void createWheelBody(WorldManager& wm, btTransform const& t);
+  void create_collision_shapes(WorldManager& wm);
+  void create_rigid_bodies(WorldManager& wm, btTransform const& t);
 
-  void setEuler(btScalar y, btScalar p, btScalar r);
+  btVector3 contact_point();
 
 private:
-  btScalar m_forkWidth;
-  btScalar m_forkLength;
-  btScalar m_wheelWidth;
-  btScalar m_wheelRadius;
+  btScalar m_fork_width;
+  btScalar m_fork_length;
+  btScalar m_wheel_width;
+  btScalar m_wheel_radius;
 
-  btScalar m_forkMass;
-  btScalar m_wheelMass;
+  btScalar m_seat_mass;
+  btScalar m_wheel_mass;
 
   btScalar m_yaw;
   btScalar m_pitch;
@@ -63,14 +66,12 @@ private:
   btScalar m_wheel_velocity;
   btScalar m_yaw_velocity;
 
-  int m_yawRestore;
-
   btTransform m_transform;
 
-  btCompoundShape* m_forkShape;
-  btCylinderShapeZ* m_wheelShape;
-  btRigidBody* m_forkBody;
-  btRigidBody* m_wheelBody;
+  btCompoundShape* m_fork_shape;
+  btCylinderShapeZ* m_wheel_shape;
+  btRigidBody* m_fork_body;
+  btRigidBody* m_wheel_body;
 };
 
 #endif // UNICYCLE_H

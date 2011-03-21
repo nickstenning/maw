@@ -7,6 +7,8 @@ from maw.world_manager import WorldManager
 
 DT              = 0.02
 MAX_EVAL_TIME   = 100.0
+YAW_BANG_SIZE   = 2.0
+PITCH_BANG_SIZE = 5.0
 YAW_SCORE_ANG   = math.pi / 12.0
 PITCH_SCORE_ANG = math.pi / 4.0
 ROLL_SCORE_ANG  = math.pi / 12.0
@@ -41,9 +43,10 @@ class Evaluator(object):
 
             if in_scoring_zone:
                 score = 0
+                score += abs(self.uni.pitch())
                 score += abs(self.uni.roll())
-                score += abs(self.uni.yaw())
                 score += abs(self.uni.yaw_velocity())
+                score += abs(self.uni.wheel_velocity())
 
                 fitness += DT * dirac_delta(score)
             else:
@@ -63,8 +66,11 @@ class Evaluator(object):
 
         output = brain.feed(input)
 
-        self.uni.apply_fork_impulse(output[0] + random.gauss(0, 0.1))
-        self.uni.apply_wheel_impulse(output[1] + random.gauss(0, 0.1))
+        output_yaw = YAW_BANG_SIZE * output[0]
+        output_pitch = PITCH_BANG_SIZE * output[1]
+
+        self.uni.apply_fork_impulse(output_yaw + random.gauss(0, 0.1))
+        self.uni.apply_wheel_impulse(output_pitch + random.gauss(0, 0.1))
 
         self.world.step_simulation(DT)
         self.uni.compute_state()
