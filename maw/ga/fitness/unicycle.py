@@ -7,8 +7,8 @@ from maw.world_manager import WorldManager
 
 DT              = 0.02
 MAX_EVAL_TIME   = 100.0
-YAW_SCORE_ANG   = math.pi - 0.2
-PITCH_SCORE_ANG = math.pi / 12.0
+YAW_SCORE_ANG   = math.pi / 12.0
+PITCH_SCORE_ANG = math.pi / 4.0
 ROLL_SCORE_ANG  = math.pi / 12.0
 
 class Evaluator(object):
