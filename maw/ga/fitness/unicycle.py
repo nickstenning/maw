@@ -9,7 +9,7 @@ DT              = 0.02
 MAX_EVAL_TIME   = 100.0
 YAW_BANG_SIZE   = 2.0
 PITCH_BANG_SIZE = 5.0
-YAW_SCORE_ANG   = math.pi / 12.0
+YAW_SCORE_ANG   = math.pi / 2.0
 PITCH_SCORE_ANG = math.pi / 4.0
 ROLL_SCORE_ANG  = math.pi / 12.0
 
