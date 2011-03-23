@@ -52,7 +52,7 @@ class Evaluator(object):
 
         return fitness
 
-    def step(self, brain, target_vel=0.0):
+    def step(self, brain):
 
         input = [
             self.uni.yaw(),
