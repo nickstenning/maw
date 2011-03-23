@@ -8,7 +8,7 @@ class BrainIncompatibleError(TypeError):
 
 class Brain(NN):
     mutation_rate = 0.1
-    mutation_sigma = 5.0
+    mutation_sigma = 2.0
 
     def mutate(self):
         for k, i, j in self.xweights:

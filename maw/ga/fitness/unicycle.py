@@ -7,8 +7,6 @@ from maw.world_manager import WorldManager
 
 DT              = 0.02
 MAX_EVAL_TIME   = 100.0
-YAW_BANG_SIZE   = 2.0
-PITCH_BANG_SIZE = 5.0
 YAW_SCORE_ANG   = math.pi / 2.0
 PITCH_SCORE_ANG = math.pi / 4.0
 ROLL_SCORE_ANG  = math.pi / 12.0
@@ -66,11 +64,8 @@ class Evaluator(object):
 
         output = brain.feed(input)
 
-        output_yaw = YAW_BANG_SIZE * output[0]
-        output_pitch = PITCH_BANG_SIZE * output[1]
-
-        self.uni.apply_fork_impulse(output_yaw + random.gauss(0, 0.1))
-        self.uni.apply_wheel_impulse(output_pitch + random.gauss(0, 0.1))
+        self.uni.apply_drive_impulse(output[0] + random.gauss(0, 0.1))
+        self.uni.apply_wheel_impulse(output[1] + random.gauss(0, 0.1))
 
         self.world.step_simulation(DT)
         self.uni.compute_state()
