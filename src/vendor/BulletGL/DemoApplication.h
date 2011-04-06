@@ -42,11 +42,9 @@ public:
   btDynamicsWorld* dynamics_world() const { return m_dynamics_world; }
   DemoApplication& dynamics_world(btDynamicsWorld* w);
 
-  bool idle() { return m_idle; }
-  DemoApplication& idle(bool i) { m_idle = i; return *this; }
-
   virtual void init();
   virtual void updateCamera();
+  DemoApplication& cameraTargetPosition(btVector3 t) { m_cameraTargetPosition = t; }
 
   btScalar getDeltaTimeMicroseconds() { return btScalar(20000.); }
 

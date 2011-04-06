@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import sys
+import signal
 import argparse
 
 from maw.ga import GA
@@ -14,6 +15,8 @@ parser.add_argument('-p', '--popsize', dest='popsize', default=50,
                     type=int, help='size of population', metavar='SIZE')
 
 evaluator = ff.Evaluator()
+
+exit_early = False
 
 def print_stats(ga):
     sorted_pop = sorted(ga.population, lambda x, y: cmp(x.fitness, y.fitness))
@@ -32,6 +35,12 @@ def print_stats(ga):
     )
 
     print(stats, file=sys.stderr)
+
+def catch_usr1(signo, frame):
+    global exit_early
+    exit_early = True
+
+signal.signal(signal.SIGUSR1, catch_usr1)
 
 def main():
     args = parser.parse_args()
@@ -55,7 +64,7 @@ def main():
     ga.add_individual(count=args.popsize - 1) # Random remaining brains
 
     print("# gen      minFit     maxFit     meanFit    sdFit", file=sys.stderr)
-    while ga.generation < args.generations:
+    while ga.generation < args.generations and not exit_early:
         ga.step()
         print_stats(ga)
 

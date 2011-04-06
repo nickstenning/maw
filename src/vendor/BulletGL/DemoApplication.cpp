@@ -29,14 +29,6 @@ subject to the following restrictions:
 
 #include "DemoApplication.h"
 
-extern bool gDisableDeactivation;
-int numObjects = 0;
-const int maxNumObjects = 16384;
-btTransform startTransforms[maxNumObjects];
-btCollisionShape* gShapePtr[maxNumObjects]; // 1 rigidbody has 1 shape (no re-use of shapes)
-
-extern int gNumClampedCcdMotions;
-
 void toggle(bool& flag)
 {
   flag = !flag;

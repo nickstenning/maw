@@ -18,7 +18,8 @@ Unicycle::Unicycle(
   btScalar wheel_mass,
   btScalar drive_mass,
   btScalar wheel_impulse,
-  btScalar drive_impulse
+  btScalar drive_impulse,
+  bool drive_limits
 ) : m_fork_length(fork_length)
   , m_wheel_radius(wheel_radius)
   , m_drive_radius(drive_radius)
@@ -38,6 +39,7 @@ Unicycle::Unicycle(
   , m_fork_body(NULL)
   , m_wheel_body(NULL)
   , m_drive_body(NULL)
+  , m_drive_limits(drive_limits)
 {}
 
 void Unicycle::create_collision_shapes(WorldManager& wm)
@@ -157,6 +159,10 @@ void Unicycle::add_to_manager(WorldManager& wm) throw(UnicycleAlreadyInitialized
                                                     pivot_in_drive, pivot_in_fork,
                                                     axis_in_drive, axis_in_fork);
 
+    if (m_drive_limits) {
+      static_cast<btHingeConstraint*>(axle)->setLimit(-M_PI + 0.2, M_PI - 0.2);
+    }
+
     wm.dynamics_world()->addConstraint(axle);
   }
 
@@ -207,7 +213,7 @@ void Unicycle::reset_position(btTransform const& trans, bool randomize)
 
   if (randomize) {
     btVector3 random_vec(util::rand(-1,1), util::rand(-1,1), util::rand(-1,1));
-    btScalar random_ang(util::rand(0, 0.1));
+    btScalar random_ang(util::rand(0, 0.2));
 
     btQuaternion rot(random_vec, random_ang);
 
@@ -230,7 +236,7 @@ void Unicycle::reset_position(btTransform const& trans, bool randomize)
 }
 
 // Calculate position of lowest vertex in wheel
-btVector3 Unicycle::contact_point()
+btVector3 Unicycle::contact_point() const
 {
   btTransform wheel_trans = m_wheel_body->getWorldTransform();
 
@@ -291,6 +297,11 @@ void Unicycle::compute_state()
     btVector3 fork_vel_in_fork = fork_vel * fork_trans.getBasis();
     m_yaw_velocity = fork_vel_in_fork.getZ();
   }
+}
+
+btVector3 const& Unicycle::origin() const
+{
+  return m_wheel_body->getWorldTransform().getOrigin();
 }
 
 btScalar Unicycle::yaw() const

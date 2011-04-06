@@ -5,11 +5,12 @@ class Unicycle(Unicycle):
                  fork_length=4.0,
                  wheel_radius=2.0,
                  drive_radius=1.8,
-                 rider_mass=10.0,
+                 rider_mass=5.00,
                  wheel_mass=2.5,
-                 drive_mass=10.0,
+                 drive_mass=10.00,
                  wheel_impulse=5.0,
                  drive_impulse=2.0,
+                 drive_limits=False,
                  *args):
         super(Unicycle, self).__init__(fork_length,
                                        wheel_radius,
@@ -19,4 +20,5 @@ class Unicycle(Unicycle):
                                        drive_mass,
                                        wheel_impulse,
                                        drive_impulse,
+                                       drive_limits,
                                        *args)

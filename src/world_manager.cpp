@@ -5,7 +5,7 @@
 
 #include "world_manager.h"
 
-WorldManager::WorldManager ()
+WorldManager::WorldManager (bool is_graphical)
   : m_collision_shapes()
   , m_collision_conf(new btDefaultCollisionConfiguration())
   , m_dispatcher(new btCollisionDispatcher(m_collision_conf))
@@ -15,13 +15,22 @@ WorldManager::WorldManager ()
 {
   m_dynamics_world->setGravity(btVector3(0, -10, 0));
 
-  // Create ground
+  // Create ground. Use btStaticPlaneShape in GA evaluation to avoid issues
+  // involving unicycle falling off plane!
   {
-    btCollisionShape* groundShape = add_collision_shape(new btBoxShape(btVector3(50, 1, 50)));
+    btCollisionShape* groundShape;
+    btTransform groundTransform;
 
-    btTransform groundTransform(btQuaternion::getIdentity(), btVector3(0, -1, 0));
+    groundTransform.setIdentity();
 
-    add_rigid_body(btScalar(0.0), groundTransform, groundShape);
+    if (is_graphical) {
+      groundShape = add_collision_shape(new btBoxShape(btVector3(100, 1, 100)));
+      groundTransform.getOrigin() += btVector3(0, -1, 0);
+    } else {
+      groundShape = add_collision_shape(new btStaticPlaneShape(btVector3(0, 1, 0), 0));
+    }
+
+    add_rigid_body(0.0, groundTransform, groundShape);
   }
 }
 

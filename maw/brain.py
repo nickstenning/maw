@@ -10,6 +10,17 @@ class Brain(NN):
     mutation_rate = 0.1
     mutation_sigma = 2.0
 
+    def __init__(self, *args):
+        super(Brain, self).__init__(*args)
+
+        num_nonin_weights = 0
+
+        for i in xrange(len(self.weights)):
+            num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
+
+        self.mutation_rate = 1.0 / num_nonin_weights
+
+
     def mutate(self):
         for k, i, j in self.xweights:
             if random.random() < self.mutation_rate:

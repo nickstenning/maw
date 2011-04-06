@@ -26,7 +26,8 @@ public:
     btScalar wheel_mass,
     btScalar drive_mass,
     btScalar wheel_impulse,
-    btScalar drive_impulse
+    btScalar drive_impulse,
+    bool drive_limits
   );
 
   void add_to_manager(WorldManager& wm) throw(UnicycleAlreadyInitializedError);
@@ -39,6 +40,7 @@ public:
 
   void compute_state();
 
+  btVector3 const& origin() const;
   btScalar yaw() const;
   btScalar pitch() const;
   btScalar roll() const;
@@ -49,8 +51,7 @@ protected:
   void create_collision_shapes(WorldManager& wm);
   void create_rigid_bodies(WorldManager& wm, btTransform const& t);
 
-  btVector3 contact_point();
-
+  btVector3 contact_point() const;
 private:
   btScalar m_fork_length;
   btScalar m_wheel_radius;
@@ -76,6 +77,8 @@ private:
   btRigidBody* m_fork_body;
   btRigidBody* m_wheel_body;
   btRigidBody* m_drive_body;
+
+  bool m_drive_limits;
 };
 
 #endif // UNICYCLE_H

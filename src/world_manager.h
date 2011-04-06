@@ -13,24 +13,22 @@ class btCollisionShape;
 class WorldManager
 {
 public:
-  WorldManager();
+  WorldManager(bool is_graphical = false);
   virtual ~WorldManager();
 
   btDynamicsWorld* dynamics_world() const;
 
   btRigidBody* add_rigid_body(btScalar mass, const btTransform& transform, btCollisionShape* shape);
-
   btCollisionShape* add_collision_shape(btCollisionShape* shape);
 
   int step_simulation(btScalar timeStep);
-
-protected:
-  btAlignedObjectArray<btCollisionShape*> m_collision_shapes;
 
 private:
   // Uncopyable
   WorldManager(WorldManager const&);
   WorldManager& operator=(WorldManager const&);
+
+  btAlignedObjectArray<btCollisionShape*> m_collision_shapes;
 
   btDefaultCollisionConfiguration*     m_collision_conf;
   btCollisionDispatcher*               m_dispatcher;
