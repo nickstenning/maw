@@ -51,7 +51,8 @@ void NN::feed_layer (size_t index)
     recv[j] = 0.0; // Clear receiving neuron's previous state.
 
     for(size_t i = 0; i < send.size(); i += 1) {
-      recv[j] += send[i] * mx[i][j];
+      double bias = mx[i][recv.size()];
+      recv[j] += send[i] * bias * mx[i][j];
     }
 
     recv[j] = activation_function( recv[j] );
@@ -77,7 +78,7 @@ void NN::init_weights ()
   for (size_t i = 0; i < m_weights.size(); i += 1) {
     layer_t const& send = m_layers[i];
     layer_t const& recv = m_layers[i + 1];
-    m_weights[i] = weight_matrix_t(send.size(), weight_vector_t(recv.size(), 0));
+    m_weights[i] = weight_matrix_t(send.size(), weight_vector_t(recv.size() + 1, 0));
   }
 }
 

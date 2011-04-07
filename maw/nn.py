@@ -15,9 +15,11 @@ class NN(NN):
 
         for k in xrange(len(nn.weights)):
             line = spec[2 + k].split(' ')
+            send = nn.layers[k]
+            recv = nn.layers[k + 1]
 
-            for i in xrange(len(nn.layers[k])):
-                for j in xrange(len(nn.layers[k + 1])):
+            for i in xrange(len(send)):
+                for j in xrange(len(recv) + 1): # NB +1 for bias
                     nn.set_weight(k, i, j, float(line.pop(0)))
 
         return nn
@@ -46,7 +48,7 @@ class NN(NN):
     def xweights(self):
         for k in xrange(len(self.weights)):
             for i in xrange(len(self.layers[k])):
-                for j in xrange(len(self.layers[k + 1])):
+                for j in xrange(len(self.layers[k + 1]) + 1): # NB +1 for bias
                     yield (k, i, j)
 
     def set_weight(self, k, i, j, val):
@@ -69,3 +71,48 @@ class NN(NN):
                 return False
 
         return True
+
+import math
+import unittest
+
+class TestNN(unittest.TestCase):
+
+    def test_basics(self):
+        nn = NN([1,1])
+
+        nn.set_weights(1.0)
+        out = nn.feed([1])
+
+        self.assertEqual(out[0], 1)
+        self.assertEqual(nn.layers[1][0], math.tanh(1.0))
+
+        nn.set_weights(0.5)
+        nn.feed([0.5])
+
+        self.assertEqual(nn.layers[1][0], math.tanh(0.125))
+
+    def test_multiinput(self):
+        nn = NN([3,1])
+
+        nn.set_weights(1.0)
+        nn.feed([1, 1, 1])
+
+        self.assertEqual(nn.layers[1][0], math.tanh(3.0))
+
+    def test_bias(self):
+        nn = NN([1,2])
+
+        nn.set_weights(1.0)
+        nn.feed([1])
+
+        self.assertEqual(nn.layers[1][0], math.tanh(1.0))
+        self.assertEqual(nn.layers[1][1], math.tanh(1.0))
+
+        nn.set_weight(0, 0, 2, -0.5)
+        nn.feed([1])
+
+        self.assertEqual(nn.layers[1][0], math.tanh(-0.5))
+        self.assertEqual(nn.layers[1][1], math.tanh(-0.5))
+
+if __name__ == '__main__':
+    unittest.main()
