@@ -17,8 +17,6 @@ Unicycle::Unicycle(
   btScalar rider_mass,
   btScalar wheel_mass,
   btScalar drive_mass,
-  btScalar wheel_impulse,
-  btScalar drive_impulse,
   bool drive_limits
 ) : m_fork_length(fork_length)
   , m_wheel_radius(wheel_radius)
@@ -26,8 +24,6 @@ Unicycle::Unicycle(
   , m_rider_mass(rider_mass)
   , m_wheel_mass(wheel_mass)
   , m_drive_mass(drive_mass)
-  , m_wheel_impulse(wheel_impulse)
-  , m_drive_impulse(drive_impulse)
   , m_yaw(0)
   , m_pitch(0)
   , m_roll(0)
@@ -171,18 +167,18 @@ void Unicycle::add_to_manager(WorldManager& wm) throw(UnicycleAlreadyInitialized
   m_drive_body->setActivationState(DISABLE_DEACTIVATION);
 }
 
-void Unicycle::apply_wheel_impulse(btScalar dir)
+void Unicycle::apply_wheel_impulse(btScalar imp)
 {
-  btVector3 impulse_in_wheel(0, 0, dir * m_wheel_impulse);
+  btVector3 impulse_in_wheel(0, 0, imp);
   btVector3 impulse_in_world = m_wheel_body->getWorldTransform().getBasis() * impulse_in_wheel;
 
   m_wheel_body->applyTorqueImpulse(impulse_in_world);
   m_fork_body->applyTorqueImpulse(-impulse_in_world);
 }
 
-void Unicycle::apply_drive_impulse(btScalar dir)
+void Unicycle::apply_drive_impulse(btScalar imp)
 {
-  btVector3 impulse_in_drive(0, dir * m_drive_impulse, 0);
+  btVector3 impulse_in_drive(0, imp, 0);
   btVector3 impulse_in_world = m_drive_body->getWorldTransform().getBasis() * impulse_in_drive;
 
   m_drive_body->applyTorqueImpulse(impulse_in_world);

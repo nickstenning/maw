@@ -17,16 +17,19 @@ static Unicycle* uni;
 static NN* nn;
 
 static double sim_time = 0.0;
-static double target_wheel_velocity = 1.0;
+static double target_wheel_velocity = 0.0;
+
+static double wheel_impulse = 1.0;
+static double drive_impulse = 1.0;
 
 static void handle_key_event (unsigned char key, int, int)
 {
   switch (key) {
-    case 't': uni->apply_drive_impulse( 5.0); break;
-    case 'y': uni->apply_drive_impulse(-5.0); break;
+    case 't': uni->apply_drive_impulse( drive_impulse); break;
+    case 'y': uni->apply_drive_impulse(-drive_impulse); break;
 
-    case 'g': uni->apply_wheel_impulse( 5.0); break;
-    case 'h': uni->apply_wheel_impulse(-5.0); break;
+    case 'g': uni->apply_wheel_impulse( wheel_impulse); break;
+    case 'h': uni->apply_wheel_impulse(-wheel_impulse); break;
 
     case ' ': uni->reset(); break;
     case '.': uni->reset(Unicycle::reset_transform, true); break;
@@ -62,17 +65,20 @@ static void simulation_callback ()
 
   output = nn->feed(input);
 
-  uni->apply_drive_impulse(output[0]);
-  uni->apply_wheel_impulse(output[1]);
+  uni->apply_drive_impulse(output[0] * drive_impulse);
+  uni->apply_wheel_impulse(output[1] * wheel_impulse);
 }
 
-int simulate (Unicycle& user_uni, NN& user_nn)
+int simulate (Unicycle& user_uni, NN& user_nn, double wheel_imp, double drive_imp)
 {
   int argc = 1;
   char* argv[1] = {"maw_simulator"};
 
   uni = &user_uni;
   nn = &user_nn;
+
+  wheel_impulse = wheel_imp;
+  drive_impulse = drive_imp;
 
   uni->add_to_manager(wm);
   uni->reset();

@@ -6,4 +6,4 @@ __all__ = ['simulate']
 unicycle = Unicycle()
 
 def simulate(nn):
-    _simulate(unicycle, nn)
+    _simulate(unicycle, nn, unicycle.wheel_impulse, unicycle.drive_impulse)

@@ -78,8 +78,8 @@ class Evaluator(object):
 
         output = brain.feed(input)
 
-        self.uni.apply_drive_impulse(output[0] + random.gauss(0, 0.1))
-        self.uni.apply_wheel_impulse(output[1] + random.gauss(0, 0.1))
+        self.uni.apply_drive_impulse(self.uni.drive_impulse * output[0])
+        self.uni.apply_wheel_impulse(self.uni.wheel_impulse * output[1])
 
         self.world.step_simulation(DT)
 

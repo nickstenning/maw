@@ -25,15 +25,13 @@ public:
     btScalar rider_mass,
     btScalar wheel_mass,
     btScalar drive_mass,
-    btScalar wheel_impulse,
-    btScalar drive_impulse,
     bool drive_limits
   );
 
   void add_to_manager(WorldManager& wm) throw(UnicycleAlreadyInitializedError);
 
-  void apply_wheel_impulse(btScalar dir);
-  void apply_drive_impulse(btScalar dir);
+  void apply_wheel_impulse(btScalar imp);
+  void apply_drive_impulse(btScalar imp);
 
   void reset(btTransform const& t = Unicycle::reset_transform, bool randomize=false);
   void reset_position(btTransform const& t = Unicycle::reset_transform, bool randomize=false);
@@ -60,9 +58,6 @@ private:
   btScalar m_rider_mass;
   btScalar m_wheel_mass;
   btScalar m_drive_mass;
-
-  btScalar m_wheel_impulse;
-  btScalar m_drive_impulse;
 
   btScalar m_yaw;
   btScalar m_pitch;
