@@ -32,11 +32,13 @@ static void handle_key_event (unsigned char key, int, int)
     case 'h': uni->apply_wheel_impulse(-wheel_impulse); break;
 
     case ' ': uni->reset(); break;
-    case '.': uni->reset(Unicycle::reset_transform, true); break;
+    case '.': uni->reset(true); break;
 
-    // case 'c': target_wheel_velocity =  1.0; break;
-    // case 'x': target_wheel_velocity =  0.0; break;
-    // case 'z': target_wheel_velocity = -1.0; break;
+    case 'v': target_wheel_velocity =  1.0; break;
+    case 'c': target_wheel_velocity =  0.5; break;
+    case 'x': target_wheel_velocity =  0.0; break;
+    case 'z': target_wheel_velocity = -0.5; break;
+    case '`': target_wheel_velocity = -1.0; break;
 
     default: break;
   }
