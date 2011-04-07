@@ -1,8 +1,8 @@
 from bindings.unicycle import Unicycle
 
 class Unicycle(Unicycle):
-    drive_impulse = 10.0
-    wheel_impulse = 5.0
+    drive_impulse = 4.0
+    wheel_impulse = 2.0
 
     def __init__(self,
                  fork_length=4.0,

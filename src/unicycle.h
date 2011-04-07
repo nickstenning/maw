@@ -33,8 +33,8 @@ public:
   void apply_wheel_impulse(btScalar imp);
   void apply_drive_impulse(btScalar imp);
 
-  void reset(bool randomize=false, btTransform const& t = Unicycle::reset_transform);
-  void reset_position(bool randomize=false, btTransform const& t = Unicycle::reset_transform);
+  void reset(double random=0.0, btTransform const& t = Unicycle::reset_transform);
+  void reset_position(double random=0.0, btTransform const& t = Unicycle::reset_transform);
 
   void compute_state();
 

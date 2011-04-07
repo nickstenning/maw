@@ -19,19 +19,11 @@ class Evaluator(object):
 
         self.uni.add_to_manager(self.world)
 
-    def evaluate(self, brain, num_evaluations=3):
-        fitness = 0
-
-        for _ in xrange(num_evaluations):
-            fitness += self.evaluate_once(brain)
-
-        return fitness / num_evaluations
-
-    def evaluate_once(self, brain):
+    def evaluate(self, brain):
         fitness = 0
 
         self.time = 0
-        self.uni.reset()
+        self.uni.reset(0.05)
         self.uni.compute_state()
 
         while (self.time < MAX_EVAL_TIME):
@@ -46,12 +38,13 @@ class Evaluator(object):
 
             if in_yaw_threshold and in_pitch_threshold and in_roll_threshold:
                 score = 0
+                # score += abs(self.uni.yaw())
                 score += abs(self.uni.pitch())
                 score += abs(self.uni.roll())
-                score += abs(self.uni.yaw_velocity() - self.target_yaw_velocity)
+                # score += 0.1 * abs(self.uni.yaw_velocity() - self.target_yaw_velocity)
                 score += abs(self.uni.wheel_velocity() - self.target_wheel_velocity)
 
-                fitness += DT * dirac_delta(score, 2)
+                fitness += DT * dirac_delta(score)
             else:
                 break # Failure. No need to evaluate further.
 
@@ -69,8 +62,12 @@ class Evaluator(object):
 
         output = brain.feed(input)
 
-        self.uni.apply_drive_impulse(self.uni.drive_impulse * output[0])
-        self.uni.apply_wheel_impulse(self.uni.wheel_impulse * output[1])
+        self.uni.apply_drive_impulse(
+            self.uni.drive_impulse * output[0] + random.gauss(0, 0.3)
+        )
+        self.uni.apply_wheel_impulse(
+            self.uni.wheel_impulse * output[1] + random.gauss(0, 0.3)
+        )
 
         self.world.step_simulation(DT)
         self.uni.compute_state()

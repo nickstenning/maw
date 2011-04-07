@@ -16,10 +16,9 @@ class Brain(NN):
         num_nonin_weights = 0
 
         for i in xrange(len(self.weights)):
-            # NB +1 for bias weight
-            num_nonin_weights += len(self.layers[i]) * (len(self.layers[i + 1]) + 1)
+            num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
 
-        self.mutation_rate = 10.0 / num_nonin_weights
+        self.mutation_rate = 2.0 / num_nonin_weights
 
     def mutate(self):
         for k, i, j in self.xweights:

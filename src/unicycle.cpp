@@ -185,11 +185,11 @@ void Unicycle::apply_drive_impulse(btScalar imp)
   m_fork_body->applyTorqueImpulse(-impulse_in_world);
 }
 
-void Unicycle::reset(bool randomize, btTransform const& trans)
+void Unicycle::reset(double random, btTransform const& trans)
 {
   btVector3 zeros(0, 0, 0);
 
-  reset_position(randomize, trans);
+  reset_position(random, trans);
 
   m_wheel_body->setLinearVelocity(zeros);
   m_wheel_body->setAngularVelocity(zeros);
@@ -201,15 +201,15 @@ void Unicycle::reset(bool randomize, btTransform const& trans)
   m_drive_body->setAngularVelocity(zeros);
 }
 
-void Unicycle::reset_position(bool randomize, btTransform const& trans)
+void Unicycle::reset_position(double random, btTransform const& trans)
 {
   btTransform wheel_trans = trans;
   btTransform fork_trans = trans;
   btTransform drive_trans = trans;
 
-  if (randomize) {
+  if (random > 0.0) {
     btVector3 random_vec(util::rand(-1,1), util::rand(-1,1), util::rand(-1,1));
-    btScalar random_ang(util::rand(0, 0.1));
+    btScalar random_ang(util::rand(0, random));
 
     btQuaternion rot(random_vec, random_ang);
 

@@ -32,7 +32,7 @@ static void handle_key_event (unsigned char key, int, int)
     case 'h': uni->apply_wheel_impulse(-wheel_impulse); break;
 
     case ' ': uni->reset(); break;
-    case '.': uni->reset(true); break;
+    case '.': uni->reset(0.1); break;
 
     case 'v': target_wheel_velocity =  1.0; break;
     case 'c': target_wheel_velocity =  0.5; break;
