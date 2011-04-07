@@ -92,6 +92,7 @@ setup(
     entry_points = {
         'console_scripts': [
             'nngen = maw.command.nngen:main',
+            'nnfeed = maw.command.nnfeed:main',
             'nn2dot = maw.command.nn2dot:main',
             'evolve = maw.command.evolve:main',
             'simulate_unicycle = maw.command.simulate_unicycle:main',
