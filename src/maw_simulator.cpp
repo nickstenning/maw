@@ -59,7 +59,7 @@ static void simulation_callback ()
   std::vector<double> input;
   std::vector<int> output;
 
-  input.push_back(uni->yaw());
+  // input.push_back(uni->yaw());
   input.push_back(uni->pitch());
   input.push_back(uni->roll());
   input.push_back(uni->wheel_velocity() - target_wheel_velocity);

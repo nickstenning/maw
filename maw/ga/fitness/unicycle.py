@@ -10,6 +10,7 @@ MAX_EVAL_TIME   = 100.0
 YAW_SCORE_ANG   = math.pi - 0.2
 PITCH_SCORE_ANG = math.pi / 12.0
 ROLL_SCORE_ANG  = math.pi / 12.0
+MAX_WHEELVEL = 4.0
 
 class Evaluator(object):
 
@@ -35,14 +36,14 @@ class Evaluator(object):
             in_yaw_threshold = abs(self.uni.yaw()) < YAW_SCORE_ANG
             in_pitch_threshold = abs(self.uni.pitch()) < PITCH_SCORE_ANG
             in_roll_threshold = abs(self.uni.roll()) < ROLL_SCORE_ANG
+            in_wheelvel_threshold = abs(self.uni.wheel_velocity()) < MAX_WHEELVEL
 
-            if in_yaw_threshold and in_pitch_threshold and in_roll_threshold:
+            if in_yaw_threshold and in_pitch_threshold and in_roll_threshold and in_wheelvel_threshold:
                 score = 0
-                # score += abs(self.uni.yaw())
                 score += abs(self.uni.pitch())
                 score += abs(self.uni.roll())
-                # score += 0.1 * abs(self.uni.yaw_velocity() - self.target_yaw_velocity)
-                score += abs(self.uni.wheel_velocity() - self.target_wheel_velocity)
+                score += 0.2 * abs(self.uni.yaw_velocity() - self.target_yaw_velocity)
+                # score += abs(self.uni.wheel_velocity() - self.target_wheel_velocity)
 
                 fitness += DT * dirac_delta(score)
             else:
@@ -53,7 +54,6 @@ class Evaluator(object):
     def step(self, brain):
 
         input = [
-            self.uni.yaw(),
             self.uni.pitch(),
             self.uni.roll(),
             self.uni.wheel_velocity() - self.target_wheel_velocity,
