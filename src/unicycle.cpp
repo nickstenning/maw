@@ -213,7 +213,7 @@ void Unicycle::reset_position(btTransform const& trans, bool randomize)
 
   if (randomize) {
     btVector3 random_vec(util::rand(-1,1), util::rand(-1,1), util::rand(-1,1));
-    btScalar random_ang(util::rand(0, 0.2));
+    btScalar random_ang(util::rand(0, 0.1));
 
     btQuaternion rot(random_vec, random_ang);
 
@@ -291,11 +291,11 @@ void Unicycle::compute_state()
     m_wheel_velocity = wheel_vel_in_wheel.getZ();
   }
 
-  // Yaw velocity about wheel axis
+  // Yaw velocity about fork vertical axis
   {
     btVector3 fork_vel = m_fork_body->getAngularVelocity();
     btVector3 fork_vel_in_fork = fork_vel * fork_trans.getBasis();
-    m_yaw_velocity = fork_vel_in_fork.getZ();
+    m_yaw_velocity = fork_vel_in_fork.getY();
   }
 }
 
