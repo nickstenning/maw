@@ -7,7 +7,7 @@ class Unicycle(Unicycle):
     def __init__(self,
                  fork_length=4.0,
                  wheel_radius=2.0,
-                 drive_radius=1.8,
+                 drive_radius=1.5,
                  rider_mass=5.00,
                  wheel_mass=2.5,
                  drive_mass=5.00,

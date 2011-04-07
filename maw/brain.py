@@ -7,8 +7,8 @@ class BrainIncompatibleError(TypeError):
     pass
 
 class Brain(NN):
-    mutation_rate = 0.1
-    mutation_sigma = 2.0
+    mutation_rate = None
+    mutation_sigma = 5.0
 
     def __init__(self, *args):
         super(Brain, self).__init__(*args)
@@ -16,10 +16,10 @@ class Brain(NN):
         num_nonin_weights = 0
 
         for i in xrange(len(self.weights)):
-            num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
+            # NB +1 for bias weight
+            num_nonin_weights += len(self.layers[i]) * (len(self.layers[i + 1]) + 1)
 
-        self.mutation_rate = 1.0 / num_nonin_weights
-
+        self.mutation_rate = 10.0 / num_nonin_weights
 
     def mutate(self):
         for k, i, j in self.xweights:

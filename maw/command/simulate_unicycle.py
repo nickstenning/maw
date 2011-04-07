@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import sys
+
 from maw.nn import NN
 from maw.simulate.unicycle import simulate
 

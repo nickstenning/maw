@@ -9,7 +9,7 @@ DT              = 0.02
 MAX_EVAL_TIME   = 100.0
 YAW_SCORE_ANG   = math.pi - 0.2
 PITCH_SCORE_ANG = math.pi / 12.0
-ROLL_SCORE_ANG  = math.pi / 24.0
+ROLL_SCORE_ANG  = math.pi / 12.0
 
 class Evaluator(object):
 
@@ -35,16 +35,8 @@ class Evaluator(object):
         self.uni.compute_state()
 
         while (self.time < MAX_EVAL_TIME):
-
             self.target_yaw_velocity = 0.0
-            self.target_wheel_velocity = 1.0
-
-            # if self.time < MAX_EVAL_TIME / 3.0:
-            #     self.target_wheel_velocity = 1.0
-            # elif self.time < (2.0 * MAX_EVAL_TIME) / 3.0:
-            #     self.target_wheel_velocity = 0.0
-            # else:
-            #     self.target_wheel_velocity = -1.0
+            self.target_wheel_velocity = 0.0
 
             self.step(brain)
 
@@ -66,7 +58,6 @@ class Evaluator(object):
         return fitness
 
     def step(self, brain):
-        self.uni.compute_state()
 
         input = [
             self.uni.yaw(),
@@ -82,5 +73,6 @@ class Evaluator(object):
         self.uni.apply_wheel_impulse(self.uni.wheel_impulse * output[1])
 
         self.world.step_simulation(DT)
+        self.uni.compute_state()
 
         self.time += DT
