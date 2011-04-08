@@ -24,12 +24,17 @@ class Evaluator(object):
         fitness = 0
 
         self.time = 0
-        self.uni.reset(0.05)
+        self.uni.reset(0.1)
         self.uni.compute_state()
 
         while (self.time < MAX_EVAL_TIME):
             self.target_yaw_velocity = 0.0
             self.target_wheel_velocity = 0.0
+
+            if self.time > MAX_EVAL_TIME / 3.0:
+                 self.target_yaw_velocity = 1.0
+            elif self.time > 2.0 * MAX_EVAL_TIME / 3.0:
+                 self.target_yaw_velocity = -1.0
 
             self.step(brain)
 
@@ -42,7 +47,7 @@ class Evaluator(object):
                 score = 0
                 score += abs(self.uni.pitch())
                 score += abs(self.uni.roll())
-                score += 0.2 * abs(self.uni.yaw_velocity() - self.target_yaw_velocity)
+                score += abs(self.uni.yaw_velocity() - self.target_yaw_velocity)
                 # score += abs(self.uni.wheel_velocity() - self.target_wheel_velocity)
 
                 fitness += DT * dirac_delta(score)
@@ -63,10 +68,10 @@ class Evaluator(object):
         output = brain.feed(input)
 
         self.uni.apply_drive_impulse(
-            self.uni.drive_impulse * output[0] + random.gauss(0, 0.3)
+            self.uni.drive_impulse * output[0] + random.gauss(0, 0.4)
         )
         self.uni.apply_wheel_impulse(
-            self.uni.wheel_impulse * output[1] + random.gauss(0, 0.3)
+            self.uni.wheel_impulse * output[1] + random.gauss(0, 0.4)
         )
 
         self.world.step_simulation(DT)
