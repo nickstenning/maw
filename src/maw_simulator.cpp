@@ -17,8 +17,6 @@ static Unicycle* uni;
 static NN* nn;
 
 static double sim_time = 0.0;
-static double target_yaw_velocity = 0.0;
-static double target_wheel_velocity = 0.0;
 
 static double wheel_impulse = 1.0;
 static double drive_impulse = 1.0;
@@ -32,18 +30,8 @@ static void handle_key_event (unsigned char key, int, int)
     case 'g': uni->apply_wheel_impulse( 3.0 * wheel_impulse); break;
     case 'h': uni->apply_wheel_impulse(-3.0 * wheel_impulse); break;
 
-    case 'j': target_yaw_velocity = -1.0; break;
-    case 'k': target_yaw_velocity =  0.0; break;
-    case 'l': target_yaw_velocity =  1.0; break;
-
     case ' ': uni->reset(); break;
     case '.': uni->reset(0.1); break;
-
-    case 'v': target_wheel_velocity =  1.0; break;
-    case 'c': target_wheel_velocity =  0.5; break;
-    case 'x': target_wheel_velocity =  0.0; break;
-    case 'z': target_wheel_velocity = -0.5; break;
-    case '`': target_wheel_velocity = -1.0; break;
 
     default: break;
   }
@@ -68,11 +56,10 @@ static void simulation_callback ()
     std::vector<double> input;
     std::vector<int> output;
 
-    // input.push_back(uni->yaw());
     input.push_back(uni->pitch());
     input.push_back(uni->roll());
-    input.push_back(uni->wheel_velocity() - target_wheel_velocity);
-    input.push_back(uni->yaw_velocity() - target_yaw_velocity);
+    input.push_back(uni->wheel_velocity());
+    input.push_back(uni->yaw_velocity());
 
     output = nn->feed(input);
 

@@ -119,6 +119,7 @@ void Unicycle::create_rigid_bodies(WorldManager& wm, btTransform const& trans)
   // Create the drive wheel.
   {
     m_drive_body = wm.add_rigid_body(m_drive_mass, drive_trans, m_drive_shape);
+    m_drive_body->setDamping(0.0, 0.2);
   }
 }
 
