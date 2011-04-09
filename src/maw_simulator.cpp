@@ -58,7 +58,7 @@ static void simulation_callback ()
   std::cout << sim_time << "\t"
             << uni->yaw() << "\t" << uni->pitch() << "\t" << uni->roll() << "\t"
             << uni->wheel_velocity() << "\t" << uni->yaw_velocity() << "\t"
-            << uni->kinetic_energy() << "\t" << uni->potential_energy() << "\n";
+            << uni->kinetic_energy() << "\t" << uni->potential_energy() << "\t";
 
   app.cameraTargetPosition(uni->origin());
 
@@ -78,7 +78,14 @@ static void simulation_callback ()
 
     uni->apply_drive_impulse(output[0] * drive_impulse);
     uni->apply_wheel_impulse(output[1] * wheel_impulse);
+
+    std::cout << output[0] * drive_impulse << "\t";
+    std::cout << output[1] * wheel_impulse;
+  } else {
+    std::cout << "0\t0";
   }
+
+  std::cout << "\n";
 }
 
 int simulate (Unicycle& user_uni, NN& user_nn, double wheel_imp, double drive_imp)
@@ -98,6 +105,8 @@ int simulate (Unicycle& user_uni, NN& user_nn, double wheel_imp, double drive_im
   app.dynamics_world(wm.dynamics_world());
   app.register_key_handler(handle_key_event);
   app.register_step_callback(simulation_callback);
+
+  std::cout << "# t\tyaw\tpitch\troll\twheel_omega\tyaw_omega\tT\tV\tdrive_imp\twheel_imp\n";
 
   return glutMain(argc, argv, 800, 600, "Missing A Wheel", &app);
 }
