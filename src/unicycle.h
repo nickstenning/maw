@@ -44,6 +44,7 @@ public:
   btScalar roll() const;
   btScalar wheel_velocity() const;
   btScalar yaw_velocity() const;
+  btScalar drive_velocity() const;
 
   btScalar kinetic_energy() const;
   btScalar potential_energy() const;
@@ -69,6 +70,7 @@ private:
 
   btScalar m_wheel_velocity;
   btScalar m_yaw_velocity;
+  btScalar m_drive_velocity;
 
   btCompoundShape* m_fork_shape;
   btCylinderShapeZ* m_wheel_shape;

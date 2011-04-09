@@ -29,6 +29,7 @@ Unicycle::Unicycle(
   , m_roll(0)
   , m_wheel_velocity(0)
   , m_yaw_velocity(0)
+  , m_drive_velocity(0)
   , m_fork_shape(NULL)
   , m_wheel_shape(NULL)
   , m_drive_shape(NULL)
@@ -292,6 +293,13 @@ void Unicycle::compute_state()
     btVector3 fork_vel = m_fork_body->getAngularVelocity();
     btVector3 fork_vel_in_fork = fork_vel * fork_trans.getBasis();
     m_yaw_velocity = fork_vel_in_fork.getY();
+
+  }
+  // Drive velocity about fork vertical axis
+  {
+    btVector3 drive_vel = m_drive_body->getAngularVelocity();
+    btVector3 drive_vel_in_fork = drive_vel * fork_trans.getBasis();
+    m_drive_velocity = drive_vel_in_fork.getY();
   }
 }
 
@@ -359,3 +367,7 @@ btScalar Unicycle::yaw_velocity() const
   return m_yaw_velocity;
 }
 
+btScalar Unicycle::drive_velocity() const
+{
+  return m_drive_velocity;
+}
