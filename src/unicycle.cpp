@@ -295,6 +295,40 @@ void Unicycle::compute_state()
   }
 }
 
+
+btScalar Unicycle::kinetic_energy() const
+{
+  btScalar lke = 0;
+  lke += 0.5 * m_rider_mass * m_fork_body->getLinearVelocity().length2();
+  lke += 0.5 * m_drive_mass * m_drive_body->getLinearVelocity().length2();
+  lke += 0.5 * m_wheel_mass * m_wheel_body->getLinearVelocity().length2();
+
+  btScalar rke = 0;
+  btVector3 w_fork = m_fork_body->getAngularVelocity();
+  btVector3 w_drive = m_drive_body->getAngularVelocity();
+  btVector3 w_wheel = m_wheel_body->getAngularVelocity();
+  rke += 0.5 * w_fork.dot(m_fork_body->getInvInertiaTensorWorld().inverse() * w_fork);
+  rke += 0.5 * w_drive.dot(m_drive_body->getInvInertiaTensorWorld().inverse() * w_drive);
+  rke += 0.5 * w_wheel.dot(m_wheel_body->getInvInertiaTensorWorld().inverse() * w_wheel);
+
+  return lke + rke;
+}
+
+btScalar Unicycle::potential_energy() const
+{
+  btScalar mh = 0;
+  btScalar g = 10;
+  mh += m_rider_mass * m_fork_body->getWorldTransform().getOrigin().getY();
+  mh += m_drive_mass * m_drive_body->getWorldTransform().getOrigin().getY();
+  mh += m_wheel_mass * m_wheel_body->getWorldTransform().getOrigin().getY();
+  return mh * g;
+}
+
+btScalar Unicycle::energy() const
+{
+  return potential_energy() + kinetic_energy();
+}
+
 btVector3 const& Unicycle::origin() const
 {
   return m_wheel_body->getWorldTransform().getOrigin();

@@ -57,7 +57,8 @@ static void simulation_callback ()
 
   std::cout << sim_time << "\t"
             << uni->yaw() << "\t" << uni->pitch() << "\t" << uni->roll() << "\t"
-            << uni->wheel_velocity() << "\t" << uni->yaw_velocity() << "\n";
+            << uni->wheel_velocity() << "\t" << uni->yaw_velocity() << "\t"
+            << uni->kinetic_energy() << "\t" << uni->potential_energy() << "\n";
 
   app.cameraTargetPosition(uni->origin());
 

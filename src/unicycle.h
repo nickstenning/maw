@@ -45,6 +45,10 @@ public:
   btScalar wheel_velocity() const;
   btScalar yaw_velocity() const;
 
+  btScalar kinetic_energy() const;
+  btScalar potential_energy() const;
+  btScalar energy() const;
+
 protected:
   void create_collision_shapes(WorldManager& wm);
   void create_rigid_bodies(WorldManager& wm, btTransform const& t);
