@@ -27,9 +27,10 @@ Unicycle::Unicycle(
   , m_yaw(0)
   , m_pitch(0)
   , m_roll(0)
-  , m_wheel_velocity(0)
   , m_yaw_velocity(0)
-  , m_drive_velocity(0)
+  , m_roll_velocity(0)
+  , m_pitch_velocity(0)
+  , m_wheel_velocity(0)
   , m_fork_shape(NULL)
   , m_wheel_shape(NULL)
   , m_drive_shape(NULL)
@@ -245,7 +246,7 @@ btVector3 Unicycle::contact_point() const
   return contact_point;
 }
 
-void Unicycle::compute_state()
+void Unicycle::compute_state(btScalar timestep)
 {
   btTransform wheel_trans = m_wheel_body->getWorldTransform();
   btTransform fork_trans = m_fork_body->getWorldTransform();
@@ -289,19 +290,25 @@ void Unicycle::compute_state()
     m_wheel_velocity = wheel_vel_in_wheel.getZ();
   }
 
-  // Yaw velocity about fork vertical axis
+  // Yaw/pitch/roll velocity
   {
-    btVector3 fork_vel = m_fork_body->getAngularVelocity();
-    btVector3 fork_vel_in_fork = fork_vel * fork_trans.getBasis();
-    m_yaw_velocity = fork_vel_in_fork.getY();
+    // Need to be a bit careful with yaw velocity as angular wrap-round causes
+    // problems.
+    if (m_yaw_velocity < 0 && m_last_yaw < 0 && m_yaw > 0) {
+      m_yaw_velocity = (m_yaw - (m_last_yaw + 2 * M_PI)) / timestep;
+    } else if (m_yaw_velocity > 0 && m_last_yaw > 0 && m_yaw < 0) {
+      m_yaw_velocity = (m_yaw - (m_last_yaw - 2 * M_PI)) / timestep;
+    } else {
+      m_yaw_velocity = (m_yaw - m_last_yaw) / timestep;
+    }
 
+    m_pitch_velocity = (m_pitch - m_last_pitch) / timestep;
+    m_roll_velocity = (m_roll - m_last_roll) / timestep;
   }
-  // Drive velocity about fork vertical axis
-  {
-    btVector3 drive_vel = m_drive_body->getAngularVelocity();
-    btVector3 drive_vel_in_fork = drive_vel * fork_trans.getBasis();
-    m_drive_velocity = drive_vel_in_fork.getY();
-  }
+
+  m_last_yaw = m_yaw;
+  m_last_pitch = m_pitch;
+  m_last_roll = m_roll;
 }
 
 
@@ -343,32 +350,12 @@ btVector3 const& Unicycle::origin() const
   return m_wheel_body->getWorldTransform().getOrigin();
 }
 
-btScalar Unicycle::yaw() const
-{
-  return m_yaw;
-}
+btScalar Unicycle::yaw() const { return m_yaw; }
+btScalar Unicycle::pitch() const { return m_pitch; }
+btScalar Unicycle::roll() const { return m_roll; }
 
-btScalar Unicycle::pitch() const
-{
-  return m_pitch;
-}
+btScalar Unicycle::wheel_velocity() const { return m_wheel_velocity; }
+btScalar Unicycle::yaw_velocity() const { return m_yaw_velocity; }
+btScalar Unicycle::pitch_velocity() const { return m_pitch_velocity; }
+btScalar Unicycle::roll_velocity() const { return m_roll_velocity; }
 
-btScalar Unicycle::roll() const
-{
-  return m_roll;
-}
-
-btScalar Unicycle::wheel_velocity() const
-{
-  return m_wheel_velocity;
-}
-
-btScalar Unicycle::yaw_velocity() const
-{
-  return m_yaw_velocity;
-}
-
-btScalar Unicycle::drive_velocity() const
-{
-  return m_drive_velocity;
-}

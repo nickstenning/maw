@@ -1,6 +1,7 @@
 #ifndef WORLD_MANAGER_H
 #define WORLD_MANAGER_H
 
+#include <LinearMath/btScalar.h>
 #include <LinearMath/btAlignedObjectArray.h>
 
 class btDefaultCollisionConfiguration;

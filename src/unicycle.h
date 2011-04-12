@@ -36,7 +36,7 @@ public:
   void reset(double random=0.0, btTransform const& t = Unicycle::reset_transform);
   void reset_position(double random=0.0, btTransform const& t = Unicycle::reset_transform);
 
-  void compute_state();
+  void compute_state(btScalar timestep);
 
   btVector3 const& origin() const;
   btScalar yaw() const;
@@ -44,7 +44,8 @@ public:
   btScalar roll() const;
   btScalar wheel_velocity() const;
   btScalar yaw_velocity() const;
-  btScalar drive_velocity() const;
+  btScalar pitch_velocity() const;
+  btScalar roll_velocity() const;
 
   btScalar kinetic_energy() const;
   btScalar potential_energy() const;
@@ -67,10 +68,14 @@ private:
   btScalar m_yaw;
   btScalar m_pitch;
   btScalar m_roll;
+  btScalar m_last_yaw;
+  btScalar m_last_pitch;
+  btScalar m_last_roll;
 
   btScalar m_wheel_velocity;
   btScalar m_yaw_velocity;
-  btScalar m_drive_velocity;
+  btScalar m_pitch_velocity;
+  btScalar m_roll_velocity;
 
   btCompoundShape* m_fork_shape;
   btCylinderShapeZ* m_wheel_shape;

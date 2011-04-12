@@ -25,7 +25,6 @@ class Evaluator(object):
 
         self.time = 0
         self.uni.reset(0.05)
-        self.uni.compute_state()
 
         while (self.time < MAX_EVAL_TIME):
             self.step(brain)
@@ -40,7 +39,6 @@ class Evaluator(object):
                 score += abs(self.uni.roll())
                 score += abs(self.uni.yaw_velocity())
                 score += 0.1 * abs(self.uni.wheel_velocity())
-                score += 0.1 * abs(self.uni.drive_velocity())
 
                 fitness += DT * dirac_delta(score)
             else:
@@ -67,6 +65,5 @@ class Evaluator(object):
         )
 
         self.world.step_simulation(DT)
-        self.uni.compute_state()
-
+        self.uni.compute_state(DT)
         self.time += DT

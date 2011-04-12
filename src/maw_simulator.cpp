@@ -17,6 +17,7 @@ static Unicycle* uni;
 static NN* nn;
 
 static double sim_time = 0.0;
+static const double dt = app.getDeltaTimeMicroseconds() / 1e6;
 
 static double wheel_impulse = 1.0;
 static double drive_impulse = 1.0;
@@ -39,13 +40,14 @@ static void handle_key_event (unsigned char key, int, int)
 
 static void simulation_callback ()
 {
-  sim_time += app.getDeltaTimeMicroseconds() / 1e6;
+  sim_time += dt;
 
-  uni->compute_state();
+  uni->compute_state(dt);
 
   std::cout << sim_time << "\t"
             << uni->yaw() << "\t" << uni->pitch() << "\t" << uni->roll() << "\t"
-            << uni->wheel_velocity() << "\t" << uni->yaw_velocity() << "\t"
+            << uni->yaw_velocity() << "\t" << uni->pitch_velocity() << "\t" << uni->roll_velocity() << "\t"
+            << uni->wheel_velocity() << "\t"
             << uni->kinetic_energy() << "\t" << uni->potential_energy() << "\t";
 
   app.cameraTargetPosition(uni->origin());
@@ -93,7 +95,7 @@ int simulate (Unicycle& user_uni, NN& user_nn, double wheel_imp, double drive_im
   app.register_key_handler(handle_key_event);
   app.register_step_callback(simulation_callback);
 
-  std::cout << "# t\tyaw\tpitch\troll\twheel_omega\tyaw_omega\tT\tV\tdrive_imp\twheel_imp\n";
+  std::cout << "# t\tyaw\tpitch\troll\tyaw_velocity\tpitch_velocity\troll_velocity\twheel_velocity\tT\tV\tdrive_imp\twheel_imp\n";
 
   return glutMain(argc, argv, 800, 600, "Missing A Wheel", &app);
 }
