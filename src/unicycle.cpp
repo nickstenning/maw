@@ -10,6 +10,9 @@
 
 const btTransform Unicycle::reset_transform = btTransform(btQuaternion::getIdentity());
 
+const btScalar Unicycle::fric_static = 10.0;
+const btScalar Unicycle::fric_kinetic = 2.0;
+
 Unicycle::Unicycle(
   btScalar fork_length,
   btScalar wheel_radius,
@@ -306,8 +309,24 @@ void Unicycle::compute_state(btScalar timestep)
 
   m_last_pitch = m_pitch;
   m_last_roll = m_roll;
+
+  apply_friction(timestep);
 }
 
+void Unicycle::apply_friction(btScalar timestep)
+{
+  // We calculate friction on the basis of the yaw velocity, which would
+  // ideally be calculated at the wheel. It's not, and is calculated about
+  // the fork. As a result, we apply the restoring torques to the fork as well
+  // in order to avoid adding energy to the system.
+
+  btScalar torque = - fric_kinetic * m_yaw_velocity - fric_static * ((m_yaw_velocity > 0) - (m_yaw_velocity < 0));
+
+  btVector3 impulse_in_fork(0, timestep * torque, 0);
+  btVector3 impulse_in_world = m_fork_body->getWorldTransform().getBasis() * impulse_in_fork;
+
+  m_fork_body->applyTorqueImpulse(impulse_in_world);
+}
 
 btScalar Unicycle::kinetic_energy() const
 {

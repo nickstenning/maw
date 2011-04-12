@@ -18,6 +18,9 @@ public:
 
   static const btTransform reset_transform;
 
+  static const btScalar fric_static;
+  static const btScalar fric_kinetic;
+
   Unicycle(
     btScalar fork_length,
     btScalar wheel_radius,
@@ -54,6 +57,7 @@ public:
 protected:
   void create_collision_shapes(WorldManager& wm);
   void create_rigid_bodies(WorldManager& wm, btTransform const& t);
+  void apply_friction(btScalar timestep);
 
   btVector3 contact_point() const;
 private:
