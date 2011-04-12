@@ -18,7 +18,7 @@ class Brain(NN):
         for i in xrange(len(self.weights)):
             num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
 
-        self.mutation_rate = 1.5 / num_nonin_weights
+        self.mutation_rate = 2.0 / num_nonin_weights
 
     def mutate(self):
         for k, i, j in self.xweights:

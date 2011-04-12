@@ -290,23 +290,20 @@ void Unicycle::compute_state(btScalar timestep)
     m_wheel_velocity = wheel_vel_in_wheel.getZ();
   }
 
-  // Yaw/pitch/roll velocity
+  // Yaw angular velocity about fork vertical (approximation to real yaw
+  // velocity).
   {
-    // Need to be a bit careful with yaw velocity as angular wrap-round causes
-    // problems.
-    if (m_yaw_velocity < 0 && m_last_yaw < 0 && m_yaw > 0) {
-      m_yaw_velocity = (m_yaw - (m_last_yaw + 2 * M_PI)) / timestep;
-    } else if (m_yaw_velocity > 0 && m_last_yaw > 0 && m_yaw < 0) {
-      m_yaw_velocity = (m_yaw - (m_last_yaw - 2 * M_PI)) / timestep;
-    } else {
-      m_yaw_velocity = (m_yaw - m_last_yaw) / timestep;
-    }
+    btVector3 fork_vel = m_fork_body->getAngularVelocity();
+    btVector3 fork_vel_in_fork = fork_vel * fork_trans.getBasis();
+    m_yaw_velocity = fork_vel_in_fork.getY();
+  }
 
+  // Pitch/roll velocity
+  {
     m_pitch_velocity = (m_pitch - m_last_pitch) / timestep;
     m_roll_velocity = (m_roll - m_last_roll) / timestep;
   }
 
-  m_last_yaw = m_yaw;
   m_last_pitch = m_pitch;
   m_last_roll = m_roll;
 }

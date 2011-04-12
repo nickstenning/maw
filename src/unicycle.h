@@ -68,7 +68,7 @@ private:
   btScalar m_yaw;
   btScalar m_pitch;
   btScalar m_roll;
-  btScalar m_last_yaw;
+
   btScalar m_last_pitch;
   btScalar m_last_roll;
 
