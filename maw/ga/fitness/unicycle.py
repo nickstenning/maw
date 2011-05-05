@@ -24,7 +24,7 @@ class Evaluator(object):
         fitness = 0
 
         self.time = 0
-        self.uni.reset(0.1)
+        self.uni.reset(0)
 
         while (self.time < MAX_EVAL_TIME):
             self.step(brain)
@@ -59,10 +59,10 @@ class Evaluator(object):
         output = brain.feed(input)
 
         self.uni.apply_drive_impulse(
-            self.uni.drive_impulse * output[0] #+ random.gauss(0, 0.5)
+            self.uni.drive_impulse * output[0] + random.gauss(0, 0.1)
         )
         self.uni.apply_wheel_impulse(
-            self.uni.wheel_impulse * output[1] #+ random.gauss(0, 0.5)
+            self.uni.wheel_impulse * output[1] + random.gauss(0, 0.1)
         )
 
         self.world.step_simulation(DT)
