@@ -25,11 +25,11 @@ static double drive_impulse = 1.0;
 static void handle_key_event (unsigned char key, int, int)
 {
   switch (key) {
-    case 't': uni->apply_drive_impulse( 3.0 * drive_impulse); break;
-    case 'y': uni->apply_drive_impulse(-3.0 * drive_impulse); break;
+    case 't': uni->apply_drive_impulse( 1.0 * drive_impulse); break;
+    case 'y': uni->apply_drive_impulse(-1.0 * drive_impulse); break;
 
-    case 'g': uni->apply_wheel_impulse( 3.0 * wheel_impulse); break;
-    case 'h': uni->apply_wheel_impulse(-3.0 * wheel_impulse); break;
+    case 'g': uni->apply_wheel_impulse( 1.0 * wheel_impulse); break;
+    case 'h': uni->apply_wheel_impulse(-1.0 * wheel_impulse); break;
 
     case ' ': uni->reset(); break;
     case '.': uni->reset(0.1); break;
@@ -55,8 +55,8 @@ static void simulation_callback ()
   bool attempt_control = abs(uni->pitch()) < M_PI / 4.0 && abs(uni->roll()) < M_PI / 4.0;
 
   if (attempt_control) {
-    std::vector<double> input;
-    std::vector<int> output;
+    NN::input_t input;
+    NN::output_t output;
 
     input.push_back(uni->pitch());
     input.push_back(uni->roll());

@@ -2,7 +2,7 @@ import random
 from util import roulette_pick
 
 ELITISM = 0.1
-CROSSOVER_PROB = 0.3
+CROSSOVER_PROB = 0.2
 
 class GA(object):
     generation = 0

@@ -1,16 +1,19 @@
 from bindings.unicycle import Unicycle
 
+sf = 4
+person = 10.0
+
 class Unicycle(Unicycle):
-    drive_impulse = 4.0
-    wheel_impulse = 2.0
+    drive_impulse = sf * 50 * 0.02
+    wheel_impulse = sf * 100 * 0.02
 
     def __init__(self,
-                 fork_length=4.0,
-                 wheel_radius=2.0,
-                 drive_radius=1.5,
-                 rider_mass=5.00,
-                 wheel_mass=2.5,
-                 drive_mass=5.00,
+                 fork_length=sf * 1.0,
+                 wheel_radius=sf * 0.4,
+                 drive_radius=sf * 0.3,
+                 rider_mass=sf * 3 * person/4,
+                 wheel_mass=sf * 2.5,
+                 drive_mass=sf * person/4,
                  drive_limits=False,
                  *args):
         super(Unicycle, self).__init__(fork_length,

@@ -60,7 +60,7 @@ class NN(NN):
 
     def set_weights_random(self):
         for k, i, j in self.xweights:
-            self.set_weight(k, i, j, random.gauss(0, 5))
+            self.set_weight(k, i, j, random.gauss(0, 2))
 
     def topology_is_compatible(self, other):
         if len(self.layers) != len(other.layers):

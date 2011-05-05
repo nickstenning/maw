@@ -16,12 +16,12 @@ public:
   typedef std::vector<weight_matrix_t> weights_t;
 
   typedef layer_t input_t;
-  typedef std::vector<int> output_t;
+  typedef layer_t output_t;
 
   NN();
   NN(std::vector<size_t> layer_sizes);
 
-  std::vector<int> feed(std::vector<double> const& input) throw(NNInputSizeError);
+  output_t feed(std::vector<double> const& input) throw(NNInputSizeError);
 
   layers_t const& layers() const { return m_layers; }
   layer_t const& layers(size_t i) const { return m_layers[i]; }

@@ -10,8 +10,8 @@
 
 const btTransform Unicycle::reset_transform = btTransform(btQuaternion::getIdentity());
 
-const btScalar Unicycle::fric_static = 10.0;
-const btScalar Unicycle::fric_kinetic = 2.0;
+const btScalar Unicycle::fric_static = 4.0;
+const btScalar Unicycle::fric_kinetic = 1.0;
 
 Unicycle::Unicycle(
   btScalar fork_length,
@@ -286,19 +286,13 @@ void Unicycle::compute_state(btScalar timestep)
     m_pitch = std::atan2(bottom_spoke_in_fork.getX(), bottom_spoke_in_fork.getY());
   }
 
-  // Wheel angular velocity about wheel axis
+  // Wheel angular velocity about wheel axle
+  // Yaw angular velocity about world Z axis
   {
     btVector3 wheel_vel = m_wheel_body->getAngularVelocity();
     btVector3 wheel_vel_in_wheel = wheel_vel * wheel_trans.getBasis();
     m_wheel_velocity = wheel_vel_in_wheel.getZ();
-  }
-
-  // Yaw angular velocity about fork vertical (approximation to real yaw
-  // velocity).
-  {
-    btVector3 fork_vel = m_fork_body->getAngularVelocity();
-    btVector3 fork_vel_in_fork = fork_vel * fork_trans.getBasis();
-    m_yaw_velocity = fork_vel_in_fork.getY();
+    m_yaw_velocity = wheel_vel.getY();
   }
 
   // Pitch/roll velocity
@@ -315,17 +309,11 @@ void Unicycle::compute_state(btScalar timestep)
 
 void Unicycle::apply_friction(btScalar timestep)
 {
-  // We calculate friction on the basis of the yaw velocity, which would
-  // ideally be calculated at the wheel. It's not, and is calculated about
-  // the fork. As a result, we apply the restoring torques to the fork as well
-  // in order to avoid adding energy to the system.
-
   btScalar torque = - fric_kinetic * m_yaw_velocity - fric_static * ((m_yaw_velocity > 0) - (m_yaw_velocity < 0));
 
-  btVector3 impulse_in_fork(0, timestep * torque, 0);
-  btVector3 impulse_in_world = m_fork_body->getWorldTransform().getBasis() * impulse_in_fork;
+  btVector3 impulse_in_world(0, timestep * torque, 0);
 
-  m_fork_body->applyTorqueImpulse(impulse_in_world);
+  m_wheel_body->applyTorqueImpulse(impulse_in_world);
 }
 
 btScalar Unicycle::kinetic_energy() const

@@ -8,7 +8,7 @@ class BrainIncompatibleError(TypeError):
 
 class Brain(NN):
     mutation_rate = None
-    mutation_sigma = 10.0
+    mutation_sigma = 5.0
 
     def __init__(self, *args):
         super(Brain, self).__init__(*args)
