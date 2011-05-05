@@ -287,7 +287,7 @@ void Unicycle::compute_state(btScalar timestep)
   }
 
   // Wheel angular velocity about wheel axle
-  // Yaw angular velocity about world Z axis
+  // Yaw angular velocity about world Y axis
   {
     btVector3 wheel_vel = m_wheel_body->getAngularVelocity();
     btVector3 wheel_vel_in_wheel = wheel_vel * wheel_trans.getBasis();

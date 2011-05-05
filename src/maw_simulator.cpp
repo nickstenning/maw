@@ -63,7 +63,6 @@ static void simulation_callback ()
     input.push_back(uni->wheel_velocity());
     input.push_back(uni->yaw_velocity());
     input.push_back(uni->pitch_velocity());
-    input.push_back(uni->roll_velocity());
 
     output = nn->feed(input);
 
