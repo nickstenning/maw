@@ -22,23 +22,17 @@ class Evaluator(object):
         fitness = 0
 
         self.time = 0
-        self.uni.reset(0)
+        self.uni.reset(0.1)
 
         while (self.time < MAX_EVAL_TIME):
             self.step(brain)
 
             in_pitch_threshold = abs(self.uni.pitch()) < PITCH_SCORE_ANG
             in_roll_threshold = abs(self.uni.roll()) < ROLL_SCORE_ANG
-            # in_wheelvel_threshold = abs(self.uni.wheel_velocity()) < MAX_WHEELVEL
+            in_yaw_threshold = abs(self.uni.yaw()) < YAW_SCORE_ANG
 
-            if in_pitch_threshold and in_roll_threshold: #and in_wheelvel_threshold:
-                score = 0
-                score += 0.1 * abs(self.uni.pitch())
-                score += 0.1 * abs(self.uni.roll())
-                score += abs(self.uni.yaw_velocity())
-                score += 0.01 * abs(self.uni.kinetic_energy())
-
-                fitness += DT * dirac_delta(score)
+            if in_pitch_threshold and in_roll_threshold and in_yaw_threshold:
+                fitness += DT
             else:
                 break # Failure. No need to evaluate further.
 
@@ -57,22 +51,12 @@ class Evaluator(object):
         output = brain.feed(input)
 
         self.uni.apply_drive_impulse(
-            self.uni.drive_impulse * output[0] + random.gauss(0, 0.1)
+            self.uni.drive_impulse * output[0] #* random.gauss(1, 0.1)
         )
         self.uni.apply_wheel_impulse(
-            self.uni.wheel_impulse * output[1] + random.gauss(0, 0.1)
+            self.uni.wheel_impulse * output[1] #* random.gauss(1, 0.1)
         )
 
         self.world.step_simulation(DT)
         self.uni.compute_state(DT)
         self.time += DT
-
-        # toprint = [
-        #     self.time,
-        #     self.uni.yaw(), self.uni.pitch(), self.uni.roll(),
-        #     self.uni.yaw_velocity(), self.uni.pitch_velocity(), self.uni.roll_velocity(),
-        #     self.uni.wheel_velocity(),
-        #     self.uni.kinetic_energy(), self.uni.potential_energy()
-        # ]
-
-        # print "\t".join(map(str, toprint))

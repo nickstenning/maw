@@ -2,7 +2,7 @@ import random
 from util import roulette_pick
 
 ELITISM = 0.1
-CROSSOVER_PROB = 0.2
+CROSSOVER_PROB = 0.66
 
 class GA(object):
     generation = 0
@@ -45,8 +45,8 @@ class GA(object):
 
             if random.random() < CROSSOVER_PROB:
                 individual.crossover(roulette_pick(self.population))
-
-            individual.mutate()
+            else:
+                individual.mutate()
 
             new_population.append(individual)
 

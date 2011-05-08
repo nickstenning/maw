@@ -34,9 +34,8 @@ NN::output_t NN::feed (layer_t const& input) throw(NNInputSizeError)
   layer_t& output_layer = m_layers[m_layers.size() - 1];
 
   for(size_t i = 0; i < output_layer.size(); i += 1) {
-    // int pinned_output = termination_function( output_layer[i] );
-    // output.push_back(pinned_output);
-    output.push_back(output_layer[i]);
+    int pinned_output = termination_function( output_layer[i] );
+    output.push_back(pinned_output);
   }
 
   return output;
