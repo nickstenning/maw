@@ -51,9 +51,11 @@ void NN::feed_layer (size_t index)
     recv[j] = 0.0; // Clear receiving neuron's previous state.
 
     for(size_t i = 0; i < send.size(); i += 1) {
-      double bias = mx[i][recv.size()];
-      recv[j] += send[i] * bias * mx[i][j];
+      recv[j] += send[i] * mx[i][j];
     }
+
+    // Add bias
+    recv[j] += mx[send.size()][j];
 
     recv[j] = activation_function( recv[j] );
   }
@@ -69,7 +71,7 @@ void NN::init_layers (std::vector<size_t> layer_sizes)
   }
 }
 
-void NN::init_weights ()
+void NN::init_weights (size_t send_extras)
 {
   m_weights = weights_t(m_layers.size() - 1);
 
@@ -78,7 +80,9 @@ void NN::init_weights ()
   for (size_t i = 0; i < m_weights.size(); i += 1) {
     layer_t const& send = m_layers[i];
     layer_t const& recv = m_layers[i + 1];
-    m_weights[i] = weight_matrix_t(send.size(), weight_vector_t(recv.size() + 1, 0));
+    // Send extras dictates how many "virtual" send weights are needed for
+    // biasing, recurrence weighting, etc.
+    m_weights[i] = weight_matrix_t(send.size() + send_extras, weight_vector_t(recv.size(), 0));
   }
 }
 

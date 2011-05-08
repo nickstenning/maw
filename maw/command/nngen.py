@@ -3,7 +3,7 @@ from __future__ import print_function
 import sys
 import argparse
 
-from maw.nn import NN
+from maw.brain import Brain
 
 import argparse
 
@@ -16,12 +16,12 @@ parser.add_argument('-r', '--random', dest='random', action='store_true', defaul
 def main():
     args = parser.parse_args()
 
-    nn = NN(args.sizes)
+    brain = Brain(args.sizes)
 
     if args.random:
-        nn.set_weights_random()
+        brain.set_weights_random()
 
-    print(nn, end='')
+    print(brain, end='')
 
 if __name__ == '__main__':
     sys.exit(main())

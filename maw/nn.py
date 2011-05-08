@@ -18,8 +18,8 @@ class NN(NN):
             send = nn.layers[k]
             recv = nn.layers[k + 1]
 
-            for i in xrange(len(send)):
-                for j in xrange(len(recv) + 1): # NB +1 for bias
+            for i in xrange(len(send) + 1): # NB +1 for bias
+                for j in xrange(len(recv)):
                     nn.set_weight(k, i, j, float(line.pop(0)))
 
         return nn
@@ -47,16 +47,25 @@ class NN(NN):
     @property
     def xweights(self):
         for k in xrange(len(self.weights)):
-            for i in xrange(len(self.layers[k])):
-                for j in xrange(len(self.layers[k + 1]) + 1): # NB +1 for bias
+            for i in xrange(len(self.layers[k]) + 1): # NB +1 for bias
+                for j in xrange(len(self.layers[k + 1])):
                     yield (k, i, j)
+
+    @property
+    def xbiases(self):
+        for k in xrange(len(self.weights)):
+            i = len(self.layers[k]) # identify bias weight
+            for j in xrange(len(self.layers[k + 1])):
+                yield (k, i, j)
 
     def set_weight(self, k, i, j, val):
         return self._weights(k, i, j, val)
 
-    def set_weights(self, val):
+    def set_weights(self, val, biases=0):
         for k, i, j in self.xweights:
             self.set_weight(k, i, j, val)
+        for k, i, j in self.xbiases:
+            self.set_weight(k, i, j, biases)
 
     def topology_is_compatible(self, other):
         if len(self.layers) != len(other.layers):
@@ -85,7 +94,7 @@ class TestNN(unittest.TestCase):
         nn.set_weights(0.5)
         nn.feed([0.5])
 
-        self.assertEqual(nn.layers[1][0], math.tanh(0.125))
+        self.assertEqual(nn.layers[1][0], math.tanh(0.25))
 
     def test_multiinput(self):
         nn = NN([3,1])
@@ -104,11 +113,13 @@ class TestNN(unittest.TestCase):
         self.assertEqual(nn.layers[1][0], math.tanh(1.0))
         self.assertEqual(nn.layers[1][1], math.tanh(1.0))
 
-        nn.set_weight(0, 0, 2, -0.5)
+        nn.set_weight(0, 1, 0, 2)
         nn.feed([1])
 
-        self.assertEqual(nn.layers[1][0], math.tanh(-0.5))
-        self.assertEqual(nn.layers[1][1], math.tanh(-0.5))
+        print nn.weights
+
+        self.assertEqual(nn.layers[1][0], math.tanh(3))
+        self.assertEqual(nn.layers[1][1], math.tanh(1))
 
 if __name__ == '__main__':
     unittest.main()

@@ -43,9 +43,13 @@ class Brain(NN):
                     for i in xrange(len(send)):
                         self.set_weight(k, i, j, other.weights[k][i][j])
 
-    def set_weights_random(self):
+    def set_weights_random(self, and_biases=False):
         for k, i, j in self.xweights:
             self.set_weight(k, i, j, random.uniform(-self.mutation_size, self.mutation_size))
+
+        if not and_biases:
+            for k, i, j in self.xbiases:
+                self.set_weight(k, i, j, 0)
 
     def clone(self):
         return Brain(self)

@@ -35,13 +35,13 @@ public:
   NN& weights(size_t k, size_t i, size_t j, double val) { m_weights[k][i][j] = val; return *this; }
 
 protected:
-  void feed_layer (size_t index);
+  virtual void feed_layer (size_t index);
 
   void init_layers(std::vector<size_t> layer_sizes);
-  void init_weights();
+  void init_weights(size_t send_extras=1);
 
-  inline double activation_function(double x);
-  inline int    termination_function(double x);
+  virtual inline double activation_function(double x);
+  virtual inline int    termination_function(double x);
 private:
   layers_t m_layers;
   weights_t m_weights;
