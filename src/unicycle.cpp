@@ -90,7 +90,7 @@ void Unicycle::create_rigid_bodies(WorldManager& wm, btTransform const& trans)
   fork_trans.getOrigin() += btVector3(0, m_fork_length, 0);
 
   btTransform drive_trans = fork_trans;
-  drive_trans.getOrigin() += btVector3(0, m_drive_radius / 5.0, 0);
+  drive_trans.getOrigin() += btVector3(0, m_drive_radius / 4.0, 0);
 
   // This creates a fork with center of mass exactly m_fork_length above trans.
   {
@@ -152,7 +152,7 @@ void Unicycle::add_to_manager(WorldManager& wm) throw(UnicycleAlreadyInitialized
 
   // Add drive axle constraint
   {
-    btVector3 pivot_in_drive(0, -m_drive_radius  / 10.0, 0);
+    btVector3 pivot_in_drive(0, -m_drive_radius / 20.0, 0);
     btVector3 pivot_in_fork(0, m_fork_length / 20.0, 0);
     btVector3 axis_in_drive(0, 1, 0);
     btVector3 axis_in_fork(0, 1, 0);
@@ -226,7 +226,7 @@ void Unicycle::reset_position(double random, btTransform const& trans)
 
   btVector3 wheel_origin(0, m_wheel_radius, 0);
   btVector3 fork_origin = wheel_origin + wheel_trans.getBasis() * btVector3(0, m_fork_length, 0);
-  btVector3 drive_origin = fork_origin + wheel_trans.getBasis() * btVector3(0, m_drive_radius / 5.0, 0);
+  btVector3 drive_origin = fork_origin + wheel_trans.getBasis() * btVector3(0, m_drive_radius / 4.0, 0);
 
   wheel_trans.getOrigin() += wheel_origin;
   fork_trans.getOrigin() += fork_origin;
