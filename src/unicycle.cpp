@@ -10,8 +10,8 @@
 
 const btTransform Unicycle::reset_transform = btTransform(btQuaternion::getIdentity());
 
-const btScalar Unicycle::fric_static = 4.0;
-const btScalar Unicycle::fric_kinetic = 1.0;
+const btScalar Unicycle::fric_static = 2.0;
+const btScalar Unicycle::fric_kinetic = 0.5;
 
 Unicycle::Unicycle(
   btScalar fork_length,
@@ -117,7 +117,7 @@ void Unicycle::create_rigid_bodies(WorldManager& wm, btTransform const& trans)
   // Create the wheel.
   {
     m_wheel_body = wm.add_rigid_body(m_wheel_mass, wheel_trans, m_wheel_shape);
-    m_wheel_body->setFriction(20.0);
+    m_wheel_body->setFriction(1000.0);
   }
 
   // Create the drive wheel.
