@@ -7,8 +7,8 @@ class BrainIncompatibleError(TypeError):
     pass
 
 class Brain(NN):
-    mutation_count = 1
-    mutation_size = 2.0
+    mutation_count = 1.0
+    mutation_size = 5.0
 
     def __init__(self, *args):
         super(Brain, self).__init__(*args)
@@ -18,7 +18,7 @@ class Brain(NN):
         for i in xrange(len(self.weights)):
             num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
 
-        self.mutation_rate = self.mutation_count / num_nonin_weights
+        self.mutation_rate = float(self.mutation_count) / num_nonin_weights
 
     def mutate(self):
         for k, i, j in self.xweights:
