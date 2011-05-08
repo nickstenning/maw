@@ -7,8 +7,8 @@ class BrainIncompatibleError(TypeError):
     pass
 
 class Brain(NN):
-    mutation_rate = None
-    mutation_sigma = 5.0
+    mutation_count = 1
+    mutation_size = 2.0
 
     def __init__(self, *args):
         super(Brain, self).__init__(*args)
@@ -18,12 +18,12 @@ class Brain(NN):
         for i in xrange(len(self.weights)):
             num_nonin_weights += len(self.layers[i]) * len(self.layers[i + 1])
 
-        self.mutation_rate = 1.0 / num_nonin_weights
+        self.mutation_rate = self.mutation_count / num_nonin_weights
 
     def mutate(self):
         for k, i, j in self.xweights:
             if random.random() < self.mutation_rate:
-                val = self.weights[k][i][j] + random.gauss(0, self.mutation_sigma)
+                val = self.weights[k][i][j] + random.uniform(-self.mutation_size, self.mutation_size)
                 self.set_weight(k, i, j, val)
 
     def crossover(self, other):
@@ -42,6 +42,10 @@ class Brain(NN):
                 if random.choice([True, False]):
                     for i in xrange(len(send)):
                         self.set_weight(k, i, j, other.weights[k][i][j])
+
+    def set_weights_random(self):
+        for k, i, j in self.xweights:
+            self.set_weight(k, i, j, random.uniform(-self.mutation_size, self.mutation_size))
 
     def clone(self):
         return Brain(self)
