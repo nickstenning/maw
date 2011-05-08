@@ -17,6 +17,12 @@ nn_module = Extension(
     **common_opts
 )
 
+rnn_module = Extension(
+    'maw.bindings._rnn',
+    sources=['src/rnn.i', 'src/util.cpp', 'src/nn.cpp', 'src/rnn.cpp'],
+    **common_opts
+)
+
 pendulum_module = Extension(
     'maw.bindings._pendulum',
     sources=['src/pendulum.i', 'src/pendulum.cpp'],
@@ -82,6 +88,7 @@ setup(
 
     ext_modules = [
         nn_module,
+        rnn_module,
         unicycle_module,
         unicycle_2d_module,
         pendulum_module,
