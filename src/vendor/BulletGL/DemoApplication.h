@@ -46,8 +46,6 @@ public:
   virtual void updateCamera();
   DemoApplication& cameraTargetPosition(btVector3 t) { m_cameraTargetPosition = t; }
 
-  btScalar getDeltaTimeMicroseconds() { return btScalar(20000.); }
-
   void moveAndDisplay();
   virtual void clientMoveAndDisplay() = 0;
 

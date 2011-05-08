@@ -102,7 +102,7 @@ btCollisionShape* WorldManager::add_collision_shape(btCollisionShape* shape)
 
 int WorldManager::step_simulation(btScalar timeStep)
 {
-  return m_dynamics_world->stepSimulation(timeStep);
+  return m_dynamics_world->stepSimulation(timeStep, 0);
 }
 
 std::ostream& operator<<(std::ostream& os, btVector3 const& v)

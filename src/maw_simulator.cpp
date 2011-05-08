@@ -16,8 +16,8 @@ static GlutDemoApplication app;
 static Unicycle* uni;
 static NN* nn;
 
+static double dt;
 static double sim_time = 0.0;
-static const double dt = app.getDeltaTimeMicroseconds() / 1e6;
 
 static double wheel_impulse = 1.0;
 static double drive_impulse = 1.0;
@@ -78,19 +78,22 @@ static void simulation_callback ()
   std::cout << "\n";
 }
 
-int simulate (Unicycle& user_uni, NN& user_nn, double wheel_imp, double drive_imp)
+int simulate (double step_size, Unicycle& user_uni, NN& user_nn, double wheel_imp, double drive_imp)
 {
   int argc = 1;
   char* argv[1] = {"maw_simulator"};
 
   uni = &user_uni;
   nn = &user_nn;
+  dt = step_size;
 
   wheel_impulse = wheel_imp;
   drive_impulse = drive_imp;
 
   uni->add_to_manager(wm);
   uni->reset();
+
+  app.step_size(dt);
 
   app.dynamics_world(wm.dynamics_world());
   app.register_key_handler(handle_key_event);

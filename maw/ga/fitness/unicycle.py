@@ -2,15 +2,13 @@ import math
 import random
 
 from maw.util import dirac_delta
-from maw.unicycle import Unicycle
+from maw.unicycle import Unicycle, DT
 from maw.world_manager import WorldManager
 
-DT              = 0.02
 MAX_EVAL_TIME   = 100.0
 YAW_SCORE_ANG   = math.pi - 0.1
 PITCH_SCORE_ANG = math.pi / 10.0
 ROLL_SCORE_ANG  = math.pi / 10.0
-# MAX_WHEELVEL = 3.0
 
 class Evaluator(object):
 

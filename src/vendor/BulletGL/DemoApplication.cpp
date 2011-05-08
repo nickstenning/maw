@@ -41,7 +41,7 @@ DemoApplication::DemoApplication()
   , m_idle(false)
   , m_ele(30)
   , m_azi(0)
-  , m_cameraDistance(12)
+  , m_cameraDistance(4)
   , m_cameraPosition(0, 0, 0)
   , m_cameraTargetPosition(0, 0, 0)
   , m_cameraUp(0, 1, 0)
@@ -73,6 +73,7 @@ DemoApplication::~DemoApplication()
 DemoApplication& DemoApplication::dynamics_world(btDynamicsWorld* w)
 {
   m_dynamics_world = w;
+  m_dynamics_world->setGravity(btVector3(0, -10, 0));
   m_dynamics_world->setDebugDrawer(m_debugDrawer);
   return *this;
 }

@@ -25,6 +25,11 @@ public:
   virtual void specialKeyboard(int key, int x, int y);
   virtual void clientMoveAndDisplay();
   virtual void displayCallback();
+
+  void step_size(double dt) { m_step_size = dt; }
+
+private:
+  double m_step_size;
 };
 #endif // GLUT_DEMO_APPLICATION_H
 

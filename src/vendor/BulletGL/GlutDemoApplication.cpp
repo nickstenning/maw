@@ -40,10 +40,8 @@ void GlutDemoApplication::clientMoveAndDisplay()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  btScalar timeStep = getDeltaTimeMicroseconds() * 0.000001f;
-
   if (m_dynamics_world) {
-    m_dynamics_world->stepSimulation(timeStep);
+    m_dynamics_world->stepSimulation(m_step_size, 0);
     m_dynamics_world->debugDrawWorld();
   }
 
