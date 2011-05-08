@@ -5,7 +5,6 @@ import signal
 import argparse
 
 from maw.ga import GA
-from maw.brain import Brain
 import maw.ga.fitness.unicycle as ff
 
 parser = argparse.ArgumentParser(description='Evolve a population of NNs.')
@@ -13,6 +12,8 @@ parser.add_argument('-g', '--generations', dest='generations', default=50,
                     type=int, help='number of generations', metavar='NUM')
 parser.add_argument('-p', '--popsize', dest='popsize', default=50,
                     type=int, help='size of population', metavar='SIZE')
+parser.add_argument('-r', '--recurrent', dest='recurrent', action='store_true', default=False,
+                    help='evolve a recurrent network')
 
 evaluator = ff.Evaluator()
 
@@ -49,12 +50,19 @@ def main():
         print('Must specify a popsize of at least 1.', file=sys.stderr)
         return 1
 
-    print('Reading brain from stdin...', file=sys.stderr)
+    if args.recurrent:
+        from maw.rbrain import RBrain
+        klass = RBrain
+    else:
+        from maw.brain import Brain
+        klass = Brain
 
-    model_brain = Brain.from_string(sys.stdin.read())
+    print('Reading ' + str(klass) + ' from stdin...', file=sys.stderr)
+
+    model_brain = klass.from_string(sys.stdin.read())
 
     def ctor():
-        b = Brain([len(l) for l in model_brain.layers])
+        b = klass([len(l) for l in model_brain.layers])
         b.set_weights_random()
         return b
 
