@@ -31,8 +31,10 @@ class Evaluator(object):
 
             if in_pitch_threshold and in_roll_threshold:
                 score = DT
-                score *= dirac_delta(self.uni.kinetic_energy(), 0.01)
-                score *= dirac_delta(self.uni.roll(), 5)
+                score *= 1 - 0.5 * (self.power_used / 2.0)
+                score *= dirac_delta(self.uni.kinetic_energy(), 0.001)
+
+
                 fitness += score
             else:
                 break # Failure. No need to evaluate further.
@@ -49,6 +51,8 @@ class Evaluator(object):
         ]
 
         output = brain.feed(input)
+
+        self.power_used = abs(output[0]) + abs(output[1])
 
         self.uni.apply_drive_impulse(
             self.uni.drive_impulse * output[0] #* random.gauss(1, 0.1)
