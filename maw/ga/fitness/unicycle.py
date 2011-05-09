@@ -6,9 +6,8 @@ from maw.unicycle import Unicycle, DT
 from maw.world_manager import WorldManager
 
 MAX_EVAL_TIME   = 100.0
-YAW_SCORE_ANG   = math.pi - 0.1
-PITCH_SCORE_ANG = math.pi / 10.0
-ROLL_SCORE_ANG  = math.pi / 10.0
+PITCH_SCORE_ANG = math.pi / 6.0
+ROLL_SCORE_ANG  = math.pi / 6.0
 
 class Evaluator(object):
 
@@ -22,17 +21,18 @@ class Evaluator(object):
         fitness = 0
 
         self.time = 0
-        self.uni.reset(0.1)
+        self.uni.reset(0.01)
 
         while (self.time < MAX_EVAL_TIME):
             self.step(brain)
 
             in_pitch_threshold = abs(self.uni.pitch()) < PITCH_SCORE_ANG
             in_roll_threshold = abs(self.uni.roll()) < ROLL_SCORE_ANG
-            in_yaw_threshold = abs(self.uni.yaw()) < YAW_SCORE_ANG
 
-            if in_pitch_threshold and in_roll_threshold and in_yaw_threshold:
-                fitness += DT
+            if in_pitch_threshold and in_roll_threshold:
+                score = DT
+                score *= dirac_delta(self.uni.kinetic_energy(), 0.01)
+                fitness += score
             else:
                 break # Failure. No need to evaluate further.
 

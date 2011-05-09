@@ -1,14 +1,26 @@
 from __future__ import print_function
 
 import sys
+import argparse
 
-from maw.nn import NN
 from maw.simulate.unicycle import simulate
 
-def main():
-    print('Reading NN specification from stdin...', file=sys.stderr)
+parser = argparse.ArgumentParser(description='Simulate a unicycle')
+parser.add_argument('-r', '--recurrent', dest='recurrent', action='store_true', default=False,
+                    help='use a recurrent network')
 
-    nn = NN.from_string(sys.stdin.read())
+def main():
+    args = parser.parse_args()
+
+    if args.recurrent:
+        from maw.rnn import RNN as NNKlass
+    else:
+        from maw.nn import NN as NNKlass
+
+    print('Reading ' + str(NNKlass) + ' from stdin...', file=sys.stderr)
+
+    nn = NNKlass.from_string(sys.stdin.read())
+
     simulate(nn)
 
 if __name__ == '__main__':

@@ -10,3 +10,12 @@ class RBrain(RNN, BrainMixin):
 
     def clone(self):
         return RBrain(self)
+
+
+def brain_constructor(spec, randomize=True):
+    def ctor():
+        b = RBrain(spec)
+        b.set_weights_random(size=10.0)
+        return b
+
+    return ctor

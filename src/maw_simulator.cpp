@@ -19,8 +19,8 @@ static NN* nn;
 static double dt;
 static double sim_time = 0.0;
 
-static double wheel_impulse = 1.0;
-static double drive_impulse = 1.0;
+static double wheel_impulse = 0.0;
+static double drive_impulse = 0.0;
 
 static void handle_key_event (unsigned char key, int, int)
 {

@@ -5,7 +5,7 @@ class BrainIncompatibleError(TypeError):
     pass
 
 class BrainMixin(object):
-    mutation_count = 1.0
+    mutation_count = 2.0
     mutation_size = 5.0
 
     def update_mutation_rate(self):
@@ -19,7 +19,7 @@ class BrainMixin(object):
     def mutate(self):
         for k, i, j in self.xweights:
             if random.random() < self.mutation_rate:
-                val = self.weights[k][i][j] + random.uniform(-self.mutation_size, self.mutation_size)
+                val = self.weights[k][i][j] + random.gauss(0, self.mutation_size)
                 self.set_weight(k, i, j, val)
 
     def crossover(self, other):
@@ -39,9 +39,9 @@ class BrainMixin(object):
                     for i in xrange(len(send)):
                         self.set_weight(k, i, j, other.weights[k][i][j])
 
-    def set_weights_random(self, and_biases=False):
+    def set_weights_random(self, size=mutation_size, and_biases=False):
         for k, i, j in self.xweights:
-            self.set_weight(k, i, j, random.uniform(-self.mutation_size, self.mutation_size))
+            self.set_weight(k, i, j, random.gauss(0, size))
 
         if not and_biases:
             for k, i, j in self.xbiases:

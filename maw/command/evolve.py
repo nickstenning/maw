@@ -54,19 +54,14 @@ def main():
         from maw.rbrain import RBrain
         klass = RBrain
     else:
-        from maw.brain import Brain
+        from maw.brain import Brain, brain_constructor
         klass = Brain
 
     print('Reading ' + str(klass) + ' from stdin...', file=sys.stderr)
 
     model_brain = klass.from_string(sys.stdin.read())
 
-    def ctor():
-        b = klass([len(l) for l in model_brain.layers])
-        b.set_weights_random()
-        return b
-
-    ga = GA(ctor, evaluator.evaluate)
+    ga = GA(brain_constructor(model_brain.spec()), evaluator.evaluate)
 
     ga.add_individual(model_brain)
     ga.add_individual(count=args.popsize - 1) # Random remaining brains

@@ -63,6 +63,9 @@ class NNMixin(object):
         for k, i, j in self.xbiases:
             self.set_weight(k, i, j, biases)
 
+    def spec(self):
+        return map(len, self.layers)
+
     def topology_is_compatible(self, other):
         if len(self.layers) != len(other.layers):
             return False

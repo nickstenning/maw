@@ -3,8 +3,6 @@ from __future__ import print_function
 import sys
 import argparse
 
-import argparse
-
 parser = argparse.ArgumentParser(description='Generate a NN specification.')
 parser.add_argument('sizes', metavar='SIZE', type=int, nargs='+',
                     help='number of neurons in each layer')
@@ -17,17 +15,13 @@ def main():
     args = parser.parse_args()
 
     if args.recurrent:
-        from maw.rbrain import RBrain
-        b = RBrain(args.sizes)
-
+        from maw.rbrain import brain_constructor
     else:
-        from maw.brain import Brain
-        b = Brain(args.sizes)
+        from maw.brain import brain_constructor
 
-    if not args.zeros:
-        b.set_weights_random()
+    ctor = brain_constructor(args.sizes, randomize=not args.zeros)
 
-    print(b, end='')
+    print(ctor(), end='')
 
 if __name__ == '__main__':
     sys.exit(main())
