@@ -7,7 +7,7 @@ person = 10.0
 
 class Unicycle(Unicycle):
     drive_impulse = 10 * DT
-    wheel_impulse = 20 * DT
+    wheel_impulse = 10 * DT
 
     def __init__(self,
                  fork_length=1.2,

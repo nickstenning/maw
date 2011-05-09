@@ -10,8 +10,8 @@
 
 const btTransform Unicycle::reset_transform = btTransform(btQuaternion::getIdentity());
 
-const btScalar Unicycle::fric_static = 2.0;
-const btScalar Unicycle::fric_kinetic = 0.5;
+const btScalar Unicycle::fric_static = 4.0;
+const btScalar Unicycle::fric_kinetic = 1.0;
 
 Unicycle::Unicycle(
   btScalar fork_length,

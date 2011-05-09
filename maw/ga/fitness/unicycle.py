@@ -32,6 +32,7 @@ class Evaluator(object):
             if in_pitch_threshold and in_roll_threshold:
                 score = DT
                 score *= dirac_delta(self.uni.kinetic_energy(), 0.01)
+                score *= dirac_delta(self.uni.roll(), 5)
                 fitness += score
             else:
                 break # Failure. No need to evaluate further.
