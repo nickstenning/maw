@@ -43,7 +43,6 @@ class Evaluator(object):
         input = [
             self.uni.pitch(),
             self.uni.roll(),
-            self.uni.wheel_velocity(),
             self.uni.yaw_velocity(),
             self.uni.pitch_velocity(),
         ]
