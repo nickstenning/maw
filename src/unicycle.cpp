@@ -193,17 +193,18 @@ void Unicycle::apply_drive_impulse(btScalar imp)
 
 void Unicycle::reset(double random, btTransform const& trans)
 {
+  btVector3 moving(0, 0, 0);
   btVector3 zeros(0, 0, 0);
 
   reset_position(random, trans);
 
-  m_wheel_body->setLinearVelocity(zeros);
+  m_wheel_body->setLinearVelocity(moving);
   m_wheel_body->setAngularVelocity(zeros);
 
-  m_fork_body->setLinearVelocity(zeros);
+  m_fork_body->setLinearVelocity(moving);
   m_fork_body->setAngularVelocity(zeros);
 
-  m_drive_body->setLinearVelocity(zeros);
+  m_drive_body->setLinearVelocity(moving);
   m_drive_body->setAngularVelocity(zeros);
 }
 

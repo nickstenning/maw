@@ -6,8 +6,8 @@ sf = 1
 person = 10.0
 
 class Unicycle(Unicycle):
-    drive_impulse = 10 * DT
-    wheel_impulse = 20 * DT
+    drive_impulse = 30 * DT
+    wheel_impulse = 15 * DT
 
     def __init__(self,
                  fork_length=1.2,

@@ -6,8 +6,9 @@ from maw.unicycle import Unicycle, DT
 from maw.world_manager import WorldManager
 
 MAX_EVAL_TIME   = 100.0
-PITCH_SCORE_ANG = math.pi / 6.0
-ROLL_SCORE_ANG  = math.pi / 6.0
+YAW_SCORE_ANG   = math.pi - 0.1
+PITCH_SCORE_ANG = math.pi / 20.0
+ROLL_SCORE_ANG  = math.pi / 20.0
 
 class Evaluator(object):
 
@@ -28,12 +29,12 @@ class Evaluator(object):
 
             in_pitch_threshold = abs(self.uni.pitch()) < PITCH_SCORE_ANG
             in_roll_threshold = abs(self.uni.roll()) < ROLL_SCORE_ANG
+            in_yaw_threshold = abs(self.uni.yaw()) < YAW_SCORE_ANG
+            # in_pos_threshold = abs(self.uni.x()) < 10.0 and abs(self.uni.z()) < 10.0
 
-            if in_pitch_threshold and in_roll_threshold:
+            if in_pitch_threshold and in_roll_threshold and in_yaw_threshold:# and in_pos_threshold:
                 score = DT
-                score *= 1 - 0.5 * (self.power_used / 2.0)
-                score *= dirac_delta(self.uni.kinetic_energy(), 0.001)
-
+                # score += DT * dirac_delta(self.uni.kinetic_energy(), 0.5)
 
                 fitness += score
             else:
@@ -46,19 +47,22 @@ class Evaluator(object):
         input = [
             self.uni.pitch(),
             self.uni.roll(),
-            self.uni.yaw_velocity(),
             self.uni.pitch_velocity(),
+            self.uni.yaw_velocity(),
         ]
 
         output = brain.feed(input)
 
         self.power_used = abs(output[0]) + abs(output[1])
 
+        # (-1 if self.uni.roll() < 0 else 1)
+        # (-1 if self.uni.pitch() < 0 else 1)
+
         self.uni.apply_drive_impulse(
-            self.uni.drive_impulse * output[0] #* random.gauss(1, 0.1)
+            self.uni.drive_impulse * output[0] #* random.gauss(1, 0.2)
         )
         self.uni.apply_wheel_impulse(
-            self.uni.wheel_impulse * output[1] #* random.gauss(1, 0.1)
+            self.uni.wheel_impulse * output[1] #* random.gauss(1, 0.2)
         )
 
         self.world.step_simulation(DT)

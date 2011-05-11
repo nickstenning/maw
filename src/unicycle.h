@@ -50,6 +50,9 @@ public:
   btScalar pitch_velocity() const;
   btScalar roll_velocity() const;
 
+  btScalar x() const { return origin().getX(); }
+  btScalar z() const { return origin().getZ(); }
+
   btScalar kinetic_energy() const;
   btScalar potential_energy() const;
   btScalar energy() const;

@@ -34,8 +34,9 @@ NN::output_t NN::feed (layer_t const& input) throw(NNInputSizeError)
   layer_t& output_layer = m_layers[m_layers.size() - 1];
 
   for(size_t i = 0; i < output_layer.size(); i += 1) {
-    int pinned_output = termination_function( output_layer[i] );
-    output.push_back(pinned_output);
+    // int pinned_output = termination_function( output_layer[i] );
+    // output.push_back(pinned_output);
+    output.push_back(output_layer[i]);
   }
 
   return output;
@@ -89,6 +90,7 @@ void NN::init_weights (size_t send_extras)
 inline double NN::activation_function (double x)
 {
   return tanh(x);
+  // return 1.0 / (1.0 + exp(-x));
 }
 
 // TODO: is this pinning necessary? Could instead use output as input to

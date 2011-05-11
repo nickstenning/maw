@@ -17,13 +17,7 @@ def brain_constructor(spec, randomize=True):
         b = Brain(spec)
 
         if randomize:
-            b.set_weights_random(size=1.0)
-
-            for i in range(spec[1]/2):
-                b.set_weight(1, i, 0, 0)
-
-            for i in range(spec[1]/2, spec[1]):
-                b.set_weight(1, i, 1, 0)
+            b.set_weights_random(size=5.0)
 
         return b
 
