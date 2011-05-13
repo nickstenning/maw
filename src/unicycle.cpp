@@ -82,7 +82,7 @@ void Unicycle::create_collision_shapes(WorldManager& wm)
   wm.add_collision_shape(m_wheel_shape);
 
   // Make the drive wheel
-  m_drive_shape = new btCylinderShape(btVector3(m_drive_radius, m_drive_radius / 10.0, m_drive_radius));
+  m_drive_shape = new btCylinderShapeX(btVector3(m_drive_radius / 20.0, m_drive_radius, m_drive_radius));
   wm.add_collision_shape(m_drive_shape);
 }
 
@@ -95,7 +95,7 @@ void Unicycle::create_rigid_bodies(WorldManager& wm, btTransform const& trans)
   fork_trans.getOrigin() += btVector3(0, m_fork_length, 0);
 
   btTransform drive_trans = fork_trans;
-  drive_trans.getOrigin() += btVector3(0, m_drive_radius / 4.0, 0);
+  drive_trans.getOrigin() += btVector3(m_drive_radius / 4.0, 0, 0);
 
   // This creates a fork with center of mass exactly m_fork_length above trans.
   {
@@ -157,10 +157,10 @@ void Unicycle::add_to_manager(WorldManager& wm) throw(UnicycleAlreadyInitialized
 
   // Add drive axle constraint
   {
-    btVector3 pivot_in_drive(0, -m_drive_radius / 20.0, 0);
-    btVector3 pivot_in_fork(0, m_fork_length / 20.0, 0);
-    btVector3 axis_in_drive(0, 1, 0);
-    btVector3 axis_in_fork(0, 1, 0);
+    btVector3 pivot_in_drive(-m_drive_radius / 40.0, 0, 0);
+    btVector3 pivot_in_fork(m_fork_length / 20.0, 0, 0);
+    btVector3 axis_in_drive(1, 0, 0);
+    btVector3 axis_in_fork(1, 0, 0);
 
     btTypedConstraint* axle = new btHingeConstraint(*m_drive_body, *m_fork_body,
                                                     pivot_in_drive, pivot_in_fork,
@@ -189,7 +189,7 @@ void Unicycle::apply_wheel_impulse(btScalar imp)
 
 void Unicycle::apply_drive_impulse(btScalar imp)
 {
-  btVector3 impulse_in_drive(0, imp, 0);
+  btVector3 impulse_in_drive(imp, 0, 0);
   btVector3 impulse_in_world = m_drive_body->getWorldTransform().getBasis() * impulse_in_drive;
 
   m_drive_body->applyTorqueImpulse(impulse_in_world);
@@ -232,7 +232,7 @@ void Unicycle::reset_position(double random, btTransform const& trans)
 
   btVector3 wheel_origin(0, m_wheel_radius, 0);
   btVector3 fork_origin = wheel_origin + wheel_trans.getBasis() * btVector3(0, m_fork_length, 0);
-  btVector3 drive_origin = fork_origin + wheel_trans.getBasis() * btVector3(0, m_drive_radius / 4.0, 0);
+  btVector3 drive_origin = fork_origin + wheel_trans.getBasis() * btVector3(m_drive_radius / 8.0, 0, 0);
 
   wheel_trans.getOrigin() += wheel_origin;
   fork_trans.getOrigin() += fork_origin;
