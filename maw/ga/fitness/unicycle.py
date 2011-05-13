@@ -30,10 +30,11 @@ class Evaluator(object):
             in_pitch_threshold = abs(self.uni.pitch()) < PITCH_SCORE_ANG
             in_roll_threshold = abs(self.uni.roll()) < ROLL_SCORE_ANG
             in_yaw_threshold = abs(self.uni.yaw()) < YAW_SCORE_ANG
-            in_pos_threshold = abs(self.uni.x()) < 2.0 and abs(self.uni.z()) < 2.0
+            in_pos_threshold = abs(self.uni.x()) < 2.5 and abs(self.uni.z()) < 2.5
 
             if in_pitch_threshold and in_roll_threshold and in_yaw_threshold and in_pos_threshold:
-                fitness += DT
+                fitness += 0.7 * DT * dirac_delta(self.uni.yaw(), 0.8)
+                fitness += 0.3 * DT * dirac_delta(abs(self.uni.x()) + abs(self.uni.z()))
             else:
                 break # Failure. No need to evaluate further.
 

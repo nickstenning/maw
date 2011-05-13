@@ -5,7 +5,7 @@ class BrainIncompatibleError(TypeError):
     pass
 
 class BrainMixin(object):
-    mutation_count = 2.0
+    mutation_count = 1.0
     mutation_size = 5.0
 
     def update_mutation_rate(self):

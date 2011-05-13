@@ -3,8 +3,9 @@ from __future__ import print_function
 import sys
 import signal
 import argparse
+import math
 
-from maw.ga import GA
+from maw.ga import GA, ELITISM
 import maw.ga.fitness.unicycle as ff
 
 parser = argparse.ArgumentParser(description='Evolve a population of NNs.')
@@ -51,7 +52,7 @@ def main():
         return 1
 
     if args.recurrent:
-        from maw.rbrain import RBrain
+        from maw.rbrain import RBrain, brain_constructor
         klass = RBrain
     else:
         from maw.brain import Brain, brain_constructor
@@ -63,8 +64,10 @@ def main():
 
     ga = GA(brain_constructor(model_brain.spec()), evaluator.evaluate)
 
-    ga.add_individual(model_brain)
-    ga.add_individual(count=args.popsize - 1) # Random remaining brains
+    prepop = math.floor(ELITISM * arg.popsize)
+
+    ga.add_individual(model_brain, prepop)
+    ga.add_individual(count=args.popsize - prepop) # Random remaining brains
 
     print("# gen      minFit     maxFit     meanFit    sdFit", file=sys.stderr)
     while ga.generation < args.generations and not exit_early:

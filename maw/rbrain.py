@@ -1,7 +1,7 @@
 from rnn import RNN
 from brain_mixin import BrainMixin
 
-__all__ = ["RBrain"]
+__all__ = ["RBrain", "brain_constructor"]
 
 class RBrain(RNN, BrainMixin):
     def __init__(self, *args):
@@ -15,7 +15,10 @@ class RBrain(RNN, BrainMixin):
 def brain_constructor(spec, randomize=True):
     def ctor():
         b = RBrain(spec)
-        b.set_weights_random(size=10.0)
+
+        if randomize:
+            b.set_weights_random(size=5.0)
+
         return b
 
     return ctor
