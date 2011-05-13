@@ -61,27 +61,17 @@ static void simulation_callback ()
     NN::output_t output;
 
     input.push_back(uni->pitch());
-    input.push_back(uni->roll());
     input.push_back(uni->pitch_velocity());
-    input.push_back(uni->yaw_velocity());
+    input.push_back(uni->roll());
+    input.push_back(uni->roll_velocity());
 
     output = nn->feed(input);
 
-    int pitch_sign = 1, roll_sign = 1;
+    uni->apply_drive_impulse(output[0] * drive_impulse);
+    uni->apply_wheel_impulse(output[1] * wheel_impulse);
 
-    // if (uni->pitch() < 0) {
-    //   pitch_sign = -1;
-    // }
-    //
-    // if (uni->roll() < 0) {
-    //   roll_sign = -1;
-    // }
-
-    uni->apply_drive_impulse(output[0] * roll_sign * drive_impulse);
-    uni->apply_wheel_impulse(output[1] * pitch_sign * wheel_impulse);
-
-    std::cout << output[0] * roll_sign * drive_impulse << "\t";
-    std::cout << output[1] * pitch_sign * wheel_impulse;
+    std::cout << output[0] * drive_impulse << "\t";
+    std::cout << output[1] * wheel_impulse;
   } else {
     std::cout << "0\t0";
   }

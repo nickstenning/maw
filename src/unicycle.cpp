@@ -10,8 +10,13 @@
 
 const btTransform Unicycle::reset_transform = btTransform(btQuaternion::getIdentity());
 
-const btScalar Unicycle::fric_static = 4.0;
-const btScalar Unicycle::fric_kinetic = 1.0;
+static btScalar mu_coulomb = 0.8;
+static btScalar mu_kinetic = 0.2;
+static btScalar contact_length = 0.05;
+
+const btScalar Unicycle::fric_coulomb = (mu_coulomb * contact_length) / 2.0;
+const btScalar Unicycle::fric_kinetic = (mu_kinetic * contact_length * contact_length) / 3.0;
+const btScalar Unicycle::fric_roll = 0.0055;
 
 Unicycle::Unicycle(
   btScalar fork_length,
@@ -215,10 +220,10 @@ void Unicycle::reset_position(double random, btTransform const& trans)
   btTransform drive_trans = trans;
 
   if (random > 0.0) {
-    btVector3 random_vec(util::rand(-1,1), util::rand(-1,1), util::rand(-1,1));
-    btScalar random_ang(util::rand(0, random));
+    btVector3 zax(0, 0, 1);
+    btScalar random_ang(util::rand(-random, random));
 
-    btQuaternion rot(random_vec, random_ang);
+    btQuaternion rot(zax, random_ang);
 
     wheel_trans.setRotation(rot);
     fork_trans.setRotation(rot);
@@ -267,6 +272,7 @@ void Unicycle::compute_state(btScalar timestep)
   }
 
   // Yaw: angle between <world x-vector>, and <vector from center of wheel to point on wheel edge at 90deg to contact point>
+  btVector3 forward_spoke;
   {
     // Initial wheel axis
     btVector3 axle(0, 0, 1);
@@ -275,7 +281,7 @@ void Unicycle::compute_state(btScalar timestep)
     btVector3 forward_point_in_wheel = rotation_in_wheel * (wheel_trans.inverse() * c_point);
     btVector3 forward_point = wheel_trans * forward_point_in_wheel;
 
-    btVector3 forward_spoke = wheel_trans.getOrigin() - forward_point;
+    forward_spoke = wheel_trans.getOrigin() - forward_point;
 
     // This should define zero to be heading directly to the right on screen
     m_yaw = std::atan2(forward_spoke.getZ(), -forward_spoke.getX());
@@ -289,32 +295,39 @@ void Unicycle::compute_state(btScalar timestep)
 
   // Wheel angular velocity about wheel axle
   // Yaw angular velocity about world Y axis
+  // Roll angular velocity about forward spoke
   {
     btVector3 wheel_vel = m_wheel_body->getAngularVelocity();
     btVector3 wheel_vel_in_wheel = wheel_vel * wheel_trans.getBasis();
     m_wheel_velocity = wheel_vel_in_wheel.getZ();
     m_yaw_velocity = wheel_vel.getY();
+    m_roll_velocity = wheel_vel.dot(forward_spoke);
   }
 
-  // Pitch/roll velocity
+  // Pitch angular velocity about wheel axis
   {
-    m_pitch_velocity = (m_pitch - m_last_pitch) / timestep;
-    m_roll_velocity = (m_roll - m_last_roll) / timestep;
+    btVector3 fork_vel = m_fork_body->getAngularVelocity();
+    btVector3 fork_vel_in_wheel = fork_vel * wheel_trans.getBasis();
+    m_pitch_velocity = fork_vel_in_wheel.getZ();
   }
-
-  m_last_pitch = m_pitch;
-  m_last_roll = m_roll;
 
   apply_friction(timestep);
 }
 
 void Unicycle::apply_friction(btScalar timestep)
 {
-  btScalar torque = - fric_kinetic * m_yaw_velocity - fric_static * ((m_yaw_velocity > 0) - (m_yaw_velocity < 0));
+  // This is an approximation that clearly only holds when the unicycle is near
+  // upright.
+  btScalar weight = (m_rider_mass + m_drive_mass + m_wheel_mass) * 10;
 
-  btVector3 impulse_in_world(0, timestep * torque, 0);
+  btScalar torque_twist = - weight * (fric_kinetic * m_yaw_velocity + fric_coulomb * ((m_yaw_velocity > 0) - (m_yaw_velocity < 0)));
+  btVector3 twist_impulse_in_world(0, timestep * torque_twist, 0);
 
-  m_wheel_body->applyTorqueImpulse(impulse_in_world);
+  btScalar torque_roll = - weight * fric_roll * m_wheel_radius * ((m_wheel_velocity > 0) - (m_wheel_velocity < 0));
+  btVector3 roll_impulse_in_wheel(0, 0, timestep * torque_roll);
+  btVector3 roll_impulse_in_world = m_wheel_body->getWorldTransform().getBasis() * roll_impulse_in_wheel;
+
+  m_wheel_body->applyTorqueImpulse(twist_impulse_in_world + roll_impulse_in_world);
 }
 
 btScalar Unicycle::kinetic_energy() const

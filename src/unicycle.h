@@ -18,8 +18,9 @@ public:
 
   static const btTransform reset_transform;
 
-  static const btScalar fric_static;
+  static const btScalar fric_coulomb;
   static const btScalar fric_kinetic;
+  static const btScalar fric_roll;
 
   Unicycle(
     btScalar fork_length,
@@ -75,9 +76,6 @@ private:
   btScalar m_yaw;
   btScalar m_pitch;
   btScalar m_roll;
-
-  btScalar m_last_pitch;
-  btScalar m_last_roll;
 
   btScalar m_wheel_velocity;
   btScalar m_yaw_velocity;

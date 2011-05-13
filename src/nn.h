@@ -16,7 +16,7 @@ public:
   typedef std::vector<weight_matrix_t> weights_t;
 
   typedef layer_t input_t;
-  typedef layer_t output_t;
+  typedef std::vector<int> output_t;
 
   NN();
   NN(std::vector<size_t> layer_sizes);
