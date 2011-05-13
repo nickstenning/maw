@@ -1,1 +1,1 @@
-from ga import GA
+from ga import *

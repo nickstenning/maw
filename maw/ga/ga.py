@@ -1,5 +1,4 @@
 import random
-import math
 from util import roulette_pick
 
 ELITISM = 0.05
@@ -33,7 +32,7 @@ class GA(object):
 
         # Elitism step. Preserve some proportion of the population untouched
         # for the next generation.
-        num_elite = math.floor(ELITISM * len(self.population))
+        num_elite = int(ELITISM * len(self.population))
 
         for i in range(-num_elite, 0):
             individual = self.population[i].clone()
