@@ -3,10 +3,10 @@ from bindings.unicycle import Unicycle
 DT = 0.01
 
 sf = 1
-person = 10.0
+person = 20.0
 
 class Unicycle(Unicycle):
-    drive_impulse = 10 * DT
+    drive_impulse = 20 * DT
     wheel_impulse = 15 * DT
 
     def __init__(self,
